@@ -1,0 +1,154 @@
+---
+import { getCollection } from "astro:content";
+
+const newEra = [
+  { name: "Consciencia Colménica", slug: "consciencia" },
+  { name: "If this world were mine", slug: "world" },
+  { name: "Pintas Heredadas", slug: "pintas" },
+];
+
+const oldEra = [
+  { name: "Lágrimas de Siddartha", slug: "lagrimas" },
+  { name: "Still Prefer Sentir", slug: "still" },
+  { name: "Placebo Onírico", slug: "placebo" },
+  { name: "En las luces de colores", slug: "colores" },
+];
+
+const collections = [...newEra, ...oldEra];
+
+const posts = await getCollection("texts");
+const countsByType = posts.reduce<Record<string, number>>((acc, p) => {
+  const t = p.data.type;
+  if (!t) return acc;
+  acc[t] = (acc[t] ?? 0) + 1;
+  return acc;
+}, {});
+---
+
+<div class="flex flex-col">
+  <h3 class="text-4xl font-medium text-left font-bebas text-human-2">Colecciones</h3>
+
+  <!-- Mobile -->
+  <div class="flex flex-col w-full justify-around sm:hidden gap-3 border-2 rounded border-human-3 p-4">
+    <div class="flex flex-col justify-around w-full">
+      {newEra.map((category) => {
+        const count = countsByType[category.slug] ?? 0;
+        return (
+          <a href={`/${category.slug}`}>
+            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full">
+              <h2 class="font-bebas font-normal text-lg text-center text-human-2">
+                {category.name}
+              </h2>
+              <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
+                ({count})
+              </span>
+            </article>
+          </a>
+        );
+      })}
+    </div>
+
+    <div class="border-b-2 border-human-3"></div>
+
+    <div class="flex flex-col justify-around w-full">
+      {oldEra.map((category) => {
+        const count = countsByType[category.slug] ?? 0;
+        return (
+          <a href={`/${category.slug}`}>
+            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full">
+              <h2 class="font-bebas font-normal text-lg text-center text-human-2">
+                {category.name}
+              </h2>
+              <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
+                ({count})
+              </span>
+            </article>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- Desktop -->
+  <div id="collections-carousel" class="hidden rounded sm:flex items-center border-y-2 border-human-3">
+    <button data-prev type="button" class="bg-human-3 text-human-2 p-4">
+      <i class="ti ti-chevron-left"></i>
+    </button>
+
+    <div data-track class="flex-1 overflow-hidden">
+      <div data-list class="flex justify-around min-w-max w-full py-2 gap-10">
+        {collections.map((category) => {
+          const count = countsByType[category.slug] ?? 0;
+          return (
+            <a href={`/${category.slug}`} class="shrink-0">
+              <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full">
+                <h2 class="font-bebas font-normal text-lg text-center text-human-2">
+                  {category.name}
+                </h2>
+                <!-- <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
+                  ({count})
+                </span> -->
+              </article>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+
+    <button data-next type="button" class="bg-human-3 text-human-2 p-4">
+        <i class="ti ti-chevron-right"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+  const carousel = document.querySelector("#collections-carousel");
+
+  if (carousel) {
+    const track = carousel.querySelector("[data-track]");
+    const list = carousel.querySelector("[data-list]");
+    const prev = carousel.querySelector("[data-prev]");
+    const next = carousel.querySelector("[data-next]");
+
+    if (track && list && prev && next) {
+      const items = Array.from(list.children);
+
+      items.forEach((item) => {
+        const cloneAfter = item.cloneNode(true);
+        const cloneBefore = item.cloneNode(true);
+        list.appendChild(cloneAfter);
+        list.insertBefore(cloneBefore, list.firstChild);
+      });
+
+      const originalSetWidth = list.scrollWidth / 3;
+
+      track.scrollLeft = originalSetWidth;
+
+      const step = () => {
+        const firstRealItem = list.children[items.length];
+        if (!firstRealItem) return 200;
+        return firstRealItem.getBoundingClientRect().width + 40;
+      };
+
+      const normalizePosition = () => {
+        if (track.scrollLeft <= originalSetWidth * 0.5) {
+          track.scrollLeft += originalSetWidth;
+        } else if (track.scrollLeft >= originalSetWidth * 1.5) {
+          track.scrollLeft -= originalSetWidth;
+        }
+      };
+
+      prev.addEventListener("click", () => {
+        track.scrollBy({ left: -step(), behavior: "smooth" });
+      });
+
+      next.addEventListener("click", () => {
+        track.scrollBy({ left: step(), behavior: "smooth" });
+      });
+
+      track.addEventListener("scroll", () => {
+        window.requestAnimationFrame(normalizePosition);
+      });
+    }
+  }
+</script>

@@ -12,7 +12,7 @@ const {
 } = writer.data;
 ---
 
-<section class="flex flex-col lg:flex-row w-full flex-1 text-white" style={`background-color: ${color}`}>
+<section class="flex flex-col lg:flex-row w-full flex-1 text-human-1" style={`background-color: ${color}`}>
     <div class="relative w-full aspect-[2/3] lg:w-[40vw] lg:h-screen lg:sticky lg:top-0 lg:aspect-auto lg:overflow-hidden shrink-0">
         <img src={photo} alt={name} class="w-full h-full object-cover object-center" loading="eager" decoding="async"/>
         <div class="hidden lg:block pointer-events-none absolute inset-y-0 right-0 w-24" style={`background: linear-gradient(to right, rgba(0,0,0,0), ${color});`}></div>
@@ -22,7 +22,7 @@ const {
     <section class="flex flex-col flex-1 h-full">
         <div class=" flex flex-col flex-1 w-full max-w-[1100px] mx-auto px-6 lg:px-10 mt-12 lg:mt-10">
             <header class="pb-3 border-b-2 border-white/50">
-                <h1 class="text-4xl font-bold font-bebas">
+                <h1 class="text-4xl font-bebas">
                     {name}
                 </h1>
                 <p class="font-besley text-base opacity-80">

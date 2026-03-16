@@ -1,11 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
+const heroBg = "/banner.svg";
+const baseBg = "#024350";
 ---
 
 <Layout title="404">
   <main
     class="flex flex-col justify-center items-center text-center px-8 gap-4 mt-36 mb-auto mx-auto"
   >
+      <section class="relative overflow-hidden">
+          <div class="relative w-full min-h-[70vh] bg-cover bg-bottom" style={`background-image: url(${heroBg});`}>
+              <div class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`}></div>
+              <div class="pointer-events-none absolute inset-x-0 bottom-0 h-4" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`}></div>
+          </div>
+      </section>
     <h3 class="text-5xl sm:text-7xl font-bold">Error 404</h3>
     <p class="text-lg font-normal">
       Vaya, vaya. Parece que no he programado esto aún...

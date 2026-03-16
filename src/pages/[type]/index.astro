@@ -29,6 +29,8 @@ if (type === "consciencia") {
   typeTitle = "Placebo Onírico";
 } else if (type === "pintas") {
   typeTitle = "Pintas Heredadas";
+} else if (type === "world") {
+  typeTitle = "If this world were mine";
 } else {
   typeTitle = type;
 }
@@ -46,6 +48,8 @@ if (type === "consciencia") {
     typeDescription = '"Escribir con un vacío en el pecho. Hallar en la insignificancia un camino hacia la libertad."';
 } else if (type === "pintas") {
     typeDescription = '"Va de hallar dentro lo que siempre se ha buscado fuera."';
+} else if (type === "world") {
+    typeDescription = '"As an intent to achieve new ways of feeling, I started feeling."';
 }
 
 const posts = (await getCollection("texts"))

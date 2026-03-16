@@ -14,6 +14,13 @@ export default {
           indigo: "#171733",
           dark: "#080809",
         },
+        human: {
+          1: "#ECFBFF",
+          2: "#D8F8FF",
+          3: "#037388",
+          4: "#024250",
+          5: "#022A31",
+        },
       },
       fontFamily: {
         bellota: ["Bellota Text", "cursive"],

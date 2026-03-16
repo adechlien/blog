@@ -15,14 +15,14 @@ const writers = [
 
 <section class="w-full">
     <div class="flex flex-col gap-3 sm:mx-auto">
-        <h3 class="text-4xl font-medium text-left font-bebas text-[#d8f7fe] border-b-white/40 border-b-2">Escritores favoritos</h3>
+        <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">Escritores favoritos</h3>
         <ul class="flex flex-col sm:grid sm:grid-cols-8 gap-3 px-3">
             {writers.map((w) => (
             <li class="">
                 <a href={`/writers/${w.slug}/`} class="group block">
                     <article class="flex justify-center relative aspect-[2/3] rounded overflow-hidden">
                         <img src={w.image} alt={w.name} class="absolute inset-0 w-full h-full object-cover"/>
-                        <p class="absolute top-3 font-bebas text-3xl sm:text-2xl text-white">{w.name}</p>
+                        <p class="absolute top-3 font-bebas text-3xl sm:text-2xl text-human-1">{w.name}</p>
                     </article>
                 </a>
             </li>

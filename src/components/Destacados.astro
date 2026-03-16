@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import FormattedDate from "./FormattedDate.astro";
 
 const posts = await getCollection("texts");
 const featured = posts.filter((p: any) => p.data.featured === true);
@@ -12,7 +13,7 @@ const featuredPosts = (featured.length ? featured : sorted)
     (a: any, b: any) =>
       new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
   )
-  .slice(0, 6);
+  .slice(0, 9);
 
 
 const mapType = (type = "") => {
@@ -27,31 +28,25 @@ const mapType = (type = "") => {
 ---
 
 <section class="w-full flex flex-col gap-3">
-    <h3 class="text-4xl font-medium text-left font-bebas text-[#d8f7fe] border-b-white/40 border-b-2">Destacados</h3>
-    <ul class="flex flex-col sm:flex-row gap-3 px-3">
+    <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">Destacados</h3>
+    <ul class="grid grid-cols-2 md:grid-cols-4 gap-3 px-3">
         {featuredPosts.map((post: any) => (
         <li class="w-full">
             <a href={`/${post.data.type}/${post.slug}`} class="block">
-                <div class="relative isolate overflow-hidden rounded aspect-[2/3]">
-                  <img
-                    src={post.data.heroImage}
-                    alt={post.data.title}
-                    class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
-                    loading="lazy"
-                  />
+                <div class="relative isolate overflow-hidden rounded aspect-[2/3] sm:aspect-[2/1]">
+                    <img src={post.data.heroImage} alt={post.data.title} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>
 
-                  <!-- blur overlay -->
-                  <div class="absolute inset-0 bg-black/25  [-webkit-backdrop-filter:blur(12px)] [transform:translateZ(0)]"></div>
+                    <div class="absolute inset-0 bg-black/25 [-webkit-backdrop-filter:blur(12px)] [transform:translateZ(0)]"></div>
 
-                  <div class="relative flex h-full flex-col px-3 py-3 min-w-0">
-                    <h3 class="text-white font-bebas text-start text-lg leading-none">
-                      {post.data.title}
-                    </h3>
+                    <div class="relative flex h-full flex-col px-3 py-3 min-w-0">
+                        <h3 class="text-human-1 font-bebas text-start text-base leading-none">
+                            {post.data.title}
+                        </h3>
 
-                    <p class="mt-auto pt-2 text-sm sm:text-xs text-white font-black text-right truncate">
-                      {mapType(post.data.type)}
-                    </p>
-                  </div>
+                        <p class="mt-auto pt-2 text-sm sm:text-xs text-human-1 text-right truncate">
+                            <FormattedDate date={post.data.pubDate} />
+                        </p>
+                    </div>
                 </div>
             </a>
         </li>

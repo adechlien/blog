@@ -8,7 +8,9 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "normalize": "node scripts/normalize.js"
+    "normalize": "node scripts/normalize.js",
+    "new:text": "node scripts/new-text.js",
+    "migrate:ids": "node scripts/migrate-text-ids.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",

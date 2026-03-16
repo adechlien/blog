@@ -7,35 +7,34 @@ const socialLinks = [
 
 const heroBg = "/banner.svg";
 const avatar = "/avatar.webp";
-const baseBg = "#024350";
 ---
 
 <section class="relative overflow-hidden">
     <div class="relative w-full min-h-[70vh] bg-cover bg-bottom" style={`background-image: url(${heroBg});`}>
-        <div class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`} ></div>
-        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-4" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`} ></div>
+        <div class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-t from-transparent to-human-4" ></div>
+        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-4 bg-gradient-to-b from-transparent to-human-4" ></div>
 
         <div class="absolute left-1/2 -translate-x-1/2 -bottom-10 z-20">
-            <div class="size-36 rounded-full border-2 border-[#d8f7fe] overflow-hidden">
+            <div class="size-36 rounded-full border-2 border-human-2 overflow-hidden">
                 <img src={avatar} alt="Foto de perfil" class="w-full h-full object-cover" />
             </div>
         </div>
     </div>
 
     <div class="flex flex-col gap-2 relative w-full px-6 pt-14 pb-10  sm:mx-auto text-center">
-        <h1 class="font-bebas text-3xl sm:text-5xl tracking-wide text-[#d8f7fe]">ALEJANDRO J. H. POLO</h1>
+        <h1 class="font-bebas text-3xl sm:text-5xl tracking-wide text-human-2">Alejandro J. Hernández P.</h1>
 
-        <nav class="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-4 gap-y-2 text-[#d8f7fe] text-base sm:text-lg">
+        <nav class="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-4 gap-y-2 text-human-2 text-base sm:text-lg">
             {socialLinks.map((link) => (
-                <a href={link.href} target="_blank" class="hover:text-white transition px-1">{link.text}</a>
-                <span class="text-white/35">|</span>
+                <a href={link.href} target="_blank" class="px-1">{link.text}</a>
+                <span class="text-human-3">|</span>
             ))}
-            <a href="https://pin.it/37CeFyEJI" target="_blank" class="hover:text-white transition px-2">
+            <a href="https://pin.it/37CeFyEJI" target="_blank" class="px-2">
                 Pinterest
             </a>
         </nav>
 
-        <p class="font-tangerine text-xl sm:text-2xl text-[#d8f7fe] leading-tight">
+        <p class="font-tangerine text-xl sm:text-2xl text-human-2 leading-tight">
             "Donde reside todo lo que siento y no sé cómo decir. <br class="sm:hidden"> Donde espero nunca llegues tú."
         </p>
     </div>

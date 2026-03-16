@@ -3,6 +3,8 @@ import { defineCollection, z } from "astro:content";
 const texts = defineCollection({
   type: "content",
   schema: z.object({
+    id: z.string(),
+    legacySlug: z.string().optional(),
     title: z.string(),
     type: z.string(),
     heroImage: z.string().optional(),
@@ -33,11 +35,11 @@ const writers = defineCollection({
     lifeSpan: z.string().optional(),
     color: z.string().optional(),
     phrases: z.array(
-         z.object({
-           text: z.string(),
-           source: z.string(),
-         }),
-        ).optional(),
+      z.object({
+        text: z.string(),
+        source: z.string(),
+      })
+    ).optional(),
   }),
 });
 

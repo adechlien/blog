@@ -16,6 +16,7 @@ const mapType = (type = "") => {
   if (type === "still") return "Still Prefer Sentir";
   if (type === "placebo") return "Placebo Onírico";
   if (type === "pintas") return "Pintas Heredadas";
+  if (type === "world") return "If this world were mine";
   return type;
 };
 
@@ -23,9 +24,9 @@ const cleanPreview = (html = "") => html.replaceAll("<br>", " ").replace(/<\/?[^
 ---
 
 <section class="w-full min-w-0 flex flex-col gap-3">
-    <h3 class="text-4xl font-medium text-left font-bebas text-[#d8f7fe] border-b-white/40 border-b-2">Recientes</h3>
+    <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">Recientes</h3>
     {recentPosts.length > 0 ? (
-    <ul class="grid grid-cols-1 sm:grid-cols-3 gap-3 px-3">
+    <ul class="grid grid-cols-1 md:grid-cols-3 gap-3 px-3">
         {recentPosts.map((post: any) => {
           const previewContent = cleanPreview(post.body ?? "");
           const typeLabel = mapType(post.data.type);
@@ -36,11 +37,11 @@ const cleanPreview = (html = "") => html.replaceAll("<br>", " ").replace(/<\/?[^
                         <img src={post.data.heroImage} alt={post.data.title} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>
                         <div class="absolute inset-0 bg-black/25 backdrop-blur-sm [-webkit-backdrop-filter:blur(12px)] [transform:translateZ(0)]"></div>
                         <div class="relative flex h-full flex-col px-3 py-3 min-w-0">
-                            <h3 class="text-white font-bebas text-start text-lg leading-none">{post.data.title}</h3>
-                            <p lang="es" class="mt-2 text-xs leading-snug text-white/90 text-justify hyphens-auto [display:-webkit-box] [-webkit-line-clamp:4] [-webkit-box-orient:vertical] overflow-hidden">
+                            <h3 class="text-human-1 font-bebas text-start text-lg leading-none">{post.data.title}</h3>
+                            <p lang="es" class="mt-2 text-xs leading-snug text-human-1 text-justify hyphens-auto [display:-webkit-box] [-webkit-line-clamp:4] [-webkit-box-orient:vertical] overflow-hidden">
                                 {previewContent}
                             </p>
-                            <p class="mt-auto pt-2 text-sm text-white font-black text-right">
+                            <p class="mt-auto pt-2 text-sm text-human-1 font-semibold text-right">
                                 {typeLabel}
                             </p>
                         </div>
@@ -50,6 +51,6 @@ const cleanPreview = (html = "") => html.replaceAll("<br>", " ").replace(/<\/?[^
         );})}
     </ul>
     ) : (
-      <p class="mt-4 text-sm text-white/80">No hay textos aún.</p>
+      <p class="mt-4 text-sm text-human-2">No hay textos aún.</p>
     )}
 </section>

@@ -20,24 +20,25 @@ const tier2 = [
 
 <section class="w-full">
   <div class="flex flex-col gap-4 sm:mx-auto">
-      <div class="flex items-center justify-between text-[#d8f7fe] border-b-white/40 border-b-2">
+      <div class="flex items-center justify-between text-human-2 border-b-human-3 border-b-2">
           <h3 class="text-4xl font-medium text-left font-bebas">Álbumes favoritos</h3>
-          <a href="https://musicboard.app/adechlien/list/albumes-favoritos/" target="_blank" class="hover:text-white transition px-2 underline">
+          <a href="https://musicboard.app/adechlien/list/albumes-favoritos/" target="_blank" class="underline">
               Musicboard
           </a>
       </div>
 
     <!-- TIER 1: 6 columnas -->
     <ul class="grid grid-cols-2 sm:grid-cols-6 gap-3 px-3">
-      {tier1.map((album) => (
+      {tier1.map((album, index) => (
         <li>
           <a href={album.link} target="_blank" class="group block">
             <article class="flex flex-col justify-center gap-0 overflow-hidden">
-              <div class="overflow-hidden mb-1">
+              <div class="overflow-hidden mb-1 relative">
                   <img src={`/albums/${album.cover}`} alt={album.title} class="w-full h-full object-cover"/>
+                  <div class="absolute top-0 left-0 text-human-1 bg-human-4 px-2 py-0 font-bebas z-10 rounded-br-md">{index+1}</div>
               </div>
-              <span class="font-bebas text-xl text-[#d8f7fe] leading-none truncate">{album.title}</span>
-              <span class="font-bellota text-xs text-[#d8f7fe]">{album.artist}</span>
+              <span class="font-bebas text-xl text-human-2 leading-none truncate">{album.title}</span>
+              <span class="font-bellota text-xs text-human-2">{album.artist}</span>
             </article>
           </a>
         </li>
@@ -58,10 +59,10 @@ const tier2 = [
                     class="w-full h-full object-cover"
                   />
                 </div>
-                <span class="font-bebas text-lg text-[#d8f7fe] leading-none truncate">
+                <span class="font-bebas text-lg text-human-2 leading-none truncate">
                   {album.title}
                 </span>
-                <span class="font-bellota text-[11px] text-[#d8f7fe]">
+                <span class="font-bellota text-xs text-human-2">
                   {album.artist}
                 </span>
               </article>

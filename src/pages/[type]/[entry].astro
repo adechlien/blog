@@ -1,0 +1,161 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("texts");
+
+  const paths = [];
+
+  for (const post of posts) {
+    // ruta nueva
+    paths.push({
+      params: {
+        type: post.data.type,
+        entry: String(post.data.id),
+      },
+      props: {
+        post,
+        redirectTo: null,
+      },
+    });
+
+    // ruta vieja
+    if (post.data.legacySlug) {
+      paths.push({
+        params: {
+          type: post.data.type,
+          entry: post.data.legacySlug,
+        },
+        props: {
+          post: null,
+          redirectTo: `/${post.data.type}/${post.data.id}`,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { post, redirectTo } = Astro.props as {
+  post?: any;
+  redirectTo?: string | null;
+};
+
+if (redirectTo) {
+  return Astro.redirect(redirectTo, 301);
+}
+
+if (!post?.data) {
+  return new Response("Not found", { status: 404 });
+}
+
+const { title, type, heroImage, pubDate, color } = post.data;
+const { Content } = await post.render();
+
+const mapTypeTitle = (t = "") => {
+  if (t === "consciencia") return "Consciencia colménica";
+  if (t === "lagrimas") return "Lágrimas de Siddartha";
+  if (t === "colores") return "En las luces de colores";
+  if (t === "still") return "Still Prefer Sentir";
+  if (t === "placebo") return "Placebo Onírico";
+  if (t === "pintas") return "Pintas Heredadas";
+  if (t === "world") return "If this world were mine";
+  return t;
+};
+
+const typeTitle = mapTypeTitle(type);
+
+const bgColor = color ?? "dark";
+
+const bgColorMap: any = {
+  mahogany: "#331717",
+  coffee: "#332217",
+  khaki: "#292812",
+  evergreen: "#0E1B0C",
+  jet: "#172433",
+  indigo: "#171733",
+  dark: "#080809",
+};
+
+const bgClassMap: any = {
+  mahogany: "bg-textbg-mahogany",
+  coffee: "bg-textbg-coffee",
+  khaki: "bg-textbg-khaki",
+  evergreen: "bg-textbg-evergreen",
+  jet: "bg-textbg-jet",
+  indigo: "bg-textbg-indigo",
+  dark: "bg-textbg-dark",
+};
+
+const bgHex = bgColorMap[bgColor] ?? bgColorMap.jet;
+const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
+---
+
+<Layout title={title} bg={bgHex}>
+  <Header />
+  <main class={`flex flex-col md:flex-row w-full min-h-screen ${bgClass}`}>
+    <div class="relative w-full aspect-[2/3] md:w-[40vw] md:h-screen md:sticky md:top-0 md:aspect-auto md:overflow-hidden shrink-0">
+      <img src={heroImage} alt="" class="w-full h-full object-cover" loading="eager" decoding="async" />
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-12 md:hidden"
+        style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bgHex});`}
+      ></div>
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 h-8 md:hidden"
+        style={`background: linear-gradient(to top, rgba(0,0,0,0), ${bgHex});`}
+      ></div>
+      <div
+        class="hidden md:block pointer-events-none absolute inset-y-0 right-0 w-20"
+        style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bgHex});`}
+      ></div>
+    </div>
+
+    <section class="flex flex-col w-full md:flex-1 text-human-1">
+      <div class="w-full max-w-[1100px] mx-auto px-6 md:px-10 mt-12 md:mt-10 flex flex-col h-full">
+        <header class="pb-2 border-b-2 border-human-1">
+          <h3 class="text-xl capitalize">{typeTitle}</h3>
+          <h1 class="text-4xl font-bebas font-medium">{title}</h1>
+          <FormattedDate date={pubDate} format="long" />
+        </header>
+
+        <article lang="es" class="py-12 font-besley text-base leading-relaxed text-justify hyphens-auto">
+          <Content />
+        </article>
+
+        <div class="mt-auto">
+          <Footer theme="text" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <button
+    type="button"
+    aria-label="Volver arriba"
+    class={`fixed bottom-5 right-5 z-50 rounded-full px-3 py-2 text-human-1 ${bgClass} border border-human-1 transition opacity-0 pointer-events-none`}
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"}
+  >
+    <i class="ti ti-chevron-up"></i>
+  </button>
+
+  <script is:inline>
+    (() => {
+      const btn = document.querySelector('[aria-label="Volver arriba"]');
+      if (!btn) return;
+
+      const toggle = () => {
+        const show = window.scrollY >= 300;
+        btn.classList.toggle("opacity-0", !show);
+        btn.classList.toggle("pointer-events-none", !show);
+      };
+
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+</Layout>
