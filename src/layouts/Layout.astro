@@ -8,12 +8,18 @@ interface Props {
   bg?: string;
 }
 
-const { title, description, image = "/texts-placeholder-1.jpg", bg } = Astro.props;
+const {
+  title,
+  description,
+  image = "/texts-placeholder-1.jpg",
+  bg = "#024250",
+} = Astro.props;
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="es" class="text-human-2 bg-human-4">
+<html lang="es" class="text-human-2" style={`background-color: ${bg};`}>
   <head>
     <!-- Global Metadata -->
     <meta charset="utf-8" />
@@ -21,6 +27,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" type="image/svg" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+
+    <!-- Browser / mobile chrome color -->
+    <meta name="theme-color" content={bg} />
 
     <!-- Font preloads -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -56,8 +65,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <ViewTransitions />
   </head>
 
-  <body class="font-bellota flex flex-col justify-between items-center min-h-screen">
+  <body class="font-bellota flex flex-col justify-between items-center min-h-screen" style={`background-color: ${bg};`}>
     <slot />
   </body>
-
 </html>

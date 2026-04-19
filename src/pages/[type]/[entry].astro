@@ -11,7 +11,6 @@ export async function getStaticPaths() {
   const paths = [];
 
   for (const post of posts) {
-    // ruta nueva
     paths.push({
       params: {
         type: post.data.type,
@@ -23,7 +22,6 @@ export async function getStaticPaths() {
       },
     });
 
-    // ruta vieja
     if (post.data.legacySlug) {
       paths.push({
         params: {
@@ -92,7 +90,7 @@ const bgClassMap: any = {
   dark: "bg-textbg-dark",
 };
 
-const bgHex = bgColorMap[bgColor] ?? bgColorMap.jet;
+const bgHex = bgColorMap[bgColor] ?? bgColorMap.dark;
 const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
 ---
 
@@ -123,7 +121,7 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
           <FormattedDate date={pubDate} format="long" />
         </header>
 
-        <article lang="es" class="py-12 font-besley text-base leading-relaxed text-justify hyphens-auto">
+        <article lang="es" class="py-8 font-besley text-base leading-relaxed text-justify hyphens-auto">
           <Content />
         </article>
 
