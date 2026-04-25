@@ -20,6 +20,18 @@ const mapType = (type = "") => {
   return type;
 };
 
+const mapIcon = (type = "") => {
+  if (type === "consciencia") return "/icons/bee.svg";
+  if (type === "lagrimas") return "/icons/cloud.png";
+  if (type === "still") return "/icons/heart.png";
+  if (type === "colores") return "/icons/flower.png";
+  if (type === "lagrimas") return "/icons/cloud.png";
+  if (type === "pintas") return "/icons/cloud.png";
+  if (type === "world") return "/icons/world.svg";
+
+  return "/icons/heart.png";
+};
+
 const cleanPreview = (html = "") => html.replaceAll("<br>", " ").replace(/<\/?[^>]+>/g, "").replace(/\s+/g, " ").trim();
 ---
 
@@ -30,20 +42,20 @@ const cleanPreview = (html = "") => html.replaceAll("<br>", " ").replace(/<\/?[^
         {recentPosts.map((post: any) => {
           const previewContent = cleanPreview(post.body ?? "");
           const typeLabel = mapType(post.data.type);
+          const icon = mapIcon(post.data.type);
           return (
             <li class="snap-start flex-none">
                 <a href={`/${post.data.type}/${post.slug}`} class="block group">
                     <div class="relative isolate overflow-hidden rounded aspect-[2/1] w-full">
                         <img src={post.data.heroImage} alt={post.data.title} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>
-                        <div class="absolute inset-0 bg-black/25 backdrop-blur-sm [-webkit-backdrop-filter:blur(12px)] [transform:translateZ(0)]"></div>
-                        <div class="relative flex h-full flex-col px-3 py-3 min-w-0">
-                            <h3 class="text-human-1 font-bebas text-start text-lg leading-none">{post.data.title}</h3>
-                            <p lang="es" class="mt-2 text-xs leading-snug text-human-1 text-justify hyphens-auto [display:-webkit-box] [-webkit-line-clamp:4] [-webkit-box-orient:vertical] overflow-hidden">
-                                {previewContent}
-                            </p>
-                            <p class="mt-auto pt-2 text-sm text-human-1 font-semibold text-right">
-                                {typeLabel}
-                            </p>
+                        <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-5 to-transparent">
+                          <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
+                                <!-- <img src="/icons/bee.svg" alt="" class="size-5"> -->
+                                  {typeLabel}
+                          </p>
+                          <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
+                            {post.data.title}
+                          </h3>
                         </div>
                     </div>
                 </a>

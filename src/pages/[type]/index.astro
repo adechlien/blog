@@ -78,12 +78,7 @@ const baseBg = "#024350";
                 {posts.map((post: any) => (
                   <li>
                     <a href={`/${type}/${post.slug}/`} class="block group">
-                        <!-- <div class="relative overflow-hidden rounded-lg aspect-[2/3]">
-                            <img src={post.data.heroImage} alt={post.data.title} class="absolute inset-0 h-full w-full object-cover" loading="lazy"/>
-                            <p class="text-[#d8f7fe] absolute top-0 right-0 bg-[#024350] text-sm sm:text-xs px-2 py-1 rounded m-2 font-bold"></p>
-                            <h2 class="absolute inset-x-0 bottom-0 bg-[#024350] text-[#d8f7fe] text-lg sm:text-base truncate font-bebas rounded px-2 py-1 m-2">{post.data.title}</h2>
-                        </div> -->
-                        <div class="relative isolate overflow-hidden rounded-lg aspect-[2/3]">
+                        <div class="relative isolate overflow-hidden rounded-lg aspect-[2/1]">
                           <img
                             src={post.data.heroImage}
                             alt={post.data.title}
@@ -91,16 +86,13 @@ const baseBg = "#024350";
                             loading="lazy"
                           />
 
-                          <div class="absolute inset-0 bg-black/25"></div>
-
-                          <div class="relative flex h-full flex-col px-3 py-3 min-w-0">
-                            <h3 class="text-white font-bebas text-start text-xl sm:text-lg leading-none">
+                          <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-5 to-transparent">
+                            <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
+                                <FormattedDate date={post.data.pubDate} format="long"/>
+                            </p>
+                            <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
                               {post.data.title}
                             </h3>
-
-                            <p class="mt-auto pt-2 text-sm sm:text-xs text-white font-black text-right truncate">
-                                <FormattedDate date={post.data.pubDate} format="short"/>
-                            </p>
                           </div>
                         </div>
                     </a>

@@ -49,13 +49,13 @@ const baseBg = "#024350";
         </section>
         <section class="flex flex-col gap-8 px-6 w-full max-w-6xl mx-auto">
             <h1 class="text-4xl font-bebas mb-10">{year}</h1>
-            <ul class="grid gap-5 grid-cols-1 sm:grid-cols-4 md:grid-cols-5">
+            <ul class="grid gap-3 grid-cols-1 sm:grid-cols-4 md:grid-cols-5">
                 {posts.length ? (posts.map((post: any) => {
                 const postTypeTitle = mapTypeTitle(post.data.type);
                 return (
                     <li>
                         <a href={`/${post.data.type}/${post.slug}/`} class="block group">
-                            <div class="relative isolate overflow-hidden rounded-lg aspect-[2/3]">
+                            <div class="relative isolate overflow-hidden rounded-lg aspect-[2/1]">
                               <img
                                 src={post.data.heroImage}
                                 alt={post.data.title}
@@ -63,16 +63,16 @@ const baseBg = "#024350";
                                 loading="lazy"
                               />
 
-                              <div class="absolute inset-0 bg-black/25"></div>
+                              <!-- <div class="absolute inset-0 bg-black/25"></div> -->
 
-                              <div class="relative flex h-full flex-col px-3 py-3 min-w-0">
-                                <h3 class="text-white font-bebas text-start text-xl sm:text-lg leading-6">
+                              <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-5 to-transparent">
+                                <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
+                                    <!-- <img src="/icons/bee.svg" alt="" class="size-5"> -->
+                                    {postTypeTitle}
+                                </p>
+                                <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
                                   {post.data.title}
                                 </h3>
-
-                                <p class="mt-auto pt-2 text-sm sm:text-xs text-white font-black text-right truncate">
-                                  {postTypeTitle}
-                                </p>
                               </div>
                             </div>
                         </a>

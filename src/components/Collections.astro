@@ -30,7 +30,7 @@ const countsByType = posts.reduce<Record<string, number>>((acc, p) => {
 
   <!-- Mobile -->
   <div class="flex flex-col w-full justify-around sm:hidden gap-3 border-2 rounded border-human-3 p-4">
-    <div class="flex flex-col justify-around w-full">
+    <div class="flex flex-col justify-around w-full gap-1">
       {newEra.map((category) => {
         const count = countsByType[category.slug] ?? 0;
         return (
@@ -50,7 +50,7 @@ const countsByType = posts.reduce<Record<string, number>>((acc, p) => {
 
     <div class="border-b-2 border-human-3"></div>
 
-    <div class="flex flex-col justify-around w-full">
+    <div class="flex flex-col justify-around w-full gap-1">
       {oldEra.map((category) => {
         const count = countsByType[category.slug] ?? 0;
         return (
