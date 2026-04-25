@@ -52,7 +52,7 @@ if (!post?.data) {
   return new Response("Not found", { status: 404 });
 }
 
-const { title, type, heroImage, pubDate, color } = post.data;
+const { title, type, heroImage, pubDate, color, id } = post.data;
 const { Content } = await post.render();
 
 const mapTypeTitle = (t = "") => {
@@ -120,8 +120,12 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
           <h1 class="text-4xl font-bebas font-medium">{title}</h1>
           <FormattedDate date={pubDate} format="long" />
           <!-- <div class="mt-4 flex items-center justify-start gap-3">
-              <button id="like-button" type="button" aria-pressed="false"
-              class="inline-flex items-center gap-2 text-sm text-human-1"
+            <button
+              id="like-button"
+              type="button"
+              data-text-id={String(id)}
+              aria-pressed="false"
+              class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60"
             >
               <i id="like-icon" class="ti ti-heart text-lg"></i>
               <span id="like-count">0</span>
@@ -162,6 +166,90 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
 
       window.addEventListener("scroll", toggle, { passive: true });
       toggle();
+    })();
+  </script>
+
+  <script is:inline>
+    (() => {
+      const button = document.querySelector("#like-button");
+      const icon = document.querySelector("#like-icon");
+      const count = document.querySelector("#like-count");
+
+      if (!button || !icon || !count) return;
+
+      const textId = button.dataset.textId;
+      if (!textId) return;
+
+      const storageKey = `text-liked:${textId}`;
+
+      const setLikedUI = (liked) => {
+        button.setAttribute("aria-pressed", String(liked));
+
+        icon.classList.toggle("ti-heart", !liked);
+        icon.classList.toggle("ti-heart-filled", liked);
+
+        button.setAttribute(
+          "aria-label",
+          liked ? "Quitar me gusta" : "Dar me gusta"
+        );
+      };
+
+      const setCount = (likes) => {
+        count.textContent = String(likes ?? 0);
+      };
+
+      const loadLikes = async () => {
+        const liked = localStorage.getItem(storageKey) === "true";
+        setLikedUI(liked);
+
+        try {
+          const response = await fetch(
+            `/api/likes?textId=${encodeURIComponent(textId)}`
+          );
+
+          if (!response.ok) return;
+
+          const data = await response.json();
+          setCount(data.likes);
+        } catch {
+          setCount(0);
+        }
+      };
+
+      const toggleLike = async () => {
+        const liked = localStorage.getItem(storageKey) === "true";
+        const nextLiked = !liked;
+
+        button.disabled = true;
+
+        try {
+          const response = await fetch("/api/likes", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              textId,
+              action: nextLiked ? "like" : "unlike",
+            }),
+          });
+
+          if (!response.ok) return;
+
+          const data = await response.json();
+
+          localStorage.setItem(storageKey, String(nextLiked));
+          setLikedUI(nextLiked);
+          setCount(data.likes);
+        } catch {
+          setLikedUI(liked);
+        } finally {
+          button.disabled = false;
+        }
+      };
+
+      button.addEventListener("click", toggleLike);
+      loadLikes();
     })();
   </script>
 </Layout>
