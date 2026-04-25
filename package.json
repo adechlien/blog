@@ -19,6 +19,7 @@
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
     "@astrojs/tailwind": "^6.0.2",
+    "@astrojs/vercel": "^10.0.5",
     "astro": "^5.17.1",
     "decap-cms-backend-github": "^3.5.0",
     "netlify-cms-oauth-provider-node": "^2.0.0",
