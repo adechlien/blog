@@ -1,8 +1,0 @@
----
-// src/pages/db-test.astro
-import { db, TextLike } from "astro:db";
-
-const likes = await db.select().from(TextLike);
----
-
-<pre>{JSON.stringify(likes, null, 2)}</pre>
