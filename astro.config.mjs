@@ -8,7 +8,6 @@ import db from "@astrojs/db";
 
 export default defineConfig({
   site: "https://adechlien.blog",
-  output: "static",
   integrations: [mdx(), sitemap(), tailwind(), db()],
   adapter: vercel(),
 });
