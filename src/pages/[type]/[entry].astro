@@ -121,7 +121,7 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
           <h3 class="text-xl capitalize">{typeTitle}</h3>
           <h1 class="text-4xl font-bebas font-medium">{title}</h1>
           <FormattedDate date={pubDate} format="long" />
-          <div class="mt-4 flex items-center justify-start gap-3">
+          <div class="mt-4 flex items-center justify-start gap-6">
             <button
               id="like-button"
               type="button"
@@ -131,6 +131,10 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
             >
               <i id="like-icon" class="ti ti-heart text-lg"></i>
               <span id="like-count">0</span>
+            </button>
+            <button id="share-button" type="button" data-share-title={title} data-share-text={`Lee "${title}".`} aria-label="Compartir texto" class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60">
+              <i class="ti ti-share text-lg"></i>
+              <span id="share-label">Compartir</span>
             </button>
           </div>
         </header>
@@ -264,6 +268,68 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
 
       initLikeButton();
       document.addEventListener("astro:page-load", initLikeButton);
+    })();
+  </script>
+
+  <script is:inline>
+    (() => {
+      const initShareButton = () => {
+        const button = document.querySelector("#share-button");
+        const label = document.querySelector("#share-label");
+
+        if (!button || !label) return;
+
+        if (button.dataset.shareInitialized === "true") return;
+        button.dataset.shareInitialized = "true";
+
+        const getCleanUrl = () => {
+          const url = new URL(window.location.href);
+          url.search = "";
+          url.hash = "";
+          return url.toString();
+        };
+
+        const setTemporaryLabel = (text) => {
+          const originalText = "Compartir";
+          label.textContent = text;
+
+          window.setTimeout(() => {
+            label.textContent = originalText;
+          }, 1600);
+        };
+
+        const shareText = async () => {
+          const title = button.dataset.shareTitle || document.title;
+          const text = button.dataset.shareText || "Lee este texto en Leggiamo.";
+          const url = getCleanUrl();
+
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title,
+                text,
+                url,
+              });
+            } catch {
+              // El usuario puede cerrar el menú de compartir; no hace falta mostrar error.
+            }
+
+            return;
+          }
+
+          try {
+            await navigator.clipboard.writeText(url);
+            setTemporaryLabel("Copiado");
+          } catch {
+            setTemporaryLabel("No se pudo copiar");
+          }
+        };
+
+        button.addEventListener("click", shareText);
+      };
+
+      initShareButton();
+      document.addEventListener("astro:page-load", initShareButton);
     })();
   </script>
 </Layout>
