@@ -178,6 +178,9 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
 
       if (!button || !count) return;
 
+      if (button.dataset.likeInitialized === "true") return;
+      button.dataset.likeInitialized = "true";
+
       const textId = button.dataset.textId;
       if (!textId) return;
 
@@ -256,6 +259,9 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
 
       button.addEventListener("click", toggleLike);
       loadLikes();
+
+      initLikeButton();
+      document.addEventListener("astro:page-load", initLikeButton);
     })();
   </script>
 </Layout>
