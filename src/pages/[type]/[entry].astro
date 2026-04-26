@@ -210,7 +210,7 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
 
         try {
           const response = await fetch(
-            `/api/likes?textId=${encodeURIComponent(textId)}`
+            `/actions/likes?textId=${encodeURIComponent(textId)}`
           );
 
           if (!response.ok) return;
@@ -229,7 +229,7 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
         button.disabled = true;
 
         try {
-          const response = await fetch("/api/likes", {
+          const response = await fetch("/actions/likes", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
