@@ -3,7 +3,8 @@ import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import WriterSection from "../../components/WriterSection.astro";
 import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
+
+export const prerender = true;
 
 export async function getStaticPaths() {
   const writers = await getCollection("writers");

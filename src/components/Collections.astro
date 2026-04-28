@@ -16,6 +16,18 @@ const oldEra = [
 
 const collections = [...newEra, ...oldEra];
 
+const mapIcon = (slug = "") => {
+  if (slug === "consciencia") return "/icons/bee.svg";
+  if (slug === "world") return "/icons/world.svg";
+  if (slug === "pintas") return "/icons/cupcake.svg";
+
+  if (slug === "lagrimas") return "/icons/cloud.svg";
+  if (slug === "still") return "/icons/heart.svg";
+  if (slug === "placebo") return "/icons/moon.svg";
+
+  return "/icons/flower.svg";
+};
+
 const posts = await getCollection("texts");
 const countsByType = posts.reduce<Record<string, number>>((acc, p) => {
   const t = p.data.type;
@@ -28,17 +40,22 @@ const countsByType = posts.reduce<Record<string, number>>((acc, p) => {
 <div class="flex flex-col">
   <h3 class="text-4xl font-medium text-left font-bebas text-human-2">Colecciones</h3>
 
-  <!-- Mobile -->
-  <div class="flex flex-col w-full justify-around sm:hidden gap-3 border-2 rounded border-human-3 p-4">
-    <div class="flex flex-col justify-around w-full gap-1">
+  <div class="flex flex-col w-full justify-around gap-4 md:gap-1 border-2 rounded border-human-3 p-4">
+    <div class="flex flex-col md:grid md:grid-cols-3 justify-around w-full gap-2">
       {newEra.map((category) => {
         const count = countsByType[category.slug] ?? 0;
+        const icon = mapIcon(category.slug);
         return (
           <a href={`/${category.slug}`}>
-            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full">
-              <h2 class="font-bebas font-normal text-lg text-center text-human-2">
+            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm">
+                <div class="flex items-center gap-2">
+
+                <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy"/>
+              <h2 class="font-bebas font-normal text-lg text-center text-human-2 leading-relaxed">
+
                 {category.name}
               </h2>
+                </div>
               <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
                 ({count})
               </span>
@@ -48,53 +65,30 @@ const countsByType = posts.reduce<Record<string, number>>((acc, p) => {
       })}
     </div>
 
-    <div class="border-b-2 border-human-3"></div>
+    <div class="border-b-2 border-human-3 md:border-0"></div>
 
-    <div class="flex flex-col justify-around w-full gap-1">
+    <div class="flex flex-col md:grid sm:grid-cols-3 lg:grid-cols-4 justify-around w-full gap-2">
       {oldEra.map((category) => {
         const count = countsByType[category.slug] ?? 0;
+        const icon = mapIcon(category.slug);
+
         return (
           <a href={`/${category.slug}`}>
-            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full">
-              <h2 class="font-bebas font-normal text-lg text-center text-human-2">
-                {category.name}
-              </h2>
-              <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
-                ({count})
-              </span>
-            </article>
-          </a>
-        );
-      })}
-    </div>
-  </div>
-
-  <!-- Desktop -->
-  <div id="collections-carousel" class="hidden rounded sm:flex items-center border-y-2 border-human-3">
-    <button data-prev type="button" class="bg-human-3 text-human-2 p-4">
-      <i class="ti ti-chevron-left"></i>
-    </button>
-
-    <div data-track class="flex-1 overflow-hidden">
-      <div data-list class="flex justify-around min-w-max w-full py-2 gap-10">
-        {collections.map((category) => {
-          const count = countsByType[category.slug] ?? 0;
-          return (
-            <a href={`/${category.slug}`} class="shrink-0">
-              <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full">
+            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm">
+              <div class="flex items-center gap-2">
+                <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy"/>
                 <h2 class="font-bebas font-normal text-lg text-center text-human-2">
                   {category.name}
                 </h2>
-              </article>
-            </a>
-          );
-        })}
-      </div>
+              </div>
+              <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
+                ({count})
+              </span>
+            </article>
+          </a>
+        );
+      })}
     </div>
-
-    <button data-next type="button" class="bg-human-3 text-human-2 p-4">
-        <i class="ti ti-chevron-right"></i>
-    </button>
   </div>
 
   <!-- <button class="bg-human-5 rounded p-2 flex items-center justify-center gap-2 mt-2"><i class="ti ti-download"></i>Todos los textos</button> -->

@@ -34,14 +34,13 @@ const mapTypeTitle = (type = "") => {
 
 const mapIcon = (type = "") => {
   if (type === "consciencia") return "/icons/bee.svg";
+  if (type === "world") return "/icons/world.svg";
+  if (type === "pintas") return "/icons/cupcake.svg";
   if (type === "lagrimas") return "/icons/cloud.svg";
   if (type === "still") return "/icons/heart.svg";
-  if (type === "colores") return "/icons/flower.svg";
-  if (type === "pintas") return "/icons/cloud.svg";
   if (type === "placebo") return "/icons/moon.svg";
-  if (type === "world") return "/icons/world.svg";
 
-  return "/icons/heart.svg";
+  return "/icons/flower.svg";
 };
 
 const posts = (await getCollection("texts"))

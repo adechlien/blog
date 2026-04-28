@@ -22,14 +22,13 @@ const mapType = (type = "") => {
 
 const mapIcon = (type = "") => {
   if (type === "consciencia") return "/icons/bee.svg";
-  if (type === "lagrimas") return "/icons/cloud.png";
-  if (type === "still") return "/icons/heart.png";
-  if (type === "colores") return "/icons/flower.png";
-  if (type === "lagrimas") return "/icons/cloud.png";
-  if (type === "pintas") return "/icons/cloud.png";
   if (type === "world") return "/icons/world.svg";
+  if (type === "pintas") return "/icons/cupcake.svg";
+  if (type === "lagrimas") return "/icons/cloud.svg";
+  if (type === "still") return "/icons/heart.svg";
+  if (type === "placebo") return "/icons/moon.svg";
 
-  return "/icons/heart.png";
+  return "/icons/flower.svg";
 };
 
 const cleanPreview = (html = "") => html.replaceAll("<br>", " ").replace(/<\/?[^>]+>/g, "").replace(/\s+/g, " ").trim();

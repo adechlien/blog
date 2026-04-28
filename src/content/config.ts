@@ -43,4 +43,16 @@ const writers = defineCollection({
   }),
 });
 
-export const collections = { texts, soon, writers };
+const sketches = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    date: z.string(),
+    pubDate: z.date(),
+    image: z.string(),
+    alt: z.string().optional(),
+    note: z.string(),
+  }),
+});
+
+export const collections = { texts, soon, writers, sketches };

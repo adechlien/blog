@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title?: string;
@@ -62,7 +62,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
     <!-- View Transitions -->
-    <ViewTransitions />
+    <ClientRouter />
   </head>
 
   <body class="font-bellota flex flex-col justify-between items-center min-h-screen" style={`background-color: ${bg};`}>

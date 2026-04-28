@@ -1,0 +1,67 @@
+---
+interface Sketch {
+  slug: string;
+  data: {
+    title: string;
+    date: string;
+    pubDate: Date;
+    image: string;
+    alt?: string;
+    note: string;
+  };
+}
+
+interface Props {
+  sketches: Sketch[];
+}
+
+const { sketches } = Astro.props;
+const recentSketches = sketches.slice(0, 6);
+---
+
+<section class="w-full">
+  <div class="flex flex-col gap-4 sm:mx-auto">
+    <div class="flex items-center justify-between border-b-2 border-b-human-3 text-human-2">
+      <h3 class="font-bebas text-left text-4xl font-medium">
+        Lienzos Atrevidos
+      </h3>
+
+      <a href="/sketches" class="underline">
+        Ver sketches
+      </a>
+    </div>
+
+    <ul class="grid grid-cols-2 gap-3 px-3 sm:grid-cols-6">
+      {
+        recentSketches.map((sketch, index) => (
+          <li>
+            <a href={`/sketches/${sketch.slug}`} class="group block">
+              <article class="flex flex-col justify-center gap-0 overflow-hidden">
+                <div class="relative mb-1 overflow-hidden">
+                  <img
+                    src={sketch.data.image}
+                    alt={sketch.data.alt ?? sketch.data.title}
+                    loading="lazy"
+                    class="aspect-[4/5] h-full w-full object-cover"
+                  />
+
+                  <div class="absolute left-0 top-0 z-10 rounded-br-md bg-human-4 px-2 py-0 font-bebas text-human-1">
+                    {index + 1}
+                  </div>
+                </div>
+
+                <span class="truncate font-bebas text-xl leading-none text-human-2">
+                  {sketch.data.title}
+                </span>
+
+                <span class="font-bellota text-xs text-human-2">
+                  {sketch.data.date}
+                </span>
+              </article>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
