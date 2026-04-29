@@ -71,6 +71,7 @@ const { sketches } = Astro.props;
   </dialog>
 </section>
 
+
 <script>
   const modal = document.querySelector("#sketch-modal");
   const modalImage = document.querySelector("#sketch-modal-image");
@@ -81,6 +82,13 @@ const { sketches } = Astro.props;
   const openButtons = document.querySelectorAll("[data-sketch-open]");
 
   const isDialog = modal instanceof HTMLDialogElement;
+
+  const closeModal = () => {
+    if (!isDialog) return;
+
+    modal.close();
+    document.body.style.overflow = "";
+  };
 
   openButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -106,15 +114,12 @@ const { sketches } = Astro.props;
     });
   });
 
-  closeButton?.addEventListener("click", () => {
-    if (!isDialog) return;
-
-    modal.close();
-    document.body.style.overflow = "";
-  });
+  closeButton?.addEventListener("click", closeModal);
 
   modal?.addEventListener("click", (event) => {
     if (!isDialog) return;
+
+    if (!(event instanceof MouseEvent)) return;
 
     const rect = modal.getBoundingClientRect();
 
@@ -125,8 +130,7 @@ const { sketches } = Astro.props;
       event.clientY > rect.bottom;
 
     if (clickedOutside) {
-      modal.close();
-      document.body.style.overflow = "";
+      closeModal();
     }
   });
 
