@@ -97,22 +97,13 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
 ---
 
 <Layout title={title} bg={bgHex}>
-  <Header />
+  <Header bg={bgClass} />
   <main class={`flex flex-col md:flex-row w-full min-h-screen ${bgClass}`}>
     <div class="relative w-full aspect-[2/3] md:w-[40vw] md:h-screen md:sticky md:top-0 md:aspect-auto md:overflow-hidden shrink-0">
       <img src={heroImage} alt="" class="w-full h-full object-cover" loading="eager" decoding="async" />
-      <div
-        class="pointer-events-none absolute inset-x-0 bottom-0 h-12 md:hidden"
-        style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bgHex});`}
-      ></div>
-      <div
-        class="pointer-events-none absolute inset-x-0 top-0 h-8 md:hidden"
-        style={`background: linear-gradient(to top, rgba(0,0,0,0), ${bgHex});`}
-      ></div>
-      <div
-        class="hidden md:block pointer-events-none absolute inset-y-0 right-0 w-20"
-        style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bgHex});`}
-      ></div>
+      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-12 md:hidden" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bgHex});`}></div>
+      <div class="pointer-events-none absolute inset-x-0 top-0 h-8 md:hidden" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${bgHex});`}></div>
+      <div class="hidden md:block pointer-events-none absolute inset-y-0 right-0 w-20" style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bgHex});`}></div>
     </div>
 
     <section class="flex flex-col w-full md:flex-1 text-human-1">
@@ -122,18 +113,14 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
           <h1 class="text-4xl font-bebas font-medium">{title}</h1>
           <FormattedDate date={pubDate} format="long" />
           <div class="mt-4 flex items-center justify-start gap-6">
-            <button
-              id="like-button"
-              type="button"
-              data-text-id={String(id)}
-              aria-pressed="false"
-              class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60"
-            >
+              <button id="like-button" type="button" data-text-id={String(id)} aria-pressed="false" class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60">
               <i id="like-icon" class="ti ti-heart text-lg"></i>
+              <span>Me gusta</span>
               <span id="like-count">0</span>
             </button>
+
             <button id="share-button" type="button" data-share-title={title} data-share-text={`Lee "${title}".`} aria-label="Compartir texto" class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60">
-              <i class="ti ti-share text-lg"></i>
+              <i class="ti ti-share-2 text-lg"></i>
               <span id="share-label">Compartir</span>
             </button>
           </div>
@@ -150,12 +137,7 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
     </section>
   </main>
 
-  <button
-    type="button"
-    aria-label="Volver arriba"
-    class={`fixed bottom-5 right-5 z-50 rounded-full px-3 py-2 text-human-1 ${bgClass} border border-human-1 transition opacity-0 pointer-events-none`}
-    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"}
-  >
+  <button type="button" aria-label="Volver arriba" class={`fixed bottom-5 right-5 z-50 rounded-full px-3 py-2 text-human-1 ${bgClass} border border-human-1 transition opacity-0 pointer-events-none`} onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"}>
     <i class="ti ti-chevron-up"></i>
   </button>
 
