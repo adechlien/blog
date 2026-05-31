@@ -1,13 +1,30 @@
-const PAYLOAD_URL = import.meta.env.PAYLOAD_URL ?? "https://cms.adechlien.blog";
+const PAYLOAD_URL = import.meta.env.PAYLOAD_URL ?? "http://localhost:3000";
 
 export function getMediaUrl(media: any) {
   if (!media?.url) return "";
 
-  if (media.url.startsWith("http")) {
-    return media.url;
+  const url = String(media.url);
+
+  // Si ya es una URL externa válida de Blob u otro storage, déjala igual.
+  if (
+    url.startsWith("http") &&
+    !url.startsWith("http://localhost:3000") &&
+    !url.startsWith("https://localhost:3000")
+  ) {
+    return url;
   }
 
-  return `${PAYLOAD_URL}${media.url}`;
+  // Si Payload guardó localhost en la DB, reemplázalo por PAYLOAD_URL.
+  if (
+    url.startsWith("http://localhost:3000") ||
+    url.startsWith("https://localhost:3000")
+  ) {
+    const parsedUrl = new URL(url);
+    return `${PAYLOAD_URL}${parsedUrl.pathname}`;
+  }
+
+  // Si viene como /api/media/file/archivo.webp
+  return `${PAYLOAD_URL}${url}`;
 }
 
 export function normalizePayloadText(text: any) {
