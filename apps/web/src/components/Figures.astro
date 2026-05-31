@@ -359,7 +359,7 @@ const getContributionImageUrl = (image: any) => {
   }
 </style>
 
-<script lang="ts">
+<script is:inline>
   const backdrop = document.querySelector("[data-figures-backdrop]");
   const modal = document.querySelector("[data-figures-modal]");
   const scrollContainer = document.querySelector("[data-figures-scroll]");
@@ -367,7 +367,7 @@ const getContributionImageUrl = (image: any) => {
   const closeButton = document.querySelector("[data-figure-close]");
   const panels = document.querySelectorAll("[data-figure-panel]");
 
-  let activePanel: Element | null = null;
+  let activePanel = null;
   let isClosing = false;
   let ticking = false;
 
@@ -440,7 +440,7 @@ const getContributionImageUrl = (image: any) => {
     }, 500);
   };
 
-  const openModal = (slug: string) => {
+  const openModal = (slug) => {
     if (!backdrop || !modal || isClosing) return;
 
     hideAllPanels();
