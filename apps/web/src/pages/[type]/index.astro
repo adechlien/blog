@@ -5,7 +5,7 @@ import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import { getPayloadTexts } from "../../lib/payload";
 
-const { type } = Astro.params;
+const type = String(Astro.params.type ?? "");
 
 export async function getStaticPaths() {
   const data = await getPayloadTexts();
@@ -44,8 +44,8 @@ const typeDescriptions: Record<string, string> = {
   world: '"As an intent to achieve new ways of feeling, I started feeling."',
 };
 
-const typeTitle = typeTitles[type ?? ""] ?? type;
-const typeDescription = typeDescriptions[type ?? ""] ?? "";
+const typeTitle = typeTitles[type] ?? type;
+const typeDescription = typeDescriptions[type] ?? "";
 
 const data = await getPayloadTexts();
 const allPosts = data.docs ?? [];
@@ -56,8 +56,6 @@ const posts = allPosts
     (a: any, b: any) =>
       new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
   );
-
-const collectionColor = posts[0]?.collection?.color ?? "#024350";
 
 const heroBg = "/banner.svg";
 const baseBg = "#024350";

@@ -1,20 +1,54 @@
 ---
 import { getPayloadTexts } from "../lib/payload";
 
-const newEra = [
+type PayloadText = {
+  id: string;
+  title: string;
+  pubDate?: string;
+  collection?: {
+    slug?: string;
+    name?: string;
+    color?: string;
+  };
+  cover?: {
+    url?: string;
+    alt?: string;
+  };
+};
+
+type Category = {
+  name: string;
+  slug: string;
+};
+
+type ModalPost = {
+  id: string;
+  title: string;
+  type: string;
+  typeTitle: string;
+  typeDescription: string;
+  href: string;
+  coverUrl: string;
+  coverAlt: string;
+  pubDate: string;
+  year: string;
+  formattedDate: string;
+};
+
+const newEra: Category[] = [
   { name: "Consciencia Colménica", slug: "consciencia" },
   { name: "If this world were mine", slug: "world" },
   { name: "Pintas Heredadas", slug: "pintas" },
 ];
 
-const oldEra = [
+const oldEra: Category[] = [
   { name: "Lágrimas de Siddartha", slug: "lagrimas" },
   { name: "Still Prefer Sentir", slug: "still" },
   { name: "Placebo Onírico", slug: "placebo" },
   { name: "En las luces de colores", slug: "colores" },
 ];
 
-const typeTitles = {
+const typeTitles: Record<string, string> = {
   consciencia: "Consciencia colménica",
   lagrimas: "Lágrimas de Siddartha",
   colores: "En las luces de colores",
@@ -24,7 +58,7 @@ const typeTitles = {
   world: "If this world were mine",
 };
 
-const typeDescriptions = {
+const typeDescriptions: Record<string, string> = {
   consciencia:
     '"Se necesita una razón para odiar a alguien, y querer odiarle es una razón válida."',
   lagrimas: '"Cuando miro a las nubes, no hay nadie más. Soy solo yo."',
@@ -50,9 +84,9 @@ const mapIcon = (slug = "") => {
 };
 
 const data = await getPayloadTexts();
-const posts = data.docs ?? [];
+const posts = (data.docs ?? []) as PayloadText[];
 
-const countsByType = posts.reduce((acc, post) => {
+const countsByType = posts.reduce<Record<string, number>>((acc, post) => {
   const slug = post.collection?.slug;
 
   if (!slug) return acc;
@@ -62,10 +96,10 @@ const countsByType = posts.reduce((acc, post) => {
   return acc;
 }, {});
 
-const modalPosts = posts
-  .filter((post) => post.collection?.slug)
+const modalPosts: ModalPost[] = posts
+  .filter((post) => Boolean(post.collection?.slug))
   .map((post) => {
-    const type = post.collection?.slug;
+    const type = String(post.collection?.slug ?? "");
     const pubDate = post.pubDate ? new Date(post.pubDate) : null;
 
     return {
@@ -77,15 +111,16 @@ const modalPosts = posts
       href: `/${type}/${post.id}`,
       coverUrl: post.cover?.url ?? "",
       coverAlt: post.cover?.alt ?? post.title,
-      pubDate: post.pubDate,
-      year: pubDate ? String(pubDate.getFullYear()) : "",
-      formattedDate: pubDate
-        ? pubDate.toLocaleDateString("es-CO", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })
-        : "",
+      pubDate: post.pubDate ?? "",
+      year: pubDate && !Number.isNaN(pubDate.getTime()) ? String(pubDate.getFullYear()) : "",
+      formattedDate:
+        pubDate && !Number.isNaN(pubDate.getTime())
+          ? pubDate.toLocaleDateString("es-CO", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })
+          : "",
     };
   });
 ---
@@ -97,88 +132,139 @@ const modalPosts = posts
 
   <div class="flex flex-col w-full justify-around gap-4 md:gap-1 border-2 rounded border-human-3 p-4">
     <div class="flex flex-col md:grid md:grid-cols-3 justify-around w-full gap-2">
-      {
-        newEra.map((category) => {
-          const count = countsByType[category.slug] ?? 0;
-          const icon = mapIcon(category.slug);
+      {newEra.map((category) => {
+        const count = countsByType[category.slug] ?? 0;
+        const icon = mapIcon(category.slug);
 
-          return (
-            <button data-collection-modal-trigger data-collection-slug={category.slug} aria-label={`Abrir colección ${category.name}`}>
-              <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm transition hover:bg-human-3/20">
-                <div class="flex items-center gap-2">
-                  <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy" />
+        return (
+          <button
+            type="button"
+            data-collection-modal-trigger
+            data-collection-slug={category.slug}
+            aria-label={`Abrir colección ${category.name}`}
+            class="w-full text-left"
+          >
+            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm transition hover:bg-human-3/20">
+              <div class="flex items-center gap-2">
+                <img
+                  src={icon}
+                  alt=""
+                  aria-hidden="true"
+                  class="size-4 object-contain"
+                  loading="lazy"
+                />
 
-                  <h2 class="font-bebas font-normal text-lg text-center text-human-2 leading-relaxed">
-                    {category.name}
-                  </h2>
-                </div>
+                <h2 class="font-bebas font-normal text-lg text-center text-human-2 leading-relaxed">
+                  {category.name}
+                </h2>
+              </div>
 
-                <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
-                  {count}
-                </span>
-              </article>
-            </button>
-          );
-        })
-      }
+              <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
+                {count}
+              </span>
+            </article>
+          </button>
+        );
+      })}
     </div>
 
     <div class="border-b-2 border-human-3 md:border-0"></div>
 
     <div class="flex flex-col md:grid sm:grid-cols-3 lg:grid-cols-4 justify-around w-full gap-2">
-      {
-        oldEra.map((category) => {
-          const count = countsByType[category.slug] ?? 0;
-          const icon = mapIcon(category.slug);
+      {oldEra.map((category) => {
+        const count = countsByType[category.slug] ?? 0;
+        const icon = mapIcon(category.slug);
 
-          return (
-            <a href={`/${category.slug}`} data-collection-modal-trigger data-collection-slug={category.slug} aria-label={`Abrir colección ${category.name}`}>
-              <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm transition hover:bg-human-3/20">
-                <div class="flex items-center gap-2">
-                    <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy"/>
+        return (
+          <button
+            type="button"
+            data-collection-modal-trigger
+            data-collection-slug={category.slug}
+            aria-label={`Abrir colección ${category.name}`}
+            class="w-full text-left"
+          >
+            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm transition hover:bg-human-3/20">
+              <div class="flex items-center gap-2">
+                <img
+                  src={icon}
+                  alt=""
+                  aria-hidden="true"
+                  class="size-4 object-contain"
+                  loading="lazy"
+                />
 
-                  <h2 class="font-bebas font-normal text-lg text-center text-human-2">
-                    {category.name}
-                  </h2>
-                </div>
+                <h2 class="font-bebas font-normal text-lg text-center text-human-2">
+                  {category.name}
+                </h2>
+              </div>
 
-                <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
-                  {count}
-                </span>
-              </article>
-            </a>
-          );
-        })
-      }
+              <span class="inline-flex items-center justify-center text-sm font-bold text-human-2">
+                {count}
+              </span>
+            </article>
+          </button>
+        );
+      })}
     </div>
   </div>
 </div>
 
-<div id="collection-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-human-5/75 px-4 py-6 backdrop-blur-sm" aria-hidden="true">
-    <div class="relative flex max-h-[96vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-human-4 text-human-2 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="collection-modal-title">
-      <header class="relative p-4 pt-8 sm:px-8 sm:pt-8">
-          <div class="absolute -bottom-12 left-0 flex min-w-full flex-col justify-end bg-gradient-to-b from-human-4 to-transparent px-2 pt-12 z-50"></div>
-          <h2 id="collection-modal-title" class="font-bebas text-4xl font-medium leading-none text-human-2 sm:text-6xl"></h2>
-          <p id="collection-modal-description" class="max-w-3xl font-tangerine text-2xl leading-none text-human-2 sm:text-4xl"></p>
-      </header>
-      <div id="collection-modal-list" class="grid max-h-[58vh] grid-cols-1 gap-4 overflow-y-auto p-4 sm:grid-cols-2 lg:grid-cols-3 sm:p-8"></div>
+<div
+  id="collection-modal"
+  class="fixed inset-0 z-[100] hidden items-center justify-center bg-human-5/75 px-4 py-6 backdrop-blur-sm"
+  aria-hidden="true"
+>
+  <div
+    class="relative flex max-h-[96vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-human-4 text-human-2 shadow-2xl"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="collection-modal-title"
+  >
+    <button
+      id="collection-modal-close"
+      type="button"
+      class="absolute right-4 top-4 z-[60] rounded-full border border-human-2/30 bg-human-5/40 px-3 py-2 text-human-2 backdrop-blur-sm transition hover:bg-human-5/60"
+      aria-label="Cerrar modal"
+    >
+      <i class="ti ti-x"></i>
+    </button>
+
+    <header class="relative p-4 pt-8 sm:px-8 sm:pt-8">
+      <div class="absolute -bottom-12 left-0 z-50 flex min-w-full flex-col justify-end bg-gradient-to-b from-human-4 to-transparent px-2 pt-12"></div>
+
+      <h2
+        id="collection-modal-title"
+        class="font-bebas text-4xl font-medium leading-none text-human-2 sm:text-6xl"
+      ></h2>
+
+      <p
+        id="collection-modal-description"
+        class="max-w-3xl font-tangerine text-2xl leading-none text-human-2 sm:text-4xl"
+      ></p>
+    </header>
+
+    <div
+      id="collection-modal-list"
+      class="grid max-h-[58vh] grid-cols-1 gap-4 overflow-y-auto p-4 sm:grid-cols-2 sm:p-8 lg:grid-cols-3"
+    ></div>
   </div>
 </div>
 
-<script define:vars={{ modalPosts, typeTitles, typeDescriptions }}>
+<script is:inline define:vars={{ modalPosts, typeTitles, typeDescriptions }}>
   const posts = modalPosts;
 
   const modal = document.getElementById("collection-modal");
   const closeButton = document.getElementById("collection-modal-close");
   const titleElement = document.getElementById("collection-modal-title");
   const descriptionElement = document.getElementById("collection-modal-description");
-  // const countElement = document.getElementById("collection-modal-count");
   const listElement = document.getElementById("collection-modal-list");
 
   const openClass = "flex";
   const closedClass = "hidden";
 
   function clearList() {
+    if (!listElement) return;
+
     while (listElement.firstChild) {
       listElement.removeChild(listElement.firstChild);
     }
@@ -201,7 +287,7 @@ const modalPosts = posts
       image.alt = post.coverAlt || post.title;
       image.loading = "lazy";
       image.className =
-        "absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform";
+        "absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105";
 
       imageWrapper.appendChild(image);
     }
@@ -231,20 +317,20 @@ const modalPosts = posts
   }
 
   function openModal(slug) {
+    if (!modal || !titleElement || !descriptionElement || !listElement) return;
+
     const filteredPosts = posts
       .filter((post) => post.type === slug)
-      .sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+      .sort(
+        (a, b) =>
+          new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
+      );
 
     const title = typeTitles[slug] ?? slug;
     const description = typeDescriptions[slug] ?? "";
 
     titleElement.textContent = title;
     descriptionElement.textContent = description;
-
-    // countElement.textContent =
-    //   filteredPosts.length === 1
-    //     ? "1 texto encontrado"
-    //     : `${filteredPosts.length} textos encontrados`;
 
     clearList();
 
@@ -267,6 +353,8 @@ const modalPosts = posts
   }
 
   function closeModal() {
+    if (!modal) return;
+
     modal.classList.add(closedClass);
     modal.classList.remove(openClass);
     modal.setAttribute("aria-hidden", "true");
@@ -274,13 +362,16 @@ const modalPosts = posts
   }
 
   document.addEventListener("click", (event) => {
-    const trigger = event.target.closest("[data-collection-modal-trigger]");
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const trigger = target.closest("[data-collection-modal-trigger]");
 
     if (!trigger) return;
 
     event.preventDefault();
 
-    const slug = trigger.dataset.collectionSlug;
+    const slug = trigger.getAttribute("data-collection-slug");
 
     if (!slug) return;
 
@@ -296,7 +387,7 @@ const modalPosts = posts
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !modal.classList.contains(closedClass)) {
+    if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) {
       closeModal();
     }
   });
