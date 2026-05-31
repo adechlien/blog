@@ -21,7 +21,9 @@
     "import:collections": "tsx scripts/import-collections.ts",
     "export:local": "tsx scripts/export-local-payload.ts",
     "import:turso": "tsx scripts/import-local-export-to-turso.ts",
-    "import:turso:dry": "tsx scripts/import-local-export-to-turso.ts --dry-run"
+    "import:turso:dry": "tsx scripts/import-local-export-to-turso.ts --dry-run",
+    "clear:turso:dry": "tsx scripts/clear-turso-content.ts --dry-run",
+    "clear:turso": "tsx scripts/clear-turso-content.ts"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.84.1",
