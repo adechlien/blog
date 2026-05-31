@@ -192,7 +192,7 @@ const modalPosts: ModalPost[] = posts
   </div>
 </div>
 
-<script is:inline define:vars={{ modalPosts, typeTitles, typeDescriptions }}>
+<script is:inline define:vars={{ modalPosts, modalTypeTitles: typeTitles, modalTypeDescriptions: typeDescriptions }}>
   const posts = modalPosts;
 
   const modal = document.getElementById("collection-modal");
@@ -268,8 +268,8 @@ const modalPosts: ModalPost[] = posts
 
     const filteredPosts = posts.filter((post) => post.type === slug).sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
 
-    const title = typeTitles[slug] ?? slug;
-    const description = typeDescriptions[slug] ?? "";
+    const title = modalTypeTitles[slug] ?? slug;
+    const description = modalTypeDescriptions[slug] ?? "";
 
     titleElement.textContent = title;
     descriptionElement.textContent = description;
