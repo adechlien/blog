@@ -7,6 +7,27 @@ import { richTextToHtml } from "../../lib/richTextToHtml";
 
 export const prerender = true;
 
+type PayloadFigure = {
+  id?: string;
+  slug: string;
+  name: string;
+  kind?: string;
+  backgroundColor?: string;
+  biography?: any;
+  featured?: boolean;
+  order?: number;
+  lifeSpanLabel?: string;
+  birthDate?: string;
+  deathDate?: string;
+  isFictional?: boolean;
+  fictionalNotice?: string;
+  cover?: {
+    url?: string;
+    alt?: string;
+  };
+  contributions?: any[];
+};
+
 export async function getStaticPaths() {
   const data = await getPayloadFigures();
   const figures = data.docs ?? [];
@@ -19,7 +40,7 @@ export async function getStaticPaths() {
     }));
 }
 
-const { figure } = Astro.props;
+const { figure } = Astro.props as { figure: any };
 
 const formatLifeSpan = (figure: any) => {
   if (figure.lifeSpanLabel) return figure.lifeSpanLabel;
