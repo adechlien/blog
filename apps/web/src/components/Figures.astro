@@ -13,13 +13,8 @@ const featuredFigures = figures
 const formatLifeSpan = (figure: any) => {
   if (figure.lifeSpanLabel) return figure.lifeSpanLabel;
 
-  const birthYear = figure.birthDate
-    ? new Date(figure.birthDate).getFullYear()
-    : null;
-
-  const deathYear = figure.deathDate
-    ? new Date(figure.deathDate).getFullYear()
-    : null;
+  const birthYear = figure.birthDate ? new Date(figure.birthDate).getFullYear() : null;
+  const deathYear = figure.deathDate ? new Date(figure.deathDate).getFullYear() : null;
 
   if (birthYear && deathYear) return `${birthYear}–${deathYear}`;
   if (birthYear && !deathYear) return `${birthYear}–actualidad`;
@@ -49,19 +44,18 @@ const getContributionImageUrl = (image: any) => {
 
           return (
             <li>
-                <button type="button" class="group block w-full text-left" data-figure-open={figure.slug} aria-label={`Abrir ilustre ${figure.name}`}>
-                  <article class="flex justify-center relative aspect-[2/1] rounded overflow-hidden">
-                    {imageUrl && (
-                      <img src={imageUrl} alt={imageAlt} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                    )}
+              <button type="button" class="group block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" data-figure-open={figure.slug} aria-label={`Abrir ilustre ${figure.name}`}>
+                <article class="flex justify-center relative aspect-[2/1] rounded overflow-hidden">
+                  {imageUrl && <img src={imageUrl} alt={imageAlt} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />}
 
                   <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
-                      <p class="font-bellota text-base text-human-1 text-right leading-4">
-                        {figure.kind}
-                      </p>
-                      <p class="font-bebas text-2xl text-human-1 text-right">
-                        {figure.name}
-                      </p>
+                    <p class="font-bellota text-base text-human-1 text-right leading-4">
+                      {figure.kind}
+                    </p>
+
+                    <p class="font-bebas text-2xl text-human-1 text-right">
+                      {figure.name}
+                    </p>
                   </div>
                 </article>
               </button>
@@ -76,68 +70,29 @@ const getContributionImageUrl = (image: any) => {
     )}
   </div>
 
-  <div
-    id="figures-modal-backdrop"
-    class="fixed inset-0 z-[100] hidden bg-black/70 opacity-0 backdrop-blur-sm transition-opacity duration-300 ease-out"
-    data-figures-backdrop
-  >
-    <div class="flex min-h-screen w-full items-center justify-center p-4 sm:p-6">
-      <div
-        class="figure-modal-shell relative max-h-[92vh] w-full max-w-6xl translate-y-16 overflow-hidden rounded-2xl border border-white/20 bg-human-4 text-human-1 opacity-0 shadow-2xl transition-[transform,opacity] duration-500 ease-out"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="figure-modal-title"
-        data-figures-modal
-      >
-        <button
-          type="button"
-          class="absolute right-4 top-4 z-30 text-human-1"
-          data-figure-close
-          aria-label="Cerrar modal"
-        >
+  <div id="figures-modal-backdrop" class="fixed inset-0 z-[100] hidden min-h-[100dvh] bg-black/70 opacity-0 backdrop-blur-sm transition-opacity duration-300 ease-out" data-figures-backdrop>
+    <div class="flex min-h-[100dvh] w-full items-center justify-center p-3 sm:p-6">
+      <div class="figure-modal-shell relative max-h-[calc(100dvh-1.5rem)] w-full max-w-6xl translate-y-16 overflow-hidden rounded-2xl border border-white/20 bg-human-4 text-human-1 opacity-0 shadow-2xl transition-[transform,opacity] duration-500 ease-out" role="dialog" aria-modal="true" aria-labelledby="figure-modal-title" data-figures-modal>
+        <button type="button" class="absolute right-4 top-4 z-30 inline-flex size-9 items-center justify-center text-2xl text-human-1" data-figure-close aria-label="Cerrar modal">
           <i class="ti ti-x"></i>
         </button>
 
-        <div
-          class="max-h-[92vh] overflow-y-auto overscroll-contain"
-          data-figures-scroll
-        >
+        <div class="max-h-[calc(100dvh-1.5rem)] overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]" data-figures-scroll>
           {featuredFigures.map((figure: any) => {
             const bg = figure.backgroundColor ?? "#080809";
             const biographyHtml = richTextToHtml(figure.biography);
             const lifeSpan = formatLifeSpan(figure);
 
             return (
-              <article
-                class="hidden min-h-[84vh] flex-col"
-                data-figure-panel={figure.slug}
-                style={`background-color: ${bg};`}
-              >
-                <div
-                  class="figure-cover-sticky sticky top-0 z-20 w-full overflow-hidden"
-                  data-figure-cover
-                >
-                  {figure.cover?.url && (
-                    <img
-                      src={figure.cover.url}
-                      alt={figure.cover.alt}
-                      class="h-full w-full object-cover object-center transition-transform duration-300 ease-out"
-                      loading="lazy"
-                      data-figure-cover-img
-                    />
-                  )}
+              <article class="hidden min-h-[84vh] flex-col" data-figure-panel={figure.slug} style={`background-color: ${bg};`}>
+                <div class="figure-cover-sticky sticky top-0 z-20 w-full overflow-hidden" data-figure-cover>
+                  {figure.cover?.url && <img src={figure.cover.url} alt={figure.cover.alt} class="h-full w-full object-cover object-center transition-transform duration-300 ease-out" loading="lazy" data-figure-cover-img />}
 
-                  <div
-                    class="pointer-events-none absolute inset-x-0 bottom-0 h-40"
-                    style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bg});`}
-                  />
+                  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bg});`}></div>
 
                   <div class="absolute bottom-0 left-0 right-0 px-6 pb-8 lg:px-10">
                     <header class="border-b-2 border-white/40 pb-4">
-                      <h1
-                        id="figure-modal-title"
-                        class="font-bebas text-4xl leading-none"
-                      >
+                      <h1 id="figure-modal-title" class="font-bebas text-4xl leading-none">
                         {figure.name}
                       </h1>
 
@@ -156,11 +111,8 @@ const getContributionImageUrl = (image: any) => {
                   </div>
                 </div>
 
-                <section class="relative z-10 flex flex-1 flex-col px-6 py-10 lg:px-10">
-                  <article
-                    class="font-besley text-base leading-relaxed text-justify"
-                    set:html={biographyHtml}
-                  />
+                <section class="relative z-10 flex flex-1 flex-col px-6 py-8 lg:px-10 lg:py-10">
+                  <article class="font-besley text-base leading-relaxed text-justify" set:html={biographyHtml} />
 
                   {figure.contributions?.length > 0 && (
                     <section class="my-10">
@@ -193,12 +145,7 @@ const getContributionImageUrl = (image: any) => {
                                   </p>
                                 )}
 
-                                <a
-                                  href={item.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  class="mt-4 inline-flex items-center gap-2 text-sm font-bold underline"
-                                >
+                                <a href={item.url} target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-sm font-bold underline">
                                   Abrir link
                                   <i class="ti ti-external-link"></i>
                                 </a>
@@ -211,6 +158,7 @@ const getContributionImageUrl = (image: any) => {
                               <article class="break-inside-avoid mb-5 rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
                                 <div class="mb-3 flex items-center gap-2">
                                   <i class="ti ti-brand-github text-xl"></i>
+
                                   <h3 class="font-bebas text-2xl">
                                     {item.title}
                                   </h3>
@@ -222,12 +170,7 @@ const getContributionImageUrl = (image: any) => {
                                   </p>
                                 )}
 
-                                <a
-                                  href={item.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  class="mt-4 inline-flex items-center gap-2 text-sm font-bold underline"
-                                >
+                                <a href={item.url} target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex items-center gap-2 text-sm font-bold underline">
                                   Ver repositorio
                                   <i class="ti ti-external-link"></i>
                                 </a>
@@ -240,14 +183,7 @@ const getContributionImageUrl = (image: any) => {
 
                             return (
                               <figure class="break-inside-avoid mb-5 overflow-hidden rounded-lg border border-white/20 bg-black/20 shadow-md">
-                                {imageUrl && (
-                                  <img
-                                    src={imageUrl}
-                                    alt={item.caption ?? ""}
-                                    class="w-full object-cover"
-                                    loading="lazy"
-                                  />
-                                )}
+                                {imageUrl && <img src={imageUrl} alt={item.caption ?? ""} class="w-full object-cover" loading="lazy" />}
 
                                 {item.caption && (
                                   <figcaption class="p-3 text-sm opacity-80">
@@ -291,8 +227,8 @@ const getContributionImageUrl = (image: any) => {
 
 <style>
   .figure-cover-sticky {
-    height: var(--figure-cover-height, 72vh);
-    min-height: var(--figure-cover-min-height, 420px);
+    height: var(--figure-cover-height, 58dvh);
+    min-height: var(--figure-cover-min-height, 300px);
     transition: height 180ms linear, min-height 180ms linear;
     will-change: height;
   }
@@ -303,8 +239,8 @@ const getContributionImageUrl = (image: any) => {
   }
 
   .figure-cover-sticky.is-compact {
-    --figure-cover-height: 34vh;
-    --figure-cover-min-height: 220px;
+    --figure-cover-height: 30dvh;
+    --figure-cover-min-height: 190px;
   }
 
   .figure-cover-sticky.is-compact [data-figure-cover-img] {
@@ -327,25 +263,25 @@ const getContributionImageUrl = (image: any) => {
 
   @media (min-width: 1024px) {
     .figure-cover-sticky {
-      --figure-cover-height: 76vh;
+      --figure-cover-height: 70dvh;
       --figure-cover-min-height: 420px;
     }
 
     .figure-cover-sticky.is-compact {
-      --figure-cover-height: 36vh;
+      --figure-cover-height: 36dvh;
       --figure-cover-min-height: 260px;
     }
   }
 
   @media (max-width: 640px) {
     .figure-cover-sticky {
-      --figure-cover-height: 70vh;
-      --figure-cover-min-height: 380px;
+      --figure-cover-height: 56dvh;
+      --figure-cover-min-height: 290px;
     }
 
     .figure-cover-sticky.is-compact {
-      --figure-cover-height: 32vh;
-      --figure-cover-min-height: 210px;
+      --figure-cover-height: 28dvh;
+      --figure-cover-min-height: 180px;
     }
   }
 
@@ -371,6 +307,16 @@ const getContributionImageUrl = (image: any) => {
   let isClosing = false;
   let ticking = false;
 
+  const lockPageScroll = () => {
+    document.documentElement.classList.add("overflow-hidden");
+    document.body.classList.add("overflow-hidden");
+  };
+
+  const unlockPageScroll = () => {
+    document.documentElement.classList.remove("overflow-hidden");
+    document.body.classList.remove("overflow-hidden");
+  };
+
   const resetCovers = () => {
     panels.forEach((panel) => {
       const cover = panel.querySelector("[data-figure-cover]");
@@ -387,11 +333,11 @@ const getContributionImageUrl = (image: any) => {
     const scrollTop = scrollContainer.scrollTop;
     const isCompact = cover.classList.contains("is-compact");
 
-    if (!isCompact && scrollTop > 240) {
+    if (!isCompact && scrollTop > 60) {
       cover.classList.add("is-compact");
     }
 
-    if (isCompact && scrollTop < 80) {
+    if (isCompact && scrollTop < 20) {
       cover.classList.remove("is-compact");
     }
   };
@@ -426,8 +372,7 @@ const getContributionImageUrl = (image: any) => {
     window.setTimeout(() => {
       backdrop.classList.add("hidden");
       modal.classList.remove("is-closing");
-      document.documentElement.classList.remove("overflow-hidden");
-
+      unlockPageScroll();
       hideAllPanels();
       resetCovers();
 
@@ -460,9 +405,8 @@ const getContributionImageUrl = (image: any) => {
     }
 
     resetCovers();
-
     backdrop.classList.remove("hidden");
-    document.documentElement.classList.add("overflow-hidden");
+    lockPageScroll();
 
     window.requestAnimationFrame(() => {
       backdrop.classList.add("is-open");
@@ -476,25 +420,21 @@ const getContributionImageUrl = (image: any) => {
       const slug = button.getAttribute("data-figure-open");
       if (!slug) return;
 
+      if (button instanceof HTMLElement) button.blur();
+
       openModal(slug);
     });
   });
 
   closeButton?.addEventListener("click", closeModal);
 
-  scrollContainer?.addEventListener("scroll", requestCoverUpdate, {
-    passive: true,
-  });
+  scrollContainer?.addEventListener("scroll", requestCoverUpdate, { passive: true });
 
   backdrop?.addEventListener("click", (event) => {
-    if (event.target === backdrop) {
-      closeModal();
-    }
+    if (event.target === backdrop) closeModal();
   });
 
   window.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeModal();
-    }
+    if (event.key === "Escape") closeModal();
   });
 </script>

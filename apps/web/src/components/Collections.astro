@@ -59,14 +59,11 @@ const typeTitles: Record<string, string> = {
 };
 
 const typeDescriptions: Record<string, string> = {
-  consciencia:
-    '"Se necesita una razón para odiar a alguien, y querer odiarle es una razón válida."',
+  consciencia: '"Se necesita una razón para odiar a alguien, y querer odiarle es una razón válida."',
   lagrimas: '"Cuando miro a las nubes, no hay nadie más. Soy solo yo."',
-  colores:
-    '"A través de mis sueños y añoranzas empezó la búsqueda del sentido."',
+  colores: '"A través de mis sueños y añoranzas empezó la búsqueda del sentido."',
   still: '"El calor de tu piel me dio razones para despertar."',
-  placebo:
-    '"Escribir con un vacío en el pecho. Hallar en la insignificancia un camino hacia la libertad."',
+  placebo: '"Escribir con un vacío en el pecho. Hallar en la insignificancia un camino hacia la libertad."',
   pintas: '"Va de hallar dentro lo que siempre se ha buscado fuera."',
   world: '"As an intent to achieve new ways of feeling, I started feeling."',
 };
@@ -75,7 +72,6 @@ const mapIcon = (slug = "") => {
   if (slug === "consciencia") return "/icons/bee.svg";
   if (slug === "world") return "/icons/world.svg";
   if (slug === "pintas") return "/icons/cupcake.svg";
-
   if (slug === "lagrimas") return "/icons/cloud.svg";
   if (slug === "still") return "/icons/heart.svg";
   if (slug === "placebo") return "/icons/moon.svg";
@@ -113,14 +109,7 @@ const modalPosts: ModalPost[] = posts
       coverAlt: post.cover?.alt ?? post.title,
       pubDate: post.pubDate ?? "",
       year: pubDate && !Number.isNaN(pubDate.getTime()) ? String(pubDate.getFullYear()) : "",
-      formattedDate:
-        pubDate && !Number.isNaN(pubDate.getTime())
-          ? pubDate.toLocaleDateString("es-CO", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            })
-          : "",
+      formattedDate: pubDate && !Number.isNaN(pubDate.getTime()) ? pubDate.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" }) : "",
     };
   });
 ---
@@ -137,22 +126,10 @@ const modalPosts: ModalPost[] = posts
         const icon = mapIcon(category.slug);
 
         return (
-          <button
-            type="button"
-            data-collection-modal-trigger
-            data-collection-slug={category.slug}
-            aria-label={`Abrir colección ${category.name}`}
-            class="w-full text-left"
-          >
+          <button type="button" data-collection-modal-trigger data-collection-slug={category.slug} aria-label={`Abrir colección ${category.name}`} class="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3">
             <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm transition hover:bg-human-3/20">
               <div class="flex items-center gap-2">
-                <img
-                  src={icon}
-                  alt=""
-                  aria-hidden="true"
-                  class="size-4 object-contain"
-                  loading="lazy"
-                />
+                <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy" />
 
                 <h2 class="font-bebas font-normal text-lg text-center text-human-2 leading-relaxed">
                   {category.name}
@@ -176,22 +153,10 @@ const modalPosts: ModalPost[] = posts
         const icon = mapIcon(category.slug);
 
         return (
-          <button
-            type="button"
-            data-collection-modal-trigger
-            data-collection-slug={category.slug}
-            aria-label={`Abrir colección ${category.name}`}
-            class="w-full text-left"
-          >
+          <button type="button" data-collection-modal-trigger data-collection-slug={category.slug} aria-label={`Abrir colección ${category.name}`} class="w-full text-left">
             <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm transition hover:bg-human-3/20">
               <div class="flex items-center gap-2">
-                <img
-                  src={icon}
-                  alt=""
-                  aria-hidden="true"
-                  class="size-4 object-contain"
-                  loading="lazy"
-                />
+                <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy" />
 
                 <h2 class="font-bebas font-normal text-lg text-center text-human-2">
                   {category.name}
@@ -209,44 +174,21 @@ const modalPosts: ModalPost[] = posts
   </div>
 </div>
 
-<div
-  id="collection-modal"
-  class="fixed inset-0 z-[100] hidden items-center justify-center bg-human-5/75 px-4 py-6 backdrop-blur-sm"
-  aria-hidden="true"
->
-  <div
-    class="relative flex max-h-[96vh] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-human-4 text-human-2 shadow-2xl"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="collection-modal-title"
-  >
-    <button
-      id="collection-modal-close"
-      type="button"
-      class="absolute right-4 top-4 z-[60] rounded-full border border-human-2/30 bg-human-5/40 px-3 py-2 text-human-2 backdrop-blur-sm transition hover:bg-human-5/60"
-      aria-label="Cerrar modal"
-    >
+<div id="collection-modal" class="fixed inset-0 z-[100] hidden min-h-[100dvh] items-center justify-center bg-human-5/75 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-6" aria-hidden="true">
+  <div class="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-human-4 text-human-2 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="collection-modal-title">
+    <button id="collection-modal-close" type="button" class="absolute right-4 top-4 z-[60] inline-flex size-8 items-center justify-center rounded-full bg-human-4/80 text-2xl text-human-2 backdrop-blur transition hover:bg-human-5/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label="Cerrar modal">
       <i class="ti ti-x"></i>
     </button>
 
     <header class="relative p-4 pt-8 sm:px-8 sm:pt-8">
       <div class="absolute -bottom-12 left-0 z-50 flex min-w-full flex-col justify-end bg-gradient-to-b from-human-4 to-transparent px-2 pt-12"></div>
 
-      <h2
-        id="collection-modal-title"
-        class="font-bebas text-4xl font-medium leading-none text-human-2 sm:text-6xl"
-      ></h2>
+      <h2 id="collection-modal-title" class="font-bebas text-4xl font-medium leading-none text-human-2 sm:text-6xl"></h2>
 
-      <p
-        id="collection-modal-description"
-        class="max-w-3xl font-tangerine text-2xl leading-none text-human-2 sm:text-4xl"
-      ></p>
+      <p id="collection-modal-description" class="max-w-3xl font-tangerine text-2xl leading-none text-human-2 sm:text-4xl"></p>
     </header>
 
-    <div
-      id="collection-modal-list"
-      class="grid max-h-[58vh] grid-cols-1 gap-4 overflow-y-auto p-4 sm:grid-cols-2 sm:p-8 lg:grid-cols-3"
-    ></div>
+    <div id="collection-modal-list" class="grid max-h-[calc(100dvh-12rem)] grid-cols-1 gap-4 overflow-y-auto overscroll-contain p-4 pb-[env(safe-area-inset-bottom)] sm:grid-cols-2 sm:p-8 lg:grid-cols-3"></div>
   </div>
 </div>
 
@@ -261,6 +203,16 @@ const modalPosts: ModalPost[] = posts
 
   const openClass = "flex";
   const closedClass = "hidden";
+
+  function lockPageScroll() {
+    document.documentElement.classList.add("overflow-hidden");
+    document.body.classList.add("overflow-hidden");
+  }
+
+  function unlockPageScroll() {
+    document.documentElement.classList.remove("overflow-hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
 
   function clearList() {
     if (!listElement) return;
@@ -278,32 +230,27 @@ const modalPosts: ModalPost[] = posts
     link.className = "group block";
 
     const imageWrapper = document.createElement("div");
-    imageWrapper.className =
-      "relative isolate overflow-hidden rounded-lg aspect-[2/1]";
+    imageWrapper.className = "relative isolate overflow-hidden rounded-lg aspect-[2/1]";
 
     if (post.coverUrl) {
       const image = document.createElement("img");
       image.src = post.coverUrl;
       image.alt = post.coverAlt || post.title;
       image.loading = "lazy";
-      image.className =
-        "absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105";
+      image.className = "absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105";
 
       imageWrapper.appendChild(image);
     }
 
     const overlay = document.createElement("div");
-    overlay.className =
-      "absolute bottom-0 flex min-w-full flex-col justify-end bg-gradient-to-t from-human-4 to-transparent px-2 pb-1 pt-12";
+    overlay.className = "absolute bottom-0 flex min-w-full flex-col justify-end bg-gradient-to-t from-human-4 to-transparent px-2 pb-1 pt-12";
 
     const date = document.createElement("p");
-    date.className =
-      "mt-auto flex items-center gap-1 truncate text-xs font-black text-human-2";
+    date.className = "mt-auto flex items-center gap-1 truncate text-xs font-black text-human-2";
     date.textContent = post.formattedDate;
 
     const heading = document.createElement("h3");
-    heading.className =
-      "text-start font-bebas text-lg leading-6 text-human-1";
+    heading.className = "text-start font-bebas text-lg leading-6 text-human-1";
     heading.textContent = post.title;
 
     overlay.appendChild(date);
@@ -319,12 +266,7 @@ const modalPosts: ModalPost[] = posts
   function openModal(slug) {
     if (!modal || !titleElement || !descriptionElement || !listElement) return;
 
-    const filteredPosts = posts
-      .filter((post) => post.type === slug)
-      .sort(
-        (a, b) =>
-          new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
-      );
+    const filteredPosts = posts.filter((post) => post.type === slug).sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
 
     const title = typeTitles[slug] ?? slug;
     const description = typeDescriptions[slug] ?? "";
@@ -338,7 +280,6 @@ const modalPosts: ModalPost[] = posts
       const emptyMessage = document.createElement("p");
       emptyMessage.className = "text-human-2/70";
       emptyMessage.textContent = "No hay textos en esta colección todavía.";
-
       listElement.appendChild(emptyMessage);
     } else {
       filteredPosts.forEach((post) => {
@@ -349,7 +290,7 @@ const modalPosts: ModalPost[] = posts
     modal.classList.remove(closedClass);
     modal.classList.add(openClass);
     modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+    lockPageScroll();
   }
 
   function closeModal() {
@@ -358,7 +299,7 @@ const modalPosts: ModalPost[] = posts
     modal.classList.add(closedClass);
     modal.classList.remove(openClass);
     modal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
+    unlockPageScroll();
   }
 
   document.addEventListener("click", (event) => {
@@ -366,14 +307,14 @@ const modalPosts: ModalPost[] = posts
     if (!(target instanceof Element)) return;
 
     const trigger = target.closest("[data-collection-modal-trigger]");
-
     if (!trigger) return;
 
     event.preventDefault();
 
     const slug = trigger.getAttribute("data-collection-slug");
-
     if (!slug) return;
+
+    if (trigger instanceof HTMLElement) trigger.blur();
 
     openModal(slug);
   });
@@ -381,14 +322,10 @@ const modalPosts: ModalPost[] = posts
   closeButton?.addEventListener("click", closeModal);
 
   modal?.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      closeModal();
-    }
+    if (event.target === modal) closeModal();
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) {
-      closeModal();
-    }
+    if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) closeModal();
   });
 </script>
