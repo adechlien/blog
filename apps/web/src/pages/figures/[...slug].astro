@@ -1,0 +1,273 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { getPayloadFigures } from "../../lib/payload";
+import { richTextToHtml } from "../../lib/richTextToHtml";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const data = await getPayloadFigures();
+  const figures = data.docs ?? [];
+
+  return figures.map((figure: any) => ({
+    params: {
+      slug: figure.slug,
+    },
+    props: {
+      figure,
+    },
+  }));
+}
+
+const { figure } = Astro.props as {
+  figure: any;
+};
+
+if (!figure) {
+  return new Response("Not found", { status: 404 });
+}
+
+const bg = figure.backgroundColor ?? "#080809";
+const biographyHtml = richTextToHtml(figure.biography);
+
+const formatLifeSpan = () => {
+  if (figure.lifeSpanLabel) return figure.lifeSpanLabel;
+
+  const birthYear = figure.birthDate
+    ? new Date(figure.birthDate).getFullYear()
+    : null;
+
+  const deathYear = figure.deathDate
+    ? new Date(figure.deathDate).getFullYear()
+    : null;
+
+  if (birthYear && deathYear) return `${birthYear}–${deathYear}`;
+  if (birthYear && !deathYear) return `${birthYear}–actualidad`;
+
+  return "";
+};
+
+const lifeSpan = formatLifeSpan();
+
+const getContributionImageUrl = (image: any) => {
+  if (!image?.url) return "";
+  if (image.url.startsWith("http")) return image.url;
+  return `${import.meta.env.PAYLOAD_URL ?? "http://localhost:3000"}${image.url}`;
+};
+---
+
+<Layout title={figure.name} bg={bg}>
+  <Header />
+
+  <section
+    class="flex flex-col lg:flex-row w-full flex-1 text-human-1"
+    style={`background-color: ${bg}`}
+  >
+    <div class="relative w-full aspect-[2/3] lg:w-[40vw] lg:h-screen lg:sticky lg:top-0 lg:aspect-auto lg:overflow-hidden shrink-0">
+      {figure.cover?.url && (
+        <img
+          src={figure.cover.url}
+          alt={figure.cover.alt}
+          class="w-full h-full object-cover object-center"
+          loading="eager"
+          decoding="async"
+        />
+      )}
+
+      <div
+        class="hidden lg:block pointer-events-none absolute inset-y-0 right-0 w-24"
+        style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bg});`}
+      />
+
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-20 lg:hidden"
+        style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bg});`}
+      />
+
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 h-20 lg:hidden"
+        style={`background: linear-gradient(to top, rgba(0,0,0,0), ${bg});`}
+      />
+    </div>
+
+    <section class="flex flex-col flex-1 h-full">
+      <div class="flex flex-col flex-1 w-full max-w-[1100px] mx-auto px-6 lg:px-10 mt-12 lg:mt-10">
+        <header class="pb-3 border-b-2 border-white/50">
+          <h1 class="text-4xl font-bebas">
+            {figure.name}
+          </h1>
+
+          {lifeSpan && (
+            <p class="font-besley text-base opacity-80">
+              ({lifeSpan})
+            </p>
+          )}
+
+          {figure.isFictional && (
+            <div class="mt-4 rounded-lg border border-white/20 bg-black/20 p-4 font-besley text-sm leading-relaxed">
+              {figure.fictionalNotice}
+            </div>
+          )}
+        </header>
+
+        <article
+          class="mt-8 font-besley text-base leading-relaxed text-justify"
+          set:html={biographyHtml}
+        />
+
+        {figure.contributions?.length > 0 && (
+          <section class="my-10">
+            <h2 class="mb-5 text-3xl font-bebas">
+              Aportes
+            </h2>
+
+            <div class="columns-1 sm:columns-2 xl:columns-3 gap-4 font-besley text-base">
+              {figure.contributions.map((item: any) => {
+                if (item.blockType === "quote") {
+                  return (
+                    <article class="break-inside-avoid mb-5 p-5 rounded-lg bg-black/20 backdrop-blur-sm border border-white/20 italic leading-relaxed shadow-md">
+                      <p>“{item.text}”</p>
+
+                      {item.source && (
+                        <span class="block text-xs font-bold not-italic opacity-70 text-right mt-3 tracking-wide">
+                          {item.source}
+                        </span>
+                      )}
+                    </article>
+                  );
+                }
+
+                if (item.blockType === "link") {
+                  return (
+                    <article class="break-inside-avoid mb-5 p-5 rounded-lg bg-black/20 backdrop-blur-sm border border-white/20 leading-relaxed shadow-md">
+                      <h3 class="font-bebas text-2xl">
+                        {item.title}
+                      </h3>
+
+                      {item.description && (
+                        <p class="mt-2 opacity-80">
+                          {item.description}
+                        </p>
+                      )}
+
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="mt-4 inline-flex items-center gap-2 text-sm font-bold underline"
+                      >
+                        Abrir link
+                        <i class="ti ti-external-link"></i>
+                      </a>
+                    </article>
+                  );
+                }
+
+                if (item.blockType === "repository") {
+                  return (
+                    <article class="break-inside-avoid mb-5 p-5 rounded-lg bg-black/20 backdrop-blur-sm border border-white/20 leading-relaxed shadow-md">
+                      <div class="mb-3 flex items-center gap-2">
+                        <i class="ti ti-brand-github text-xl"></i>
+                        <h3 class="font-bebas text-2xl">
+                          {item.title}
+                        </h3>
+                      </div>
+
+                      {item.description && (
+                        <p class="opacity-80">
+                          {item.description}
+                        </p>
+                      )}
+
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="mt-4 inline-flex items-center gap-2 text-sm font-bold underline"
+                      >
+                        Ver repositorio
+                        <i class="ti ti-external-link"></i>
+                      </a>
+                    </article>
+                  );
+                }
+
+                if (item.blockType === "image") {
+                  const imageUrl = getContributionImageUrl(item.image);
+
+                  return (
+                    <figure class="break-inside-avoid mb-5 overflow-hidden rounded-lg bg-black/20 border border-white/20 shadow-md">
+                      {imageUrl && (
+                        <img
+                          src={imageUrl}
+                          alt={item.caption ?? ""}
+                          class="w-full object-cover"
+                          loading="lazy"
+                        />
+                      )}
+
+                      {item.caption && (
+                        <figcaption class="p-3 text-sm opacity-80">
+                          {item.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  );
+                }
+
+                if (item.blockType === "note") {
+                  const noteHtml = richTextToHtml(item.content);
+
+                  return (
+                    <article class="break-inside-avoid mb-5 p-5 rounded-lg bg-black/20 backdrop-blur-sm border border-white/20 leading-relaxed shadow-md">
+                      {item.title && (
+                        <h3 class="mb-3 font-bebas text-2xl">
+                          {item.title}
+                        </h3>
+                      )}
+
+                      <div set:html={noteHtml} />
+                    </article>
+                  );
+                }
+
+                return null;
+              })}
+            </div>
+          </section>
+        )}
+
+        <div class="mt-auto">
+          <Footer theme="text" />
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <button
+    type="button"
+    aria-label="Volver arriba"
+    class="fixed bottom-5 right-5 z-50 rounded-full px-4 py-3 text-white bg-black/30 backdrop-blur-sm border border-white/20 shadow-lg hover:bg-black/40 transition opacity-0 pointer-events-none"
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+  >
+    <i class="ti ti-chevron-up"></i>
+  </button>
+
+  <script is:inline>
+    (() => {
+      const btn = document.querySelector('[aria-label="Volver arriba"]');
+      if (!btn) return;
+
+      const toggle = () => {
+        const show = window.scrollY >= 300;
+        btn.classList.toggle("opacity-0", !show);
+        btn.classList.toggle("pointer-events-none", !show);
+      };
+
+      window.addEventListener("scroll", toggle, { passive: true });
+      toggle();
+    })();
+  </script>
+</Layout>

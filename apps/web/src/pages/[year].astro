@@ -2,15 +2,23 @@
 import Layout from "../layouts/Layout.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { getCollection } from "astro:content";
+import { getPayloadTexts } from "../lib/payload";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const posts = await getCollection("texts");
+  const data = await getPayloadTexts();
+  const posts = data.docs ?? [];
 
   const years = Array.from(
-    new Set(posts.map((p: any) => new Date(p.data.pubDate).getFullYear()))
+    new Set(
+      posts
+        .map((post: any) => {
+          const date = new Date(post.pubDate);
+          return Number.isNaN(date.getTime()) ? null : date.getFullYear();
+        })
+        .filter(Boolean)
+    )
   );
 
   return years.map((year) => ({
@@ -20,17 +28,6 @@ export async function getStaticPaths() {
 
 const { year } = Astro.params;
 const yearNum = Number(year);
-
-const mapTypeTitle = (type = "") => {
-  if (type === "consciencia") return "Consciencia colménica";
-  if (type === "lagrimas") return "Lágrimas de Siddartha";
-  if (type === "colores") return "En las luces de colores";
-  if (type === "still") return "Still Prefer Sentir";
-  if (type === "placebo") return "Placebo Onírico";
-  if (type === "pintas") return "Pintas Heredadas";
-  if (type === "world") return "If this world were mine";
-  return type;
-};
 
 const mapIcon = (type = "") => {
   if (type === "consciencia") return "/icons/bee.svg";
@@ -43,60 +40,94 @@ const mapIcon = (type = "") => {
   return "/icons/flower.svg";
 };
 
-const posts = (await getCollection("texts"))
-  .filter((p: any) => new Date(p.data.pubDate).getFullYear() === yearNum)
-  .sort((a: any, b: any) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const data = await getPayloadTexts();
+const allPosts = data.docs ?? [];
+
+const posts = allPosts
+  .filter((post: any) => {
+    const date = new Date(post.pubDate);
+
+    if (Number.isNaN(date.getTime())) return false;
+
+    return date.getFullYear() === yearNum;
+  })
+  .sort(
+    (a: any, b: any) =>
+      new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
+  );
 
 const heroBg = "/banner.svg";
 const baseBg = "#024350";
 ---
 
 <Layout title={`${year}`}>
-    <Header />
-    <main class="w-full max-w-[1100px] sm:max-w-none flex flex-col gap-16"}>
-        <section class="relative overflow-hidden">
-            <div class="relative w-full min-h-[70vh] bg-cover bg-bottom" style={`background-image: url(${heroBg});`}>
-                <div class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`}></div>
-                <div class="pointer-events-none absolute inset-x-0 bottom-0 h-4" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`}></div>
-            </div>
-        </section>
-        <section class="flex flex-col gap-8 px-6 w-full max-w-6xl mx-auto">
-            <h1 class="text-4xl font-bebas mb-10">{year}</h1>
-            <ul class="grid gap-3 grid-cols-1 sm:grid-cols-4">
-                {posts.length ? (posts.map((post: any) => {
-                const postTypeTitle = mapTypeTitle(post.data.type);
-                const icon = mapIcon(post.data.type);
-                return (
-                    <li>
-                        <a href={`/${post.data.type}/${post.slug}/`} class="block group">
-                            <div class="relative isolate overflow-hidden rounded-lg aspect-[2/1]">
-                              <img
-                                src={post.data.heroImage}
-                                alt={post.data.title}
-                                class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
-                                loading="lazy"
-                              />
+  <Header />
 
-                              <!-- <div class="absolute inset-0 bg-black/25"></div> -->
+  <main class="w-full max-w-[1100px] sm:max-w-none flex flex-col gap-16">
+    <section class="relative overflow-hidden">
+      <div
+        class="relative w-full min-h-[70vh] bg-cover bg-bottom"
+        style={`background-image: url(${heroBg});`}
+      >
+        <div
+          class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8"
+          style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`}
+        />
 
-                              <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
-                                <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                                    <img src={icon} alt="" class="size-4">
-                                    {postTypeTitle}
-                                </p>
-                                <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
-                                  {post.data.title}
-                                </h3>
-                              </div>
-                            </div>
-                        </a>
-                    </li>
-                    );})
-                      ) : (
-                        <li>No hay textos en este año.</li>
+        <div
+          class="pointer-events-none absolute inset-x-0 bottom-0 h-4"
+          style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`}
+        />
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-8 px-6 w-full max-w-6xl mx-auto">
+      <h1 class="text-4xl font-bebas mb-10">{year}</h1>
+
+      <ul class="grid gap-3 grid-cols-1 sm:grid-cols-4">
+        {posts.length ? (
+          posts.map((post: any) => {
+            const collection = post.collection;
+            const postTypeTitle = collection?.name ?? "";
+            const icon = mapIcon(collection?.slug);
+            const href = `/${collection?.slug}/${post.id}`;
+            const coverUrl = post.cover?.url ?? "";
+            const coverAlt = post.cover?.alt ?? post.title;
+
+            return (
+              <li>
+                <a href={href} class="block group">
+                  <div class="relative isolate overflow-hidden rounded-lg aspect-[2/1]">
+                    {coverUrl && (
+                      <img
+                        src={coverUrl}
+                        alt={coverAlt}
+                        class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
                     )}
-            </ul>
-            <Footer theme="home" />
-        </section>
-    </main>
+
+                    <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
+                      <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
+                        <img src={icon} alt="" class="size-4" />
+                        {postTypeTitle}
+                      </p>
+
+                      <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
+                        {post.title}
+                      </h3>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })
+        ) : (
+          <li>No hay textos en este año.</li>
+        )}
+      </ul>
+
+      <Footer theme="home" />
+    </section>
+  </main>
 </Layout>

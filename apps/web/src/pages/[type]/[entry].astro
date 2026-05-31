@@ -1,22 +1,28 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
+import { getPayloadTexts, getPayloadTextByNumericId } from "../../lib/payload";
+import { richTextToHtml } from "../../lib/richTextToHtml";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const posts = await getCollection("texts");
+  const data = await getPayloadTexts();
+  const posts = data.docs ?? [];
 
   const paths = [];
 
   for (const post of posts) {
+    const collectionSlug = post.collection?.slug;
+
+    if (!collectionSlug || !post.id) continue;
+
     paths.push({
       params: {
-        type: post.data.type,
-        entry: String(post.data.id),
+        type: collectionSlug,
+        entry: String(post.id),
       },
       props: {
         post,
@@ -24,15 +30,15 @@ export async function getStaticPaths() {
       },
     });
 
-    if (post.data.legacySlug) {
+    if (post.legacySlug) {
       paths.push({
         params: {
-          type: post.data.type,
-          entry: post.data.legacySlug,
+          type: collectionSlug,
+          entry: String(post.legacySlug),
         },
         props: {
           post: null,
-          redirectTo: `/${post.data.type}/${post.data.id}`,
+          redirectTo: `/${collectionSlug}/${post.id}`,
         },
       });
     }
@@ -41,7 +47,7 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { post, redirectTo } = Astro.props as {
+const { post: staticPost, redirectTo } = Astro.props as {
   post?: any;
   redirectTo?: string | null;
 };
@@ -50,85 +56,96 @@ if (redirectTo) {
   return Astro.redirect(redirectTo, 301);
 }
 
-if (!post?.data) {
+const { entry } = Astro.params;
+
+const post = staticPost ?? (entry ? await getPayloadTextByNumericId(entry) : null);
+
+if (!post) {
   return new Response("Not found", { status: 404 });
 }
 
-const { title, type, heroImage, pubDate, color, id } = post.data;
-const { Content } = await post.render();
+const title = post.title;
+const id = post.id;
+const pubDate = post.pubDate;
+const typeTitle = post.collection?.name ?? "";
+const coverUrl = post.cover?.url ?? "";
+const coverAlt = post.cover?.alt ?? title;
 
-const mapTypeTitle = (t = "") => {
-  if (t === "consciencia") return "Consciencia colménica";
-  if (t === "lagrimas") return "Lágrimas de Siddartha";
-  if (t === "colores") return "En las luces de colores";
-  if (t === "still") return "Still Prefer Sentir";
-  if (t === "placebo") return "Placebo Onírico";
-  if (t === "pintas") return "Pintas Heredadas";
-  if (t === "world") return "If this world were mine";
-  return t;
-};
+const bgHex = post.collection?.color ?? "#080809";
 
-const typeTitle = mapTypeTitle(type);
-
-const bgColor = color ?? "dark";
-
-const bgColorMap: any = {
-  mahogany: "#331717",
-  coffee: "#332217",
-  khaki: "#292812",
-  evergreen: "#0E1B0C",
-  jet: "#172433",
-  indigo: "#171733",
-  dark: "#080809",
-};
-
-const bgClassMap: any = {
-  mahogany: "bg-textbg-mahogany",
-  coffee: "bg-textbg-coffee",
-  khaki: "bg-textbg-khaki",
-  evergreen: "bg-textbg-evergreen",
-  jet: "bg-textbg-jet",
-  indigo: "bg-textbg-indigo",
-  dark: "bg-textbg-dark",
-};
-
-const bgHex = bgColorMap[bgColor] ?? bgColorMap.dark;
-const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
+const contentHtml = richTextToHtml(post.content);
 ---
 
 <Layout title={title} bg={bgHex}>
-  <Header bg={bgClass} />
-  <main class={`flex flex-col md:flex-row w-full min-h-screen ${bgClass}`}>
+  <Header bg="" />
+
+  <main class="flex flex-col md:flex-row w-full min-h-screen" style={`background-color: ${bgHex};`}>
     <div class="relative w-full aspect-[2/3] md:w-[40vw] md:h-screen md:sticky md:top-0 md:aspect-auto md:overflow-hidden shrink-0">
-      <img src={heroImage} alt="" class="w-full h-full object-cover" loading="eager" decoding="async" />
-      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-12 md:hidden" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bgHex});`}></div>
-      <div class="pointer-events-none absolute inset-x-0 top-0 h-8 md:hidden" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${bgHex});`}></div>
-      <div class="hidden md:block pointer-events-none absolute inset-y-0 right-0 w-20" style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bgHex});`}></div>
+      {coverUrl && (
+        <img
+          src={coverUrl}
+          alt={coverAlt}
+          class="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+        />
+      )}
+
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-12 md:hidden"
+        style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bgHex});`}
+      />
+
+      <div
+        class="pointer-events-none absolute inset-x-0 top-0 h-8 md:hidden"
+        style={`background: linear-gradient(to top, rgba(0,0,0,0), ${bgHex});`}
+      />
+
+      <div
+        class="hidden md:block pointer-events-none absolute inset-y-0 right-0 w-20"
+        style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bgHex});`}
+      />
     </div>
 
     <section class="flex flex-col w-full md:flex-1 text-human-1">
       <div class="w-full max-w-[1100px] mx-auto px-6 md:px-10 mt-12 md:mt-10 flex flex-col h-full">
         <header class="pb-2 border-b-2 border-human-1">
           <h3 class="text-xl capitalize">{typeTitle}</h3>
-          <h1 class="text-4xl font-bebas font-medium">{title}</h1>
+
+          <h1 class="text-4xl font-bebas font-medium">
+            {title}
+          </h1>
+
           <FormattedDate date={pubDate} format="long" />
+
           <div class="mt-4 flex items-center justify-start gap-6">
-              <button id="like-button" type="button" data-text-id={String(id)} aria-pressed="false" class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60">
+            <button
+              id="like-button"
+              type="button"
+              data-text-id={String(id)}
+              aria-pressed="false"
+              class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60"
+            >
               <i id="like-icon" class="ti ti-heart text-lg"></i>
               <span>Me gusta</span>
               <span id="like-count">0</span>
             </button>
 
-            <button id="share-button" type="button" data-share-title={title} data-share-text={`Lee "${title}".`} aria-label="Compartir texto" class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60">
+            <button
+              id="share-button"
+              type="button"
+              data-share-title={title}
+              data-share-text={`Lee "${title}".`}
+              aria-label="Compartir texto"
+              class="inline-flex items-center gap-2 text-sm text-human-1 transition hover:opacity-70 disabled:pointer-events-none disabled:opacity-60"
+            >
               <i class="ti ti-share-2 text-lg"></i>
               <span id="share-label">Compartir</span>
             </button>
           </div>
         </header>
 
-        <article lang="es" class="py-8 font-besley text-base leading-relaxed text-justify hyphens-auto">
-          <Content />
-        </article>
+        <article lang="es" class="py-8 font-besley text-base leading-relaxed text-justify hyphens-auto [&_p]:mb-5 [&_p:last-child]:mb-0 [&_br]:block [&_br]:mb-5" set:html={contentHtml} />
 
         <div class="mt-auto">
           <Footer theme="text" />
@@ -137,7 +154,13 @@ const bgClass = bgClassMap[bgColor] ?? bgClassMap.dark;
     </section>
   </main>
 
-  <button type="button" aria-label="Volver arriba" class={`fixed bottom-5 right-5 z-50 rounded-full px-3 py-2 text-human-1 ${bgClass} border border-human-1 transition opacity-0 pointer-events-none`} onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"}>
+  <button
+    type="button"
+    aria-label="Volver arriba"
+    class="fixed bottom-5 right-5 z-50 rounded-full px-3 py-2 text-human-1 border border-human-1 transition opacity-0 pointer-events-none"
+    style={`background-color: ${bgHex};`}
+    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"}
+  >
     <i class="ti ti-chevron-up"></i>
   </button>
 

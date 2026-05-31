@@ -1,66 +1,57 @@
 ---
-import { getCollection } from "astro:content";
+import { getPayloadTexts } from "../lib/payload";
 
-const posts = await getCollection("texts");
-const sortedPosts = posts.sort(
-  (a: any, b: any) =>
-    new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
-);
+const data = await getPayloadTexts();
+const posts = data.docs ?? [];
 
-const recentPosts = sortedPosts.slice(0, 3);
+const recentPosts = posts.slice(0, 3);
 
-const mapType = (type = "") => {
-  if (type === "consciencia") return "Consciencia colménica";
-  if (type === "lagrimas") return "Lágrimas de Siddartha";
-  if (type === "colores") return "En las luces de colores";
-  if (type === "still") return "Still Prefer Sentir";
-  if (type === "placebo") return "Placebo Onírico";
-  if (type === "pintas") return "Pintas Heredadas";
-  if (type === "world") return "If this world were mine";
-  return type;
-};
-
-const mapIcon = (type = "") => {
-  if (type === "consciencia") return "/icons/bee.svg";
-  if (type === "world") return "/icons/world.svg";
-  if (type === "pintas") return "/icons/cupcake.svg";
-  if (type === "lagrimas") return "/icons/cloud.svg";
-  if (type === "still") return "/icons/heart.svg";
-  if (type === "placebo") return "/icons/moon.svg";
-
-  return "/icons/flower.svg";
-};
-
-const cleanPreview = (html = "") => html.replaceAll("<br>", " ").replace(/<\/?[^>]+>/g, "").replace(/\s+/g, " ").trim();
+const cleanPreview = (text = "") =>
+  text
+    .replaceAll("<br>", " ")
+    .replace(/<\/?[^>]+>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 ---
 
 <section class="w-full min-w-0 flex flex-col gap-3">
-    <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">Recientes</h3>
-    {recentPosts.length > 0 ? (
+  <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">
+    Recientes
+  </h3>
+
+  {recentPosts.length > 0 ? (
     <ul class="grid grid-cols-1 md:grid-cols-3 gap-3 px-3">
-        {recentPosts.map((post: any) => {
-          const previewContent = cleanPreview(post.body ?? "");
-          const typeLabel = mapType(post.data.type);
-          const icon = mapIcon(post.data.type);
-          return (
-            <li class="snap-start flex-none">
-                <a href={`/${post.data.type}/${post.slug}`} class="block group">
-                    <div class="relative isolate overflow-hidden rounded aspect-[2/1] w-full">
-                        <img src={post.data.heroImage} alt={post.data.title} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>
-                        <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
-                          <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                              <img src={icon} alt="" class="size-4">{typeLabel}
-                          </p>
-                          <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
-                            {post.data.title}
-                          </h3>
-                        </div>
-                    </div>
-                </a>
-            </li>
-        );})}
+      {recentPosts.map((post: any) => {
+        const collection = post.collection;
+        const typeLabel = collection?.name ?? "";
+        const icon = collection?.icon || "/icons/flower.svg";
+        const href = `/${collection?.slug}/${post.id}`;
+        const coverUrl = post.cover?.url ?? "";
+        const coverAlt = post.cover?.alt ?? post.title;
+
+        return (
+          <li class="snap-start flex-none">
+            <a href={href} class="block group">
+              <div class="relative isolate overflow-hidden rounded aspect-[2/1] w-full">
+                {coverUrl && (<img src={coverUrl} alt={coverAlt} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>)}
+
+                <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent" style={`--collection-color: ${collection?.color ?? "#000000"}`}>
+                  <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
+                    <img src={icon} alt="" class="size-4" />
+                    {typeLabel}
+                  </p>
+
+                  <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
+                    {post.title}
+                  </h3>
+                </div>
+              </div>
+            </a>
+          </li>
+        );
+      })}
     </ul>
-    ) : (
-      <p class="mt-4 text-sm text-human-2">No hay textos aún.</p>
-    )}
+  ) : (
+    <p class="mt-4 text-sm text-human-2">No hay textos aún.</p>
+  )}
 </section>

@@ -1,0 +1,46 @@
+---
+import { getPayloadTexts } from "../../lib/payload";
+import { richTextToHtml } from "../../lib/richTextToHtml";
+
+const data = await getPayloadTexts();
+const texts = data.docs ?? [];
+
+const firstText = texts[0];
+const html = firstText ? richTextToHtml(firstText.content) : "";
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Payload Test</title>
+  </head>
+</html>
+<body>
+
+<section class="mx-auto max-w-3xl px-6 py-12">
+  <h1 class="mb-8 text-3xl font-semibold">Textos desde Payload</h1>
+
+  {firstText && (
+    <article>
+      {firstText.cover?.url && (
+        <img
+          src={firstText.cover.url}
+          alt={firstText.cover.alt}
+          class="mb-8 w-full rounded-xl"
+        />
+      )}
+
+      <p class="mb-2 text-sm opacity-70">
+        {firstText.collection.name} · {firstText.id}
+      </p>
+
+      <h2 class="mb-6 text-2xl font-semibold">
+        {firstText.title}
+      </h2>
+
+      <div class="prose prose-invert max-w-none" set:html={html} />
+    </article>
+  )}
+</section>
+
+</body>

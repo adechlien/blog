@@ -1,52 +1,59 @@
 ---
-import { getCollection } from "astro:content";
+import { getPayloadTexts } from "../lib/payload";
 import FormattedDate from "./FormattedDate.astro";
 
-const posts = await getCollection("texts");
-const featured = posts.filter((p: any) => p.data.featured === true);
-const sorted = posts.sort(
-  (a: any, b: any) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+const data = await getPayloadTexts();
+const posts = data.docs ?? [];
+
+const featured = posts.filter((post: any) => post.featured === true);
+
+const sorted = [...posts].sort(
+  (a: any, b: any) =>
+    new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
 );
 
 const featuredPosts = (featured.length ? featured : sorted)
   .sort(
     (a: any, b: any) =>
-      new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+      new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
   )
   .slice(0, 9);
-
-
-const mapType = (type = "") => {
-  if (type === "consciencia") return "Consciencia colménica";
-  if (type === "lagrimas") return "Lágrimas de Siddartha";
-  if (type === "colores") return "En las luces de colores";
-  if (type === "still") return "Still Prefer Sentir";
-  if (type === "placebo") return "Placebo Onírico";
-  if (type === "pintas") return "Pintas Heredadas";
-  return type;
-};
 ---
 
 <section class="w-full flex flex-col gap-3">
-    <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">Destacados</h3>
-    <ul class="grid grid-cols-1 md:grid-cols-4 gap-3 px-3">
-        {featuredPosts.map((post: any) => (
-        <li class="w-full">
-            <a href={`/${post.data.type}/${post.slug}`} class="block">
-                <div class="relative isolate overflow-hidden rounded aspect-[2/1]">
-                    <img src={post.data.heroImage} alt={post.data.title} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>
+  <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">
+    Destacados
+  </h3>
 
-                    <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
-                        <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                            <FormattedDate date={post.data.pubDate} />
-                        </p>
-                        <h3 class="text-human-1 font-bebas text-start text-lg leading-tight">
-                          {post.data.title}
-                        </h3>
-                    </div>
+  {featuredPosts.length > 0 ? (
+    <ul class="grid grid-cols-1 md:grid-cols-3 gap-3 px-3">
+      {featuredPosts.map((post: any) => {
+        const href = `/${post.collection?.slug}/${post.id}`;
+        const coverUrl = post.cover?.url ?? "";
+        const coverAlt = post.cover?.alt ?? post.title;
+
+        return (
+          <li class="w-full">
+            <a href={href} class="block group">
+              <div class="relative isolate overflow-hidden rounded aspect-[2/1]">
+                {coverUrl && (<img src={coverUrl} alt={coverAlt} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>)}
+
+                <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
+                  <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
+                    <FormattedDate date={post.pubDate} />
+                  </p>
+
+                  <h3 class="text-human-1 font-bebas text-start text-lg  leading-5">
+                    {post.title}
+                  </h3>
                 </div>
+              </div>
             </a>
-        </li>
-        ))}
+          </li>
+        );
+      })}
     </ul>
+  ) : (
+    <p class="mt-4 text-sm text-human-2">No hay textos destacados aún.</p>
+  )}
 </section>

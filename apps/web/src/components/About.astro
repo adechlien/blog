@@ -32,33 +32,23 @@ const avatar = "/avatar.webp";
     >
       {socialLinks.map((link, index) => (
         <>
-          <a
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="px-1 underline-offset-4 hover:underline"
-          >
-            {link.text}
-          </a>
+            <a href={link.href} target="_blank" rel="noopener noreferrer" class="px-1 underline-offset-4 hover:underline">
+              {link.text}
+            </a>
 
           <span class="text-human-3" aria-hidden="true">|</span>
         </>
       ))}
 
-      <a
-        href="https://pin.it/37CeFyEJI"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="px-2 underline-offset-4 hover:underline"
-      >
+      <a href="https://pin.it/37CeFyEJI" target="_blank" rel="noopener noreferrer" class="px-2 underline-offset-4 hover:underline">
         Pinterest
       </a>
     </nav>
 
-    <p class="font-tangerine text-xl leading-tight text-human-2 sm:text-2xl">
-      "Donde reside todo lo que siento y no sé cómo decir.
+    <p class="font-tangerine text-xl leading-tight text-human-2 sm:text-2xl mt-8 md:mt-0">
+      Donde reside todo lo que siento y no sé cómo decir.
       <br class="sm:hidden" />
-      Donde espero nunca llegues tú."
+      Donde espero llegues tú.
     </p>
   </div>
 </section>

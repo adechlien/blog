@@ -1,105 +1,142 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getCollection } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
+import { getPayloadTexts } from "../../lib/payload";
 
 const { type } = Astro.params;
 
 export async function getStaticPaths() {
-  const posts = await getCollection("texts");
-  const types = [...new Set(posts.map((post: any) => post.data.type))];
+  const data = await getPayloadTexts();
+  const posts = data.docs ?? [];
+
+  const types = [
+    ...new Set(
+      posts
+        .map((post: any) => post.collection?.slug)
+        .filter(Boolean)
+    ),
+  ];
+
   return types.map((type) => ({
     params: { type },
   }));
 }
 
-let typeTitle: any = "";
+const typeTitles: Record<string, string> = {
+  consciencia: "Consciencia colménica",
+  lagrimas: "Lágrimas de Siddartha",
+  colores: "En las luces de colores",
+  still: "Still Prefer Sentir",
+  placebo: "Placebo Onírico",
+  pintas: "Pintas Heredadas",
+  world: "If this world were mine",
+};
 
-if (type === "consciencia") {
-  typeTitle = "Consciencia colménica";
-} else if (type === "lagrimas") {
-  typeTitle = "Lágrimas de Siddartha";
-} else if (type === "colores") {
-  typeTitle = "En las luces de colores";
-} else if (type === "still") {
-  typeTitle = "Still Prefer Sentir";
-} else if (type === "placebo") {
-  typeTitle = "Placebo Onírico";
-} else if (type === "pintas") {
-  typeTitle = "Pintas Heredadas";
-} else if (type === "world") {
-  typeTitle = "If this world were mine";
-} else {
-  typeTitle = type;
-}
+const typeDescriptions: Record<string, string> = {
+  consciencia: '"Se necesita una razón para odiar a alguien, y querer odiarle es una razón válida."',
+  lagrimas: '"Cuando miro a las nubes, no hay nadie más. Soy solo yo."',
+  colores: '"A través de mis sueños y añoranzas empezó la búsqueda del sentido."',
+  still: '"El calor de tu piel me dio razones para despertar."',
+  placebo: '"Escribir con un vacío en el pecho. Hallar en la insignificancia un camino hacia la libertad."',
+  pintas: '"Va de hallar dentro lo que siempre se ha buscado fuera."',
+  world: '"As an intent to achieve new ways of feeling, I started feeling."',
+};
 
-let typeDescription: any = "";
-if (type === "consciencia") {
-  typeDescription = '"Se necesita una razón para odiar a alguien, y querer odiarle es una razón válida."';
-} else if (type === "lagrimas") {
-  typeDescription = '"Cuando miro a las nubes, no hay nadie más. Soy solo yo."';
-} else if (type === "colores") {
-    typeDescription = '"A través de mis sueños y añoranzas empezó la búsqueda del sentido."';
-} else if (type === "still") {
-    typeDescription = '"El calor de tu piel me dio razones para despertar."';
-} else if (type === "placebo") {
-    typeDescription = '"Escribir con un vacío en el pecho. Hallar en la insignificancia un camino hacia la libertad."';
-} else if (type === "pintas") {
-    typeDescription = '"Va de hallar dentro lo que siempre se ha buscado fuera."';
-} else if (type === "world") {
-    typeDescription = '"As an intent to achieve new ways of feeling, I started feeling."';
-}
+const typeTitle = typeTitles[type ?? ""] ?? type;
+const typeDescription = typeDescriptions[type ?? ""] ?? "";
 
-const posts = (await getCollection("texts"))
-  .sort((a: any, b: any) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .filter((post: any) => post.data.type === type);
+const data = await getPayloadTexts();
+const allPosts = data.docs ?? [];
+
+const posts = allPosts
+  .filter((post: any) => post.collection?.slug === type)
+  .sort(
+    (a: any, b: any) =>
+      new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
+  );
+
+const collectionColor = posts[0]?.collection?.color ?? "#024350";
 
 const heroBg = "/banner.svg";
 const baseBg = "#024350";
 ---
 
 <Layout title={typeTitle}>
-    <Header />
-    <main class="w-full max-w-[1100px] sm:max-w-none flex flex-col gap-16"}>
-        <section class="relative overflow-hidden">
-            <div class="relative w-full min-h-[70vh] bg-cover bg-bottom" style={`background-image: url(${heroBg});`}>
-                <div class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`}></div>
-                <div class="pointer-events-none absolute inset-x-0 bottom-0 h-4" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`}></div>
-            </div>
-        </section>
-        <section class="flex flex-col gap-6 px-6 w-full max-w-6xl mx-auto">
-            <header class="mb-10">
-                <h1 class="text-4xl font-bebas">{typeTitle}</h1>
-                <p class="text-3xl font-tangerine opacity-80">{typeDescription}</p>
-            </header>
-            <ul class="grid gap-4 grid-cols-1 md:grid-cols-4">
-                {posts.map((post: any) => (
-                  <li>
-                    <a href={`/${type}/${post.slug}/`} class="block group">
-                        <div class="relative isolate overflow-hidden rounded-lg aspect-[2/1]">
-                          <img
-                            src={post.data.heroImage}
-                            alt={post.data.title}
-                            class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
-                            loading="lazy"
-                          />
+  <Header />
 
-                          <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
-                            <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                                <FormattedDate date={post.data.pubDate} format="long"/>
-                            </p>
-                            <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
-                              {post.data.title}
-                            </h3>
-                          </div>
-                        </div>
-                    </a>
-                </li>
-                ))}
-            </ul>
-            <Footer theme="home" />
-        </section>
-    </main>
+  <main class="w-full max-w-[1100px] sm:max-w-none flex flex-col gap-16">
+    <section class="relative overflow-hidden">
+      <div
+        class="relative w-full min-h-[70vh] bg-cover bg-bottom"
+        style={`background-image: url(${heroBg});`}
+      >
+        <div
+          class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8"
+          style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`}
+        />
+
+        <div
+          class="pointer-events-none absolute inset-x-0 bottom-0 h-4"
+          style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`}
+        />
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-6 px-6 w-full max-w-6xl mx-auto">
+      <header class="mb-10 text-human-2">
+          <h1 class="text-4xl font-bebas">
+          {typeTitle}
+        </h1>
+
+        {typeDescription && (
+          <p class="text-3xl font-tangerine opacity-80">
+            {typeDescription}
+          </p>
+        )}
+      </header>
+
+      {posts.length > 0 ? (
+        <ul class="grid gap-4 grid-cols-1 md:grid-cols-4">
+          {posts.map((post: any) => {
+            const href = `/${post.collection?.slug}/${post.id}`;
+            const coverUrl = post.cover?.url ?? "";
+            const coverAlt = post.cover?.alt ?? post.title;
+
+            return (
+              <li>
+                <a href={href} class="block group">
+                  <div class="relative isolate overflow-hidden rounded-lg aspect-[2/1]">
+                    {coverUrl && (
+                      <img
+                        src={coverUrl}
+                        alt={coverAlt}
+                        class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    )}
+
+                    <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
+                      <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
+                        <FormattedDate date={post.pubDate} format="long" />
+                      </p>
+
+                      <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
+                        {post.title}
+                      </h3>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p class="text-human-2">No hay textos en esta colección todavía.</p>
+      )}
+
+      <Footer theme="home" />
+    </section>
+  </main>
 </Layout>

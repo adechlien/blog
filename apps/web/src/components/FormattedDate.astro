@@ -1,32 +1,40 @@
 ---
 interface Props {
-  date: Date;
+  date: Date | string;
   format?: string;
 }
 
-const { date, format = "long" } = Astro.props;
+const { date: inputDate, format = "long" } = Astro.props;
+
+const date = inputDate instanceof Date ? inputDate : new Date(inputDate);
+
+const isValidDate = !Number.isNaN(date.getTime());
 
 const formatDate = (date: Date, format: string) => {
+  if (!isValidDate) {
+    return "";
+  }
+
   if (format === "long") {
-    // Formato largo: "Febrero 15, 2025"
+    // Formato largo: "Febrero, 2025"
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
       month: "long",
       day: "numeric",
     };
+
     const formatted = date.toLocaleDateString("es-ES", options);
 
-    // Extrae valores correctamente
     const parts = formatted.match(/(\d{1,2}) de (\w+) de (\d{4})/);
+
     if (parts) {
-      const [, day, month, year] = parts;
-      // return `${month.charAt(0).toUpperCase() + month.slice(1)} ${day}, ${year}`;
+      const [, , month, year] = parts;
       return `${month.charAt(0).toUpperCase() + month.slice(1)}, ${year}`;
     }
   }
 
   if (format === "short") {
-    // Formato corto: "15/02/25"
+    // Formato corto: "15.02.25"
     return date
       .toLocaleDateString("es-ES", {
         year: "2-digit",
@@ -35,10 +43,15 @@ const formatDate = (date: Date, format: string) => {
       })
       .replaceAll("/", ".");
   }
+
   return date.toLocaleDateString("es-ES");
 };
 ---
 
-<time datetime={date.toISOString()}>
-  {formatDate(date, format)}
-</time>
+{
+  isValidDate && (
+    <time datetime={date.toISOString()}>
+      {formatDate(date, format)}
+    </time>
+  )
+}

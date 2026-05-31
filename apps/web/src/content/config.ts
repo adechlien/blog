@@ -1,31 +1,5 @@
 import { defineCollection, z } from "astro:content";
 
-const texts = defineCollection({
-  type: "content",
-  schema: z.object({
-    id: z.string(),
-    legacySlug: z.string().optional(),
-    title: z.string(),
-    type: z.string(),
-    heroImage: z.string().optional(),
-    pubDate: z.coerce.date(),
-    color: z.string().optional(),
-    featured: z.boolean().optional(),
-  }),
-});
-
-const soon = defineCollection({
-  type: "content",
-  schema: z.object({
-    title: z.string(),
-    type: z.string(),
-    heroImage: z.string().optional(),
-    pubDate: z.coerce.date(),
-    color: z.string().optional(),
-    featured: z.boolean().optional(),
-  }),
-});
-
 const writers = defineCollection({
   type: "content",
   schema: z.object({
@@ -55,4 +29,4 @@ const sketches = defineCollection({
   }),
 });
 
-export const collections = { texts, soon, writers, sketches };
+export const collections = { writers, sketches };
