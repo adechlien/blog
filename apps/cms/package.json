@@ -17,12 +17,17 @@
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
     "import:texts": "tsx scripts/import-texts.ts",
-    "import:texts:dry": "tsx scripts/import-texts.ts --dry-run"
+    "import:texts:dry": "tsx scripts/import-texts.ts --dry-run",
+    "import:collections": "tsx scripts/import-collections.ts",
+    "export:local": "tsx scripts/export-local-payload.ts",
+    "import:turso": "tsx scripts/import-local-export-to-turso.ts",
+    "import:turso:dry": "tsx scripts/import-local-export-to-turso.ts --dry-run"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.84.1",
     "@payloadcms/next": "3.84.1",
     "@payloadcms/richtext-lexical": "3.84.1",
+    "@payloadcms/storage-vercel-blob": "^3.84.1",
     "@payloadcms/ui": "3.84.1",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",

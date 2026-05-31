@@ -1,4 +1,4 @@
-const PAYLOAD_URL = import.meta.env.PAYLOAD_URL ?? "http://localhost:3000";
+const PAYLOAD_URL = import.meta.env.PAYLOAD_URL ?? "https://cms.adechlien.blog";
 
 export function getMediaUrl(media: any) {
   if (!media?.url) return "";
