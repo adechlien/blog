@@ -7,27 +7,6 @@ import { richTextToHtml } from "../../lib/richTextToHtml";
 
 export const prerender = true;
 
-type PayloadFigure = {
-  id?: string;
-  slug: string;
-  name: string;
-  kind?: string;
-  backgroundColor?: string;
-  biography?: any;
-  featured?: boolean;
-  order?: number;
-  lifeSpanLabel?: string;
-  birthDate?: string;
-  deathDate?: string;
-  isFictional?: boolean;
-  fictionalNotice?: string;
-  cover?: {
-    url?: string;
-    alt?: string;
-  };
-  contributions?: any[];
-};
-
 export async function getStaticPaths() {
   const data = await getPayloadFigures();
   const figures = data.docs ?? [];
@@ -71,45 +50,46 @@ const lifeSpan = formatLifeSpan(figure);
 <Layout title={figure.name} bg={bg}>
   <Header />
 
-  <main class="min-h-screen text-human-1" style={`background-color: ${bg};`}>
-    <article>
-      <section class="figure-cover-sticky sticky top-0 z-20 w-full overflow-hidden" data-figure-cover>
-        {coverUrl && <img src={coverUrl} alt={coverAlt} class="h-full w-full object-cover object-center transition-transform duration-300 ease-out" loading="eager" data-figure-cover-img />}
+  <main class="relative min-h-screen overflow-hidden text-human-1" style={`background-color: ${bg};`}>
+    <section class="relative h-[72vh] min-h-[420px] w-full overflow-hidden lg:pointer-events-none lg:fixed lg:inset-y-0 lg:left-0 lg:z-0 lg:h-screen lg:w-[46vw] lg:min-h-screen">
+      {coverUrl && <img src={coverUrl} alt={coverAlt} class="absolute inset-0 h-full w-full object-cover object-center" loading="eager" />}
 
-        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-48" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bg});`}></div>
+      <div class="pointer-events-none absolute inset-0 lg:hidden" style={`background: linear-gradient(to bottom, rgba(0,0,0,0.06), rgba(0,0,0,0.16) 40%, ${bg} 100%);`}></div>
+      <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 lg:block" style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bg} 100%);`}></div>
+      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 lg:hidden" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bg} 100%);`}></div>
 
-        <div class="absolute bottom-0 left-0 right-0 px-6 pb-8 lg:px-10">
-          <header class="mx-auto max-w-5xl border-b-2 border-white/40 pb-4">
+      <div class="absolute bottom-0 left-0 right-0 px-4 pb-6 lg:px-8 lg:pb-8">
+        <header class="flex flex-col items-start gap-1 border-b-2 border-white/40 pb-3">
+          {lifeSpan && (
+            <p class="font-besley text-base">
+              ({lifeSpan})
+            </p>
+          )}
 
-            <h1 class="font-bebas text-4xl sm:text-6xl">
-              {figure.name}
-            </h1>
+          <h1 class="font-bebas text-4xl leading-none sm:text-6xl">
+            {figure.name}
+          </h1>
+        </header>
+      </div>
+    </section>
 
-            {lifeSpan && (
-              <p class="font-besley text-base">
-                ({lifeSpan})
-              </p>
-            )}
-          </header>
-        </div>
-      </section>
-
-      <section class="relative z-10 mx-auto flex max-w-5xl flex-col px-6 py-10 lg:px-10">
+    <article class="relative z-10 flex min-h-screen flex-col lg:pl-[42vw]">
+      <section class="mx-auto flex w-full max-w-7xl flex-1 flex-col p-6 lg:px-10 lg:py-20">
         {figure.isFictional && figure.fictionalNotice && (
-          <div class="mb-8 rounded-lg border border-white/20 bg-black/30 p-4 font-besley text-sm leading-relaxed backdrop-blur-sm">
+          <div class="mb-6 rounded-lg border border-white/20 bg-black/30 p-4 font-besley text-sm leading-relaxed backdrop-blur-sm">
             {figure.fictionalNotice}
           </div>
         )}
 
-        {biographyHtml && <article class="figure-biography font-besley text-base leading-relaxed text-justify" set:html={biographyHtml} />}
+        {biographyHtml && <article class="figure-biography w-full font-besley text-base leading-relaxed text-justify" set:html={biographyHtml} />}
 
         {figure.contributions?.length > 0 && (
-          <section class="my-12">
-            <div class="flex flex-col gap-5 font-besley text-base sm:columns-2 xl:columns-3">
+          <section class="my-10">
+            <div class="grid grid-cols-1 gap-5 font-besley text-base md:grid-cols-2 xl:grid-cols-3">
               {figure.contributions.map((item: any) => {
                 if (item.blockType === "quote") {
                   return (
-                    <article class="break-inside-avoid flex flex-col gap-4 rounded-lg border border-white/20 bg-black/20 p-4 italic leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid flex flex-col justify-between gap-4 rounded-lg border border-white/20 bg-black/20 p-4 italic leading-relaxed shadow-md backdrop-blur-sm">
                       <p class="text-sm">“{item.text}”</p>
 
                       {item.source && (
@@ -123,7 +103,7 @@ const lifeSpan = formatLifeSpan(figure);
 
                 if (item.blockType === "link") {
                   return (
-                    <article class="break-inside-avoid mb-5 rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
                       <h3 class="font-bebas text-2xl">
                         {item.title}
                       </h3>
@@ -144,7 +124,7 @@ const lifeSpan = formatLifeSpan(figure);
 
                 if (item.blockType === "repository") {
                   return (
-                    <article class="break-inside-avoid mb-5 rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
                       <div class="mb-3 flex items-center gap-2">
                         <i class="ti ti-brand-github text-xl"></i>
 
@@ -171,7 +151,7 @@ const lifeSpan = formatLifeSpan(figure);
                   const contributionImageUrl = getContributionImageUrl(item.image);
 
                   return (
-                    <figure class="break-inside-avoid mb-5 overflow-hidden rounded-lg border border-white/20 bg-black/20 shadow-md">
+                    <figure class="break-inside-avoid overflow-hidden rounded-lg border border-white/20 bg-black/20 shadow-md">
                       {contributionImageUrl && <img src={contributionImageUrl} alt={item.caption ?? ""} class="w-full object-cover" loading="lazy" />}
 
                       {item.caption && (
@@ -187,7 +167,7 @@ const lifeSpan = formatLifeSpan(figure);
                   const noteHtml = richTextToHtml(item.content);
 
                   return (
-                    <article class="break-inside-avoid mb-5 rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
                       {item.title && (
                         <h3 class="mb-3 font-bebas text-2xl">
                           {item.title}
@@ -205,41 +185,16 @@ const lifeSpan = formatLifeSpan(figure);
           </section>
         )}
       </section>
+
+      <Footer theme="text" />
     </article>
   </main>
 
-  <Footer theme="home" />
-
-  <button type="button" aria-label="Volver arriba" class="fixed bottom-5 right-5 z-50 rounded-full border border-white/20 bg-black/30 px-4 py-3 text-white opacity-0 shadow-lg backdrop-blur-sm transition hover:bg-black/40 pointer-events-none" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+  <button type="button" aria-label="Volver arriba" class="fixed bottom-4 right-4 z-50 rounded-full border border-white/20 bg-black/30 px-3 py-2 text-white opacity-0 shadow-lg backdrop-blur-sm transition hover:bg-black/40 pointer-events-none" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
     <i class="ti ti-chevron-up"></i>
   </button>
 
   <style>
-    .figure-cover-sticky {
-      height: var(--figure-cover-height, 76vh);
-      min-height: var(--figure-cover-min-height, 420px);
-      transition: height 180ms linear, min-height 180ms linear;
-      will-change: height;
-    }
-
-    [data-figure-cover-img] {
-      transition: transform 180ms linear;
-      will-change: transform;
-    }
-
-    .figure-cover-sticky.is-compact {
-      --figure-cover-height: 34vh;
-      --figure-cover-min-height: 240px;
-    }
-
-    .figure-cover-sticky.is-compact [data-figure-cover-img] {
-      transform: scale(1.04);
-    }
-
-    .figure-biography :global(p) {
-      margin-bottom: 1rem;
-    }
-
     .figure-biography :global(a) {
       text-decoration: underline;
       font-weight: 700;
@@ -248,78 +203,22 @@ const lifeSpan = formatLifeSpan(figure);
     .figure-biography :global(strong) {
       font-weight: 800;
     }
-
-    @media (max-width: 640px) {
-      .figure-cover-sticky {
-        --figure-cover-height: 68vh;
-        --figure-cover-min-height: 360px;
-      }
-
-      .figure-cover-sticky.is-compact {
-        --figure-cover-height: 34vh;
-        --figure-cover-min-height: 220px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .figure-cover-sticky,
-      [data-figure-cover-img] {
-        transition: none !important;
-      }
-    }
   </style>
 
   <script is:inline>
     (() => {
-      const cover = document.querySelector("[data-figure-cover]");
       const backToTopButton = document.querySelector('[aria-label="Volver arriba"]');
-
-      let ticking = false;
-
-      const updateCover = () => {
-        if (!cover) return;
-
-        const scrollTop = window.scrollY;
-        const isCompact = cover.classList.contains("is-compact");
-
-        if (!isCompact && scrollTop > 80) {
-          cover.classList.add("is-compact");
-        }
-
-        if (isCompact && scrollTop < 24) {
-          cover.classList.remove("is-compact");
-        }
-      };
+      if (!backToTopButton) return;
 
       const updateBackToTopButton = () => {
-        if (!backToTopButton) return;
-
         const show = window.scrollY >= 300;
 
         backToTopButton.classList.toggle("opacity-0", !show);
         backToTopButton.classList.toggle("pointer-events-none", !show);
       };
 
-      const updatePage = () => {
-        updateCover();
-        updateBackToTopButton();
-      };
-
-      const requestPageUpdate = () => {
-        if (ticking) return;
-
-        ticking = true;
-
-        window.requestAnimationFrame(() => {
-          updatePage();
-          ticking = false;
-        });
-      };
-
-      window.addEventListener("scroll", requestPageUpdate, { passive: true });
-      window.addEventListener("resize", requestPageUpdate);
-
-      updatePage();
+      window.addEventListener("scroll", updateBackToTopButton, { passive: true });
+      updateBackToTopButton();
     })();
   </script>
 </Layout>
