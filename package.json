@@ -12,5 +12,12 @@
     "preview:web": "npm run preview -w web",
     "dev": "npm run dev:web",
     "build": "npm run build:web"
+  },
+  "dependencies": {
+    "styled-jsx": "^5.1.7"
+  },
+  "overrides": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
   }
 }
