@@ -66,23 +66,24 @@ const modalPosts: ModalPost[] = posts
   .filter((post) => post.year && post.type);
 ---
 
-<aside class="w-full flex flex-col gap-3">
-  <h3 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">
+<aside class="w-full flex flex-col">
+  <h3 class="text-4xl font-medium text-left font-bebas text-human-2">
     Historial
   </h3>
 
-  <ul class="flex flex-col gap-2 px-3">
+  <ul class="grid grid-cols-2 md:flex md:flex-col gap-2 border-2 rounded border-human-3 p-2">
     {years.map((year) => (
       <li>
-        <button type="button" data-history-modal-trigger data-history-year={year} class="flex justify-between items-center text-human-2 text-3xl sm:text-2xl font-bebas tracking-wide transition hover:text-human-1 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label={`Abrir textos del año ${year}`}>
+        <button type="button" data-history-modal-trigger data-history-year={year} class="flex justify-between items-center text-human-2 text-2xl font-bebas tracking-wide transition hover:text-human-1 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3 border-2 border-human-3 px-2 py-1 rounded" aria-label={`Abrir textos del año ${year}`}>
           <span>{year}</span>
 
-          <span class="text-sm font-bold text-human-2 font-bellota">
+          <span class="text-sm font-black text-human-3 font-bellota">
             {yearCount[year]}
           </span>
         </button>
       </li>
     ))}
+    <div class="hidden border-human-3 md:border-t-2"></div>
   </ul>
 </aside>
 

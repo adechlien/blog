@@ -16,7 +16,9 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const serverURL =
-  process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000'
+  process.env.PAYLOAD_PUBLIC_SERVER_URL ||
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  'http://localhost:3000'
 
 export default buildConfig({
   admin: {
@@ -34,8 +36,16 @@ export default buildConfig({
 
   serverURL,
 
+  cors: [
+    'http://localhost:3000',
+    'http://localhost:4321',
+    'https://cms.adechlien.blog',
+    'https://adechlien.blog',
+  ],
+
   csrf: [
     'http://localhost:3000',
+    'http://localhost:4321',
     'https://cms.adechlien.blog',
     'https://adechlien.blog',
   ],
