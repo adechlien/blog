@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateBlog } from '../hooks/revalidateBlog'
 
 export const Collections: CollectionConfig = {
   slug: 'collections',
@@ -8,6 +9,22 @@ export const Collections: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'slug', 'color'],
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc }) => {
+        if (doc.status === 'published') {
+          await revalidateBlog()
+        }
+
+        return doc
+      },
+    ],
+    afterDelete: [
+      async () => {
+        await revalidateBlog()
+      },
+    ],
   },
   fields: [
     {

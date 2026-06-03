@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { generateTextNumericId } from '../utils/generateTextId'
+import { revalidateBlog } from '../hooks/revalidateBlog'
 
 export const Texts: CollectionConfig = {
   slug: 'texts',
@@ -50,6 +51,20 @@ export const Texts: CollectionConfig = {
         return data;
       },
     ],
+    afterChange: [
+        async ({ doc }) => {
+          if (doc.status === 'published') {
+            await revalidateBlog()
+          }
+
+          return doc
+        },
+      ],
+      afterDelete: [
+        async () => {
+          await revalidateBlog()
+        },
+      ],
   },
   admin: {
     useAsTitle: 'title',

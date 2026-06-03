@@ -27,7 +27,7 @@ const featuredFigures = figures
             <li>
               <a href={href} class="group block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label={`Abrir ilustre ${figure.name}`}>
                 <article class="flex justify-center relative aspect-[2/1] rounded overflow-hidden">
-                  {imageUrl && <img src={imageUrl} alt={imageAlt} class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />}
+                  {imageUrl && <img src={imageUrl} alt={imageAlt} class="absolute inset-0 w-full h-full object-cover" loading="lazy" />}
 
                   <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
                     <p class="font-bellota text-base text-human-1 text-right leading-4">
