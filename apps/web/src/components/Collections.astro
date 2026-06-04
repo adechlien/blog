@@ -189,17 +189,23 @@ const modalPosts: ModalPost[] = posts
   </div>
 </div>
 
-<script is:inline define:vars={{ modalPosts, modalTypeTitles: typeTitles, modalTypeDescriptions: typeDescriptions }}>
-  const posts = modalPosts;
+<script is:inline data-astro-rerun define:vars={{ modalPosts, modalTypeTitles: typeTitles, modalTypeDescriptions: typeDescriptions }}>
+(() => {
+  window.__leggiamoCollectionModalController?.abort();
 
-  const modal = document.getElementById("collection-modal");
-  const closeButton = document.getElementById("collection-modal-close");
-  const titleElement = document.getElementById("collection-modal-title");
-  const descriptionElement = document.getElementById("collection-modal-description");
-  const listElement = document.getElementById("collection-modal-list");
+  var controller = new AbortController();
+  window.__leggiamoCollectionModalController = controller;
 
-  const openClass = "flex";
-  const closedClass = "hidden";
+  var posts = modalPosts;
+
+  var modal = document.getElementById("collection-modal");
+  var closeButton = document.getElementById("collection-modal-close");
+  var titleElement = document.getElementById("collection-modal-title");
+  var descriptionElement = document.getElementById("collection-modal-description");
+  var listElement = document.getElementById("collection-modal-list");
+
+  var openClass = "flex";
+  var closedClass = "hidden";
 
   function lockPageScroll() {
     document.documentElement.classList.add("overflow-hidden");
@@ -314,15 +320,16 @@ const modalPosts: ModalPost[] = posts
     if (trigger instanceof HTMLElement) trigger.blur();
 
     openModal(slug);
-  });
+  }, { signal: controller.signal });
 
-  closeButton?.addEventListener("click", closeModal);
+  closeButton?.addEventListener("click", closeModal, { signal: controller.signal });
 
   modal?.addEventListener("click", (event) => {
     if (event.target === modal) closeModal();
-  });
+  }, { signal: controller.signal });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) closeModal();
-  });
+  }, { signal: controller.signal });
+})();
 </script>

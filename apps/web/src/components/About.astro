@@ -16,7 +16,7 @@ const avatar = "/avatar.webp";
 
         <div class="absolute left-1/2 -translate-x-1/2 -bottom-10 z-20">
             <div class="size-36 rounded-full border-2 border-human-2 overflow-hidden">
-                <img src={avatar} alt="Foto de perfil" class="w-full h-full object-cover" />
+                <img src={avatar} alt="Foto de perfil" class="w-full h-full object-cover" loading="eager" decoding="async" fetchpriority="high" />
             </div>
         </div>
     </div>

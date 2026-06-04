@@ -100,16 +100,22 @@ const modalPosts: ModalPost[] = posts
   </div>
 </div>
 
-<script is:inline define:vars={{ modalPosts }}>
-  const posts = modalPosts;
+<script is:inline data-astro-rerun define:vars={{ modalPosts }}>
+(() => {
+  window.__leggiamoHistoryModalController?.abort();
 
-  const modal = document.getElementById("history-modal");
-  const closeButton = document.getElementById("history-modal-close");
-  const titleElement = document.getElementById("history-modal-title");
-  const listElement = document.getElementById("history-modal-list");
+  var controller = new AbortController();
+  window.__leggiamoHistoryModalController = controller;
 
-  const openClass = "flex";
-  const closedClass = "hidden";
+  var posts = modalPosts;
+
+  var modal = document.getElementById("history-modal");
+  var closeButton = document.getElementById("history-modal-close");
+  var titleElement = document.getElementById("history-modal-title");
+  var listElement = document.getElementById("history-modal-list");
+
+  var openClass = "flex";
+  var closedClass = "hidden";
 
   function lockPageScroll() {
     document.documentElement.classList.add("overflow-hidden");
@@ -220,15 +226,16 @@ const modalPosts: ModalPost[] = posts
     if (trigger instanceof HTMLElement) trigger.blur();
 
     openModal(year);
-  });
+  }, { signal: controller.signal });
 
-  closeButton?.addEventListener("click", closeModal);
+  closeButton?.addEventListener("click", closeModal, { signal: controller.signal });
 
   modal?.addEventListener("click", (event) => {
     if (event.target === modal) closeModal();
-  });
+  }, { signal: controller.signal });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) closeModal();
-  });
+  }, { signal: controller.signal });
+})();
 </script>
