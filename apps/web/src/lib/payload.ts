@@ -1,5 +1,23 @@
 const PAYLOAD_URL = import.meta.env.PAYLOAD_URL ?? "http://localhost:3000";
 
+type PayloadListOptions = {
+  status?: "published" | "draft";
+  limit?: number;
+  sort?: string;
+  includeContent?: boolean;
+};
+
+type PayloadFigureOptions = {
+  limit?: number;
+  includeDetails?: boolean;
+};
+
+function setSelectParams(url: URL, fields: string[]) {
+  fields.forEach((field) => {
+    url.searchParams.set(`select[${field}]`, "true");
+  });
+}
+
 export function getMediaUrl(media: any) {
   if (!media?.url) return "";
 
@@ -57,13 +75,33 @@ export function normalizePayloadText(text: any) {
   };
 }
 
-export async function getPayloadTexts() {
+export async function getPayloadTexts(options: PayloadListOptions = {}) {
+  const {
+    status = "published",
+    limit = 100,
+    sort = "-pubDate",
+    includeContent = true,
+  } = options;
   const url = new URL("/api/texts", PAYLOAD_URL);
 
-  url.searchParams.set("where[status][equals]", "published");
-  url.searchParams.set("sort", "-pubDate");
+  url.searchParams.set("where[status][equals]", status);
+  url.searchParams.set("sort", sort);
   url.searchParams.set("depth", "2");
-  url.searchParams.set("limit", "100");
+  url.searchParams.set("limit", String(limit));
+
+  if (!includeContent) {
+    setSelectParams(url, [
+      "numericId",
+      "title",
+      "legacySlug",
+      "excerpt",
+      "pubDate",
+      "featured",
+      "status",
+      "collection",
+      "cover",
+    ]);
+  }
 
   const response = await fetch(url.toString());
 
@@ -126,13 +164,27 @@ export function normalizePayloadFigure(figure: any) {
   };
 }
 
-export async function getPayloadFigures() {
+export async function getPayloadFigures(options: PayloadFigureOptions = {}) {
+  const { limit = 100, includeDetails = true } = options;
   const url = new URL('/api/figures', PAYLOAD_URL);
 
   url.searchParams.set("where[status][equals]", "published");
   url.searchParams.set('sort', 'order');
   url.searchParams.set('depth', '2');
-  url.searchParams.set('limit', '100');
+  url.searchParams.set('limit', String(limit));
+
+  if (!includeDetails) {
+    setSelectParams(url, [
+      "name",
+      "slug",
+      "kind",
+      "backgroundColor",
+      "order",
+      "featured",
+      "status",
+      "cover",
+    ]);
+  }
 
   const response = await fetch(url.toString());
 
@@ -169,23 +221,10 @@ export async function getPayloadFigureBySlug(slug: string) {
 }
 
 export async function getPayloadDraftTexts() {
-  const url = new URL("/api/texts", PAYLOAD_URL);
-
-  url.searchParams.set("where[status][equals]", "draft");
-  url.searchParams.set("sort", "-updatedAt");
-  url.searchParams.set("depth", "2");
-  url.searchParams.set("limit", "4");
-
-  const response = await fetch(url.toString());
-
-  if (!response.ok) {
-    throw new Error(`Error fetching draft texts from Payload: ${response.status}`);
-  }
-
-  const data = await response.json();
-
-  return {
-    ...data,
-    docs: data.docs.map(normalizePayloadText),
-  };
+  return getPayloadTexts({
+    status: "draft",
+    sort: "-updatedAt",
+    limit: 4,
+    includeContent: false,
+  });
 }

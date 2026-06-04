@@ -1,9 +1,7 @@
 ---
-import { getPayloadTexts } from "../lib/payload";
 import FormattedDate from "./FormattedDate.astro";
 
-const data = await getPayloadTexts();
-const posts = data.docs ?? [];
+const { posts = [] } = Astro.props;
 
 const featured = posts.filter((post: any) => post.featured === true);
 

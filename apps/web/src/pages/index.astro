@@ -8,19 +8,24 @@ import History from "../components/History.astro";
 import Destacados from "../components/Destacados.astro";
 import Figures from "../components/Figures.astro";
 import Albums from "../components/Albums.astro";
-import Playlists from "../components/Playlists.astro";
 import Footer from "../components/Footer.astro";
-import Videos from "../components/Videos.astro";
-import RecentSketches from "../components/RecentSketches.astro";
-import { getCollection } from "astro:content";
+import {
+  getPayloadDraftTexts,
+  getPayloadFigures,
+  getPayloadTexts,
+} from "../lib/payload";
 
-const sketches = await getCollection("sketches");
+export const prerender = true;
 
-const sortedSketches = sketches.sort(
-  (a, b) =>
-    new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
-);
+const [textsData, draftTextsData, figuresData] = await Promise.all([
+  getPayloadTexts({ includeContent: false }),
+  getPayloadDraftTexts(),
+  getPayloadFigures({ includeDetails: false }),
+]);
 
+const posts = textsData.docs ?? [];
+const soonPosts = draftTextsData.docs ?? [];
+const figures = figuresData.docs ?? [];
 ---
 
 <Layout title="Inicio" description="Blog de textos literarios, prosa y reflexiones personales.">
@@ -28,14 +33,14 @@ const sortedSketches = sketches.sort(
         <About />
         <section class="w-full px-6">
             <div class="mx-auto flex flex-col gap-12 sm:max-w-[1100px]">
-                <Collections />
-                <Recent />
+                <Collections posts={posts} />
+                <Recent posts={posts} />
                 <div class="grid grid-cols-1 lg:grid-cols-[1fr_200px] gap-12 sm:gap-8 h-full">
-                    <Destacados />
-                    <History />
+                    <Destacados posts={posts} />
+                    <History posts={posts} />
                 </div>
-                <Soon />
-                <Figures />
+                <Soon posts={soonPosts} />
+                <Figures figures={figures} />
                 <!-- <RecentSketches sketches={sortedSketches} /> -->
                 <!-- <Videos /> -->
                 <!-- <Playlists /> -->

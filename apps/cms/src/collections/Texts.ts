@@ -53,9 +53,7 @@ export const Texts: CollectionConfig = {
     ],
     afterChange: [
         async ({ doc }) => {
-          if (doc.status === 'published') {
-            await revalidateBlog()
-          }
+          await revalidateBlog()
 
           return doc
         },

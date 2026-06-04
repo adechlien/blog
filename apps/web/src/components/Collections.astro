@@ -1,6 +1,4 @@
 ---
-import { getPayloadTexts } from "../lib/payload";
-
 type PayloadText = {
   id: string;
   title: string;
@@ -79,8 +77,7 @@ const mapIcon = (slug = "") => {
   return "/icons/flower.svg";
 };
 
-const data = await getPayloadTexts();
-const posts = (data.docs ?? []) as PayloadText[];
+const { posts = [] } = Astro.props as { posts?: PayloadText[] };
 
 const countsByType = posts.reduce<Record<string, number>>((acc, post) => {
   const slug = post.collection?.slug;

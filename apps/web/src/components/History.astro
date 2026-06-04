@@ -1,6 +1,4 @@
 ---
-import { getPayloadTexts } from "../lib/payload";
-
 type PayloadText = {
   id: string;
   title: string;
@@ -28,8 +26,7 @@ type ModalPost = {
   formattedDate: string;
 };
 
-const data = await getPayloadTexts();
-const posts = (data.docs ?? []) as PayloadText[];
+const { posts = [] } = Astro.props as { posts?: PayloadText[] };
 
 const yearCount: Record<number, number> = {};
 

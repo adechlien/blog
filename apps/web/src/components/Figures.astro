@@ -1,8 +1,5 @@
 ---
-import { getPayloadFigures } from "../lib/payload";
-
-const data = await getPayloadFigures();
-const figures = data.docs ?? [];
+const { figures = [] } = Astro.props;
 
 const featuredFigures = figures
   .filter((figure: any) => figure.featured === true)

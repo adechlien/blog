@@ -1,17 +1,7 @@
 ---
-import { getPayloadTexts } from "../lib/payload";
-
-const data = await getPayloadTexts();
-const posts = data.docs ?? [];
+const { posts = [] } = Astro.props;
 
 const recentPosts = posts.slice(0, 3);
-
-const cleanPreview = (text = "") =>
-  text
-    .replaceAll("<br>", " ")
-    .replace(/<\/?[^>]+>/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
 ---
 
 <section class="w-full min-w-0 flex flex-col gap-3">

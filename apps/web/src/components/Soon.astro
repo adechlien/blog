@@ -1,8 +1,5 @@
 ---
-import { getPayloadDraftTexts } from "../lib/payload";
-
-const data = await getPayloadDraftTexts();
-const soonPosts = data.docs ?? [];
+const { posts: soonPosts = [] } = Astro.props;
 ---
 
 <section class="w-full min-w-0 flex flex-col gap-3">
