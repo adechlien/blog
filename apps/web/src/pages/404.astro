@@ -1,14 +1,26 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 ---
 
-<Layout title="404" description="Pagina no encontrada en Leggiamo.">
+<Layout title="404" description="Pagina no encontrada.">
   <Header theme="home" />
-  <main class="flex flex-col justify-center items-center text-center px-8 gap-4 mx-auto">
-    <h1 class="text-5xl sm:text-7xl font-bold">Error 404</h1>
-    <p class="text-lg font-normal">
-      Vaya, vaya. Parece que no he programado esto aun...
-    </p>
+
+  <main class="flex min-h-screen w-full flex-col overflow-hidden text-human-2">
+    <section class="relative flex min-h-[78vh] w-full items-end overflow-hidden">
+      <img src="/banner.svg" alt="" class="absolute inset-0 h-full w-full object-cover object-bottom" loading="eager" decoding="async" />
+      <div class="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-t from-transparent to-human-4 sm:hidden"></div>
+      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent via-human-4/90 to-human-4"></div>
+    </section>
+    <div class="max-w-3xl mx-auto p-6">
+      <p class="font-bebas text-6xl font-black text-human-3">
+        404
+      </p>
+      <h1 class="font-bellota text-base text-human-1 sm:text-xl">
+        Vaya, vaya. Parece que no he programado esto aún. O cambié la ruta. Ni idea la verdad.
+      </h1>
+    </div>
+    <Footer theme="home" />
   </main>
 </Layout>
