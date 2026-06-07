@@ -6,16 +6,32 @@ interface Props {
   description?: string;
   image?: string;
   bg?: string;
+  type?: "website" | "article";
 }
 
 const {
   title,
-  description,
-  image = "/texts-placeholder-1.jpg",
+  description = "Blog de Alejandro J. Hernandez P. con textos literarios, prosa, reflexiones personales y referencias creativas.",
+  image = "/banner-og.jpg",
   bg = "#024250",
+  type = "website",
 } = Astro.props;
 
+const siteName = "Leggiamo";
+const displayTitle = title && title !== "Inicio" ? `${title} | ${siteName}` : `${siteName} | Alejandro J. Hernandez P.`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image, Astro.site);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: Astro.site?.toString(),
+  author: {
+    "@type": "Person",
+    name: "Alejandro J. Hernandez P.",
+  },
+  inLanguage: "es-CO",
+};
 ---
 
 <!doctype html>
@@ -32,7 +48,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="theme-color" content={bg} />
 
     <!-- Font preloads -->
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bellota+Text:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Besley:ital,wght@0,400..900;1,400..900&family=Tangerine:wght@400;700&display=swap" rel="stylesheet"/>
@@ -41,23 +56,29 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Primary Meta Tags -->
-    <title>AJHP | {title}</title>
-    <meta name="title" content={title} />
+    <title>{displayTitle}</title>
+    <meta name="title" content={displayTitle} />
     <meta name="description" content={description} />
+    <meta name="author" content="Alejandro J. Hernandez P." />
+    <meta name="robots" content="index, follow" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:url" content={Astro.url} />
-    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={displayTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(image, Astro.url)} />
+    <meta property="og:image" content={imageURL} />
+    <meta property="og:locale" content="es_CO" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={Astro.url} />
-    <meta property="twitter:title" content={title} />
+    <meta property="twitter:title" content={displayTitle} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+    <meta property="twitter:image" content={imageURL} />
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
     <!-- View Transitions -->
     <ClientRouter />

@@ -45,9 +45,12 @@ const coverUrl = figure.cover?.url ?? "";
 const coverAlt = figure.cover?.alt ?? figure.name;
 const biographyHtml = richTextToHtml(figure.biography);
 const lifeSpan = formatLifeSpan(figure);
+const description = figure.isFictional
+  ? `Perfil de ${figure.name}, personaje ficticio, en Leggiamo.`
+  : `Perfil de ${figure.name} en Leggiamo.`;
 ---
 
-<Layout title={figure.name} bg={bg}>
+<Layout title={figure.name} description={description} image={coverUrl || undefined} bg={bg} type="article">
   <Header />
 
   <main class="relative min-h-screen overflow-hidden text-human-1" style={`background-color: ${bg};`}>

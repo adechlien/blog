@@ -68,6 +68,7 @@ const title = post.title;
 const id = post.id;
 const pubDate = post.pubDate;
 const typeTitle = post.collection?.name ?? "";
+const description = post.excerpt || `Texto de ${typeTitle} en Leggiamo.`;
 const coverUrl = post.cover?.url ?? "";
 const coverAlt = post.cover?.alt ?? title;
 
@@ -76,7 +77,7 @@ const bgHex = post.collection?.color ?? "#080809";
 const contentHtml = richTextToHtml(post.content);
 ---
 
-<Layout title={title} bg={bgHex}>
+<Layout title={title} description={description} image={coverUrl || undefined} bg={bgHex} type="article">
   <Header bg="" />
 
   <main class="flex flex-col md:flex-row w-full min-h-screen" style={`background-color: ${bgHex};`}>
@@ -90,7 +91,7 @@ const contentHtml = richTextToHtml(post.content);
     <section class="flex flex-col w-full md:flex-1 text-human-1">
       <div class="w-full max-w-[1100px] mx-auto px-6 md:px-10 mt-12 md:mt-10 flex flex-col h-full">
         <header class="pb-2 border-b-2 border-human-1">
-          <h3 class="text-xl capitalize">{typeTitle}</h3>
+          <p class="text-xl capitalize">{typeTitle}</p>
 
           <h1 class="text-4xl font-bebas font-medium">
             {title}

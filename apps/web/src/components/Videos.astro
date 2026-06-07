@@ -10,14 +10,14 @@ const featuredVideos = videos
 <section class="w-full">
   <div class="flex flex-col gap-4 sm:mx-auto">
     <div class="flex items-center justify-between text-human-2 border-b-human-3 border-b-2">
-      <h3 class="text-4xl font-medium text-left font-bebas">Videos</h3>
-      <a href="https://www.youtube.com/" target="_blank" rel="noreferrer" class="underline">
+      <h2 class="text-4xl font-medium text-left font-bebas">Videos</h2>
+      <a href="https://www.youtube.com/@adechlien" target="_blank" rel="noreferrer" class="underline">
         YouTube
       </a>
     </div>
 
     {featuredVideos.length > 0 ? (
-      <ul class="flex flex-col sm:grid sm:grid-cols-3 lg:grid-cols-6 gap-3 px-3">
+      <ul class="flex flex-col sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 px-3">
         {featuredVideos.map((video: any) => {
           const imageUrl = video.thumbnail?.url ?? "";
           const imageAlt = video.thumbnail?.alt ?? video.title;
@@ -29,10 +29,6 @@ const featuredVideos = videos
                   <div class="relative aspect-video overflow-hidden rounded">
                     {imageUrl && <img src={imageUrl} alt={imageAlt} class="absolute inset-0 w-full h-full object-cover transition-transform duration-200 group-hover:scale-105" loading="lazy" />}
                   </div>
-
-                  <p class="font-bellota text-sm leading-4 text-human-2">
-                    {video.title}
-                  </p>
                 </article>
               </a>
             </li>

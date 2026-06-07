@@ -1,41 +1,63 @@
 ---
-const tier1 = [
-  { title: "Quizá no es para tanto", artist: "Jaze", cover: "qnept.png", link: "https://www.youtube.com/watch?v=ZblFXnv8eAA&list=PLSC2ZIlwOzm54UAfQk9XgSxxEaYHRS_vw"},
-  { title: "Blanco", artist: "Ricardo Arjona", cover: "blanco.png", link: "https://www.youtube.com/watch?v=cap5V6kNEb4&list=OLAK5uy_nbEDEld90A1tsMhPTtsw0rWC9mAM0srwc&index=2"},
-  { title: "We are not your kind", artist: "Slipknot", cover: "wearenotyourkind.png", link: "https://www.youtube.com/watch?v=neliFsn2g-I&list=PLvXUqfNLb-tnlP1TgObahebiRcIcVyc2J" },
-  { title: "Data", artist: "Tainy", cover: "data.png", link: "https://www.youtube.com/watch?v=Ak3ROTSVRGs&list=OLAK5uy_lhb0K46x2XM9WYEASWk0AB7NTukr2qCHI&index=2" },
-  { title: "Estopa", artist: "Estopa", cover: "estopa.png", link: "https://www.youtube.com/watch?v=T8gzgj6W7UA&list=PL6mpyAioMZGi2mO7gKHnNzRrHYv8rst0T" },
-  { title: "La novena Batalla", artist: "Silvestre Dangond", cover: "novena.png", link: "https://www.youtube.com/watch?v=mK8PNF55I50&list=OLAK5uy_mbUDY72WytUuvas0cCh92gRbINbv4lwLg"},
-];
-
-const tier2 = [
-  { title: "Don KBRON", artist: "Eladio Carrión", cover: "donkbron.png", link: ""},
-  { title: "Retrofuturismopsicotropical", artist: "Motherflowers", cover: "retro.png", link: "" },
-  { title: "Cracker Island", artist: "Gorillaz", cover: "cracker.png", link: "" },
-  { title: "Por si alguien nos escucha", artist: "Kapo", cover: "psane.png", link: ""},
-  { title: "Wings", artist: "BTS", cover: "wings.png", link: "" },
-  { title: "Muerte", artist: "Canserbero", cover: "muerte.png", link: "" },
+const albums = [
+  {
+    title: "Quizá no es para tanto",
+    artist: "Jaze",
+    cover: "qnept.webp",
+    link: "https://www.youtube.com/watch?v=ZblFXnv8eAA&list=PLSC2ZIlwOzm54UAfQk9XgSxxEaYHRS_vw",
+  },
+  {
+    title: "Blanco",
+    artist: "Ricardo Arjona",
+    cover: "blanco.webp",
+    link: "https://www.youtube.com/watch?v=cap5V6kNEb4&list=OLAK5uy_nbEDEld90A1tsMhPTtsw0rWC9mAM0srwc&index=2",
+  },
+  {
+    title: "We are not your kind",
+    artist: "Slipknot",
+    cover: "wearenotyourkind.webp",
+    link: "https://www.youtube.com/watch?v=neliFsn2g-I&list=PLvXUqfNLb-tnlP1TgObahebiRcIcVyc2J",
+  },
+  {
+    title: "Data",
+    artist: "Tainy",
+    cover: "data.webp",
+    link: "https://www.youtube.com/watch?v=Ak3ROTSVRGs&list=OLAK5uy_lhb0K46x2XM9WYEASWk0AB7NTukr2qCHI&index=2",
+  },
+  {
+    title: "Estopa",
+    artist: "Estopa",
+    cover: "estopa.webp",
+    link: "https://www.youtube.com/watch?v=T8gzgj6W7UA&list=PL6mpyAioMZGi2mO7gKHnNzRrHYv8rst0T",
+  },
+  {
+    title: "La novena Batalla",
+    artist: "Silvestre Dangond",
+    cover: "novena.webp",
+    link: "https://www.youtube.com/watch?v=mK8PNF55I50&list=OLAK5uy_mbUDY72WytUuvas0cCh92gRbINbv4lwLg",
+  },
 ];
 ---
 
 <section class="w-full">
   <div class="flex flex-col gap-4 sm:mx-auto">
-      <div class="flex items-center justify-between text-human-2 border-b-human-3 border-b-2">
-          <h3 class="text-4xl font-medium text-left font-bebas">Susurros y ecos</h3>
-          <a href="https://musicboard.app/adechlien/list/albumes-favoritos/" target="_blank" class="underline">
-              Musicboard
-          </a>
-      </div>
+    <div class="flex items-center justify-between text-human-2 border-b-human-3 border-b-2">
+      <h2 class="text-4xl font-medium text-left font-bebas">Susurros y ecos</h2>
+      <a href="https://musicboard.app/adechlien/list/albumes-favoritos/" target="_blank" rel="noopener noreferrer" class="underline">
+        Musicboard
+      </a>
+    </div>
 
-    <!-- TIER 1: 6 columnas -->
     <ul class="grid grid-cols-2 sm:grid-cols-6 gap-3 px-3">
-      {tier1.map((album, index) => (
+      {albums.map((album, index) => (
         <li>
-          <a href={album.link} target="_blank" class="group block">
+          <a href={album.link} target="_blank" rel="noopener noreferrer" class="group block">
             <article class="flex flex-col justify-center gap-0 overflow-hidden">
               <div class="overflow-hidden mb-1 relative">
-                  <img src={`/albums/${album.cover}`} alt={album.title} class="w-full h-full object-cover"/>
-                  <div class="absolute top-0 left-0 text-human-1 bg-human-4 px-2 py-0 font-bebas z-10 rounded-br-md">{index+1}</div>
+                <img src={`/albums/${album.cover}`} alt={album.title} class="w-full h-full object-cover" loading="lazy" decoding="async" />
+                <div class="absolute top-0 left-0 text-human-1 bg-human-4 px-2 py-0 font-bebas z-10 rounded-br-md">
+                  {index + 1}
+                </div>
               </div>
               <span class="font-bebas text-xl text-human-2 leading-none truncate">{album.title}</span>
               <span class="font-bellota text-xs text-human-2">{album.artist}</span>
@@ -44,32 +66,5 @@ const tier2 = [
         </li>
       ))}
     </ul>
-
-    <!-- TIER 2: 12 columnas -->
-    <!-- {tier2.length > 0 && (
-      <ul class="grid grid-cols-3 sm:grid-cols-6 gap-3 px-3">
-        {tier2.map((album) => (
-          <li>
-            <a href={album.link} target="_blank" class="group block">
-              <article class="flex flex-col justify-center gap-0 overflow-hidden">
-                <div class="overflow-hidden mb-1">
-                  <img
-                    src={`/albums/${album.cover}`}
-                    alt={album.title}
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-                <span class="font-bebas text-lg text-human-2 leading-none truncate">
-                  {album.title}
-                </span>
-                <span class="font-bellota text-xs text-human-2">
-                  {album.artist}
-                </span>
-              </article>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )} -->
   </div>
 </section>

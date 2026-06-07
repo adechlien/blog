@@ -6,13 +6,18 @@ const socialLinks = [
 ];
 
 const heroBg = "/banner.svg";
+const heroMobileBg = "/banner-mobile.svg";
 const avatar = "/avatar.webp";
 ---
 
 <section class="relative overflow-hidden">
-    <div class="relative w-full min-h-[70vh] bg-cover bg-bottom" style={`background-image: url(${heroBg});`}>
+    <div class="relative w-full min-h-[70vh]">
+        <picture>
+            <source srcset={heroMobileBg} media="(max-width: 640px)" />
+            <img src={heroBg} alt="" class="absolute inset-0 h-full w-full object-cover object-bottom" loading="eager" decoding="async" fetchpriority="high" />
+        </picture>
         <div class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-t from-transparent to-human-4" ></div>
-        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-4 bg-gradient-to-b from-transparent to-human-4" ></div>
+        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent via-human-4/80 to-human-4" ></div>
 
         <div class="absolute left-1/2 -translate-x-1/2 -bottom-10 z-20">
             <div class="size-36 rounded-full border-2 border-human-2 overflow-hidden">
@@ -30,7 +35,7 @@ const avatar = "/avatar.webp";
       aria-label="Redes sociales"
       class="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-base text-human-2 sm:gap-x-4 sm:text-lg"
     >
-      {socialLinks.map((link, index) => (
+      {socialLinks.map((link) => (
         <>
             <a href={link.href} target="_blank" rel="noopener noreferrer" class="px-1 underline-offset-4 hover:underline">
               {link.text}
