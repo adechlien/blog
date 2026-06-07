@@ -72,6 +72,7 @@ export interface Config {
     collections: Collection;
     texts: Text;
     figures: Figure;
+    videos: Video;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +85,7 @@ export interface Config {
     collections: CollectionsSelect<false> | CollectionsSelect<true>;
     texts: TextsSelect<false> | TextsSelect<true>;
     figures: FiguresSelect<false> | FiguresSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -334,6 +336,25 @@ export interface Figure {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos".
+ */
+export interface Video {
+  id: number;
+  title: string;
+  /**
+   * URL completa del video en YouTube.
+   */
+  youtubeUrl: string;
+  thumbnail: number | Media;
+  description?: string | null;
+  order?: number | null;
+  featured?: boolean | null;
+  status: 'draft' | 'published' | 'archived';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -375,6 +396,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'figures';
         value: number | Figure;
+      } | null)
+    | ({
+        relationTo: 'videos';
+        value: number | Video;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -555,6 +580,21 @@ export interface FiguresSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos_select".
+ */
+export interface VideosSelect<T extends boolean = true> {
+  title?: T;
+  youtubeUrl?: T;
+  thumbnail?: T;
+  description?: T;
+  order?: T;
+  featured?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;

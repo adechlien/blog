@@ -12,6 +12,10 @@ type PayloadFigureOptions = {
   includeDetails?: boolean;
 };
 
+type PayloadVideoOptions = {
+  limit?: number;
+};
+
 function setSelectParams(url: URL, fields: string[]) {
   fields.forEach((field) => {
     url.searchParams.set(`select[${field}]`, "true");
@@ -218,6 +222,63 @@ export async function getPayloadFigureBySlug(slug: string) {
   const figure = data.docs?.[0];
 
   return figure ? normalizePayloadFigure(figure) : null;
+}
+
+export function normalizePayloadVideo(video: any) {
+  return {
+    id: video.id,
+    title: video.title,
+    youtubeUrl: video.youtubeUrl,
+    description: video.description,
+    order: video.order,
+    featured: video.featured,
+    status: video.status,
+
+    thumbnail: {
+      url: getMediaUrl(video.thumbnail),
+      alt: video.thumbnail?.alt ?? video.title,
+      width: video.thumbnail?.width,
+      height: video.thumbnail?.height,
+    },
+  };
+}
+
+export async function getPayloadVideos(options: PayloadVideoOptions = {}) {
+  const { limit = 100 } = options;
+  const url = new URL('/api/videos', PAYLOAD_URL);
+
+  url.searchParams.set("where[status][equals]", "published");
+  url.searchParams.set('sort', 'order');
+  url.searchParams.set('depth', '2');
+  url.searchParams.set('limit', String(limit));
+  setSelectParams(url, [
+    "title",
+    "youtubeUrl",
+    "description",
+    "order",
+    "featured",
+    "status",
+    "thumbnail",
+  ]);
+
+  const response = await fetch(url.toString());
+
+  if (response.status === 404) {
+    return {
+      docs: [],
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(`Error fetching videos from Payload: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return {
+    ...data,
+    docs: data.docs.map(normalizePayloadVideo),
+  };
 }
 
 export async function getPayloadDraftTexts() {

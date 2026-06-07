@@ -11,6 +11,7 @@ import { Media } from './collections/Media'
 import { Collections } from './collections/Collections'
 import { Texts } from './collections/Texts'
 import { Figures } from './collections/Figures'
+import { Videos } from './collections/Videos'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,7 +29,7 @@ export default buildConfig({
     },
   },
 
-  collections: [Users, Media, Collections, Texts, Figures],
+  collections: [Users, Media, Collections, Texts, Figures, Videos],
 
   editor: lexicalEditor(),
 
