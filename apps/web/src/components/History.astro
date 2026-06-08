@@ -68,7 +68,7 @@ const modalPosts: ModalPost[] = posts
     Historial
   </h2>
 
-  <ul class="grid grid-cols-2 md:flex md:flex-col gap-2 border-2 rounded border-human-3 p-2">
+  <ul class="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-col gap-2 border-2 rounded border-human-3 p-2">
     {years.map((year) => (
       <li>
         <button type="button" data-history-modal-trigger data-history-year={year} class="flex justify-between items-center text-human-2 text-2xl font-bebas tracking-wide transition hover:text-human-1 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3 border-2 border-human-3 px-2 py-1 rounded" aria-label={`Abrir textos del año ${year}`}>

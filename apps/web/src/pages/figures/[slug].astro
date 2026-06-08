@@ -51,49 +51,46 @@ const description = figure.isFictional
 ---
 
 <Layout title={figure.name} description={description} image={coverUrl || undefined} bg={bg} type="article">
-  <Header />
+  <Header bg="" />
 
-  <main class="relative min-h-screen overflow-hidden text-human-1" style={`background-color: ${bg};`}>
-    <section class="relative h-[72vh] min-h-[420px] w-full overflow-hidden lg:pointer-events-none lg:fixed lg:inset-y-0 lg:left-0 lg:z-0 lg:h-screen lg:w-[46vw] lg:min-h-screen">
-      {coverUrl && <img src={coverUrl} alt={coverAlt} class="absolute inset-0 h-full w-full object-cover object-center" loading="eager" />}
-
-      <div class="pointer-events-none absolute inset-0 lg:hidden" style={`background: linear-gradient(to bottom, rgba(0,0,0,0.06), rgba(0,0,0,0.16) 40%, ${bg} 100%);`}></div>
-      <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 lg:block" style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bg} 100%);`}></div>
-      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 lg:hidden" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bg} 100%);`}></div>
+  <main class="flex min-h-screen w-full flex-col md:flex-row" style={`background-color: ${bg};`}>
+    <div class="relative w-full aspect-[2/3] shrink-0 md:sticky md:top-0 md:h-screen md:w-[40vw] md:aspect-auto md:overflow-hidden">
+      {coverUrl && <img src={coverUrl} alt={coverAlt} class="h-full w-full object-cover object-center" loading="eager" decoding="async" />}
+      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-12 md:hidden" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${bg});`}></div>
       <div class="pointer-events-none absolute inset-x-0 top-0 h-8 md:hidden" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${bg});`}></div>
+      <div class="pointer-events-none absolute inset-y-0 right-0 hidden w-20 md:block" style={`background: linear-gradient(to right, rgba(0,0,0,0), ${bg});`}></div>
+    </div>
 
-      <div class="absolute bottom-0 left-0 right-0 px-4 pb-6 lg:px-8 lg:pb-8">
-        <header class="flex flex-col items-start gap-1 border-b-2 border-white pb-3">
+    <section class="flex w-full flex-col text-human-1 md:flex-1">
+      <div class="mx-auto mt-12 flex h-full w-full max-w-[1100px] flex-col px-6 md:mt-10 md:px-10">
+        <header class="border-b-2 border-human-1 pb-2">
+          {figure.kind && <p class="text-xl capitalize">{figure.kind}</p>}
+
+          <h1 class="font-bebas text-4xl font-medium">
+            {figure.name}
+          </h1>
+
           {lifeSpan && (
-            <p class="font-besley text-base">
+            <p class="font-besley text-sm">
               ({lifeSpan})
             </p>
           )}
-
-          <h1 class="font-bebas text-4xl leading-none sm:text-6xl">
-            {figure.name}
-          </h1>
         </header>
-      </div>
-    </section>
-
-    <article class="relative z-10 flex min-h-screen flex-col lg:pl-[42vw]">
-      <section class="mx-auto flex w-full max-w-7xl flex-1 flex-col p-6 lg:px-10 lg:py-20">
         {figure.isFictional && figure.fictionalNotice && (
-          <div class="mb-6 rounded-lg border border-white/20 bg-black/30 p-4 font-besley text-sm leading-relaxed backdrop-blur-sm">
+          <div class="mt-6 rounded-lg border border-human-1/20 bg-black/20 p-4 font-besley text-sm leading-relaxed backdrop-blur-sm">
             {figure.fictionalNotice}
           </div>
         )}
 
-        {biographyHtml && <article class="figure-biography w-full font-besley text-base leading-relaxed text-justify" set:html={biographyHtml} />}
+        {biographyHtml && <article lang="es" class="figure-biography py-8 font-besley text-base leading-relaxed text-justify hyphens-auto [&_p]:mb-5 [&_p:last-child]:mb-0 [&_br]:block [&_br]:mb-5" set:html={biographyHtml} />}
 
         {figure.contributions?.length > 0 && (
-          <section class="my-10">
-            <div class="grid grid-cols-1 gap-5 font-besley text-base md:grid-cols-2 xl:grid-cols-3">
+          <section class="pb-10">
+            <div class="grid grid-cols-1 gap-5 font-besley text-base md:grid-cols-2">
               {figure.contributions.map((item: any) => {
                 if (item.blockType === "quote") {
                   return (
-                    <article class="break-inside-avoid flex flex-col justify-between gap-4 rounded-lg border border-white/20 bg-black/20 p-4 italic leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid flex flex-col justify-between gap-4 rounded-lg border border-human-1/20 bg-black/20 p-4 italic leading-relaxed shadow-md backdrop-blur-sm">
                       <p class="text-sm">“{item.text}”</p>
 
                       {item.source && (
@@ -107,7 +104,7 @@ const description = figure.isFictional
 
                 if (item.blockType === "link") {
                   return (
-                    <article class="break-inside-avoid rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid rounded-lg border border-human-1/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
                       <h3 class="font-bebas text-2xl">
                         {item.title}
                       </h3>
@@ -128,7 +125,7 @@ const description = figure.isFictional
 
                 if (item.blockType === "repository") {
                   return (
-                    <article class="break-inside-avoid rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid rounded-lg border border-human-1/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
                       <div class="mb-3 flex items-center gap-2">
                         <i class="ti ti-brand-github text-xl"></i>
 
@@ -155,7 +152,7 @@ const description = figure.isFictional
                   const contributionImageUrl = getContributionImageUrl(item.image);
 
                   return (
-                    <figure class="break-inside-avoid overflow-hidden rounded-lg border border-white/20 bg-black/20 shadow-md">
+                    <figure class="break-inside-avoid overflow-hidden rounded-lg border border-human-1/20 bg-black/20 shadow-md">
                       {contributionImageUrl && <img src={contributionImageUrl} alt={item.caption ?? ""} class="w-full object-cover" loading="lazy" />}
 
                       {item.caption && (
@@ -171,7 +168,7 @@ const description = figure.isFictional
                   const noteHtml = richTextToHtml(item.content);
 
                   return (
-                    <article class="break-inside-avoid rounded-lg border border-white/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
+                    <article class="break-inside-avoid rounded-lg border border-human-1/20 bg-black/20 p-5 leading-relaxed shadow-md backdrop-blur-sm">
                       {item.title && (
                         <h3 class="mb-3 font-bebas text-2xl">
                           {item.title}
@@ -188,13 +185,14 @@ const description = figure.isFictional
             </div>
           </section>
         )}
-      </section>
-
-      <Footer theme="text" />
-    </article>
+        <div class="mt-auto">
+          <Footer theme="text" />
+        </div>
+      </div>
+    </section>
   </main>
 
-  <button type="button" aria-label="Volver arriba" class="fixed bottom-4 right-4 z-50 rounded-full border border-white/20 bg-black/30 px-3 py-2 text-white opacity-0 shadow-lg backdrop-blur-sm transition hover:bg-black/40 pointer-events-none" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+  <button type="button" aria-label="Volver arriba" class="fixed bottom-5 right-5 z-50 rounded-full border border-human-1 px-3 py-2 text-human-1 opacity-0 transition pointer-events-none" style={`background-color: ${bg};`} onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
     <i class="ti ti-chevron-up"></i>
   </button>
 

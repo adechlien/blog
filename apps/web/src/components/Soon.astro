@@ -13,13 +13,13 @@ const { posts: soonPosts = [] } = Astro.props;
         const collection = post.collection;
         const typeLabel = collection?.name ?? "";
         const icon = collection?.icon || "/icons/flower.svg";
-        const coverUrl = post.cover?.url ?? "";
-        const coverAlt = post.cover?.alt ?? post.title;
+        // const coverUrl = post.cover?.url ?? "";
+        // const coverAlt = post.cover?.alt ?? post.title;
 
         return (
           <li class="snap-start flex-none">
-            <article class="relative isolate overflow-hidden rounded aspect-[3/1] w-full">
-              {coverUrl && (<img src={coverUrl} alt={coverAlt} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none opacity-70 grayscale-[20%]" loading="lazy"/>)}
+            <article class="relative isolate overflow-hidden rounded aspect-[3/1] w-full border-2 border-human-3">
+              <!-- {coverUrl && (<img src={coverUrl} alt={coverAlt} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none opacity-70 grayscale-[20%]" loading="lazy"/>)} -->
 
 
               <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pt-8 min-w-full bg-gradient-to-t from-human-4 to-transparent" style={`--collection-color: ${collection?.color ?? "#000000"}`}>

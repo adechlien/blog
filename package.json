@@ -10,7 +10,8 @@
     "build:web": "npm run build -w web",
     "build:cms": "npm run build -w cms",
     "preview:web": "npm run preview -w web",
-    "dev": "npm run dev:web",
+    "dev": "npm run dev:cms",
+    "dev:all": "node tools/dev-all.mjs",
     "build": "npm run build:web"
   },
   "dependencies": {
