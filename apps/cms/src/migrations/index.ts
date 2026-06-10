@@ -3,6 +3,7 @@ import * as migration_20260607_162320_add_videos from './20260607_162320_add_vid
 import * as migration_20260610_155138_add_sketches from './20260610_155138_add_sketches';
 import * as migration_20260610_161600_sketchbooks_model from './20260610_161600_sketchbooks_model';
 import * as migration_20260610_174500_repair_sketchbook_uploads from './20260610_174500_repair_sketchbook_uploads';
+import * as migration_20260610_181500_rebuild_sketches_schema from './20260610_181500_rebuild_sketches_schema';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20260610_174500_repair_sketchbook_uploads.up,
     down: migration_20260610_174500_repair_sketchbook_uploads.down,
-    name: '20260610_174500_repair_sketchbook_uploads'
+    name: '20260610_174500_repair_sketchbook_uploads',
+  },
+  {
+    up: migration_20260610_181500_rebuild_sketches_schema.up,
+    down: migration_20260610_181500_rebuild_sketches_schema.down,
+    name: '20260610_181500_rebuild_sketches_schema'
   },
 ];
