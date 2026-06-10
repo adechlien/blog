@@ -63,6 +63,14 @@ export const Sketches: CollectionConfig = {
       label: 'Alt del cover',
     },
     {
+      name: 'timeSpan',
+      type: 'text',
+      label: 'Rango de tiempo',
+      admin: {
+        description: 'Ejemplo: Diciembre de 2024 - Febrero de 2025',
+      },
+    },
+    {
       name: 'featured',
       type: 'checkbox',
       label: 'Destacado',

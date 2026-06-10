@@ -20,6 +20,7 @@ async function ignoreExpected(query: Promise<unknown>) {
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await ignoreExpected(db.run(sql`ALTER TABLE \`sketches\` ADD \`slug\` text;`))
+  await ignoreExpected(db.run(sql`ALTER TABLE \`sketches\` ADD \`time_span\` text;`))
   await ignoreExpected(db.run(sql`ALTER TABLE \`sketches\` RENAME COLUMN \`image\` TO \`cover\`;`))
   await ignoreExpected(db.run(sql`ALTER TABLE \`sketches\` RENAME COLUMN \`alt\` TO \`cover_alt\`;`))
 
@@ -42,8 +43,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
     WHERE NOT EXISTS (SELECT 1 FROM \`sketches_sketches\` WHERE \`_parent_id\` = \`sketches\`.\`id\`);
   `))
 
-  await ignoreExpected(db.run(sql`INSERT INTO \`sketches\` ("title", "slug", "cover", "cover_alt", "featured", "pub_date", "status")
-    SELECT 'Mars', 'mars', '/sketches/1.JPEG', 'Sketch de varias raquetas de tenis con un mensaje', true, '2026-06-10T00:00:00.000Z', 'published'
+  await ignoreExpected(db.run(sql`INSERT INTO \`sketches\` ("title", "slug", "cover", "cover_alt", "time_span", "featured", "pub_date", "status")
+    SELECT 'Mars', 'mars', '/sketches/1.JPEG', 'Sketch de varias raquetas de tenis con un mensaje', 'Diciembre de 2024 - Febrero de 2025', true, '2026-06-10T00:00:00.000Z', 'published'
     WHERE NOT EXISTS (SELECT 1 FROM \`sketches\` WHERE \`slug\` = 'mars');
   `))
   await ignoreExpected(db.run(sql`INSERT INTO \`sketches_sketches\` ("_order", "_parent_id", "id", "title", "image", "alt", "order")
@@ -52,6 +53,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
     AND NOT EXISTS (SELECT 1 FROM \`sketches_sketches\` WHERE \`_parent_id\` = \`sketches\`.\`id\`);
   `))
   await ignoreExpected(db.run(sql`UPDATE \`sketches\` SET \`title\` = 'Mars', \`slug\` = 'mars' WHERE \`title\` = 'Raquetas';`))
+  await ignoreExpected(db.run(sql`UPDATE \`sketches\` SET \`time_span\` = 'Diciembre de 2024 - Febrero de 2025' WHERE \`slug\` = 'mars';`))
   await ignoreExpected(db.run(sql`UPDATE \`sketches\` SET \`slug\` = 'sketchbook-' || \`id\` WHERE \`slug\` IS NULL;`))
   await db.run(sql`CREATE UNIQUE INDEX IF NOT EXISTS \`sketches_slug_idx\` ON \`sketches\` (\`slug\`);`)
 }
@@ -62,5 +64,6 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   await db.run(sql`ALTER TABLE \`sketches\` RENAME COLUMN \`cover_alt\` TO \`alt\`;`)
   await db.run(sql`ALTER TABLE \`sketches\` RENAME COLUMN \`cover\` TO \`image\`;`)
   await db.run(sql`DROP INDEX \`sketches_slug_idx\`;`)
+  await db.run(sql`ALTER TABLE \`sketches\` DROP COLUMN \`time_span\`;`)
   await db.run(sql`ALTER TABLE \`sketches\` DROP COLUMN \`slug\`;`)
 }

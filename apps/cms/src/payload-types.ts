@@ -371,6 +371,10 @@ export interface Sketch {
    */
   cover: string;
   coverAlt: string;
+  /**
+   * Ejemplo: Diciembre de 2024 - Febrero de 2025
+   */
+  timeSpan?: string | null;
   featured?: boolean | null;
   /**
    * Se usa para ordenar los sketchbooks.
@@ -649,6 +653,7 @@ export interface SketchesSelect<T extends boolean = true> {
   slug?: T;
   cover?: T;
   coverAlt?: T;
+  timeSpan?: T;
   featured?: T;
   pubDate?: T;
   sketches?:

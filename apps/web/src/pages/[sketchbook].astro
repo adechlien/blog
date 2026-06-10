@@ -3,11 +3,27 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import SketchMasonry from "../components/SketchMasonry.astro";
 import Footer from "../components/Footer.astro";
-import { getPayloadSketchbookBySlug } from "../lib/payload";
+import { getPayloadSketches, getPayloadSketchbookBySlug } from "../lib/payload";
 
 export const prerender = true;
 
-const sketchbook = await getPayloadSketchbookBySlug("mars");
+export async function getStaticPaths() {
+  const data = await getPayloadSketches();
+  const sketchbooks = data.docs ?? [];
+
+  return sketchbooks
+    .filter((sketchbook: any) => Boolean(sketchbook.slug))
+    .map((sketchbook: any) => ({
+      params: { sketchbook: sketchbook.slug },
+      props: { sketchbook },
+    }));
+}
+
+const { sketchbook: staticSketchbook } = Astro.props as { sketchbook?: any };
+const { sketchbook: slug } = Astro.params;
+
+const sketchbook =
+  staticSketchbook ?? (slug ? await getPayloadSketchbookBySlug(slug) : null);
 
 if (!sketchbook) {
   return new Response("Not found", { status: 404 });
@@ -31,6 +47,9 @@ const baseBg = "#024350";
     <section class="flex flex-col gap-6 px-6 w-full max-w-6xl mx-auto">
       <header class="mb-10">
         <h1 class="text-4xl font-bebas">{sketchbook.title}</h1>
+        {sketchbook.timeSpan && (
+          <p class="text-human-2">{sketchbook.timeSpan}</p>
+        )}
       </header>
 
       <SketchMasonry sketches={sketchbook.sketches ?? []} />

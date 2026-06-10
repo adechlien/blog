@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
-import SketchMasonry from "../../components/SketchMasonry.astro";
 import Footer from "../../components/Footer.astro";
 import { getPayloadSketches } from "../../lib/payload";
 
@@ -27,12 +26,29 @@ const baseBg = "#024350";
                 <p class="text-3xl font-tangerine opacity-80">"."</p>
             </header>
             <div class="flex flex-col gap-16">
-                {sketchbooks.map((sketchbook: any) => (
-                    <section class="flex flex-col gap-5">
-                        <h2 class="font-bebas text-3xl text-human-1">{sketchbook.title}</h2>
-                        <SketchMasonry sketches={sketchbook.sketches ?? []} />
-                    </section>
-                ))}
+                <ul class="grid gap-4 grid-cols-1 sm:grid-cols-4">
+                    {sketchbooks.map((sketchbook: any) => (
+                        <li>
+                            <a href={`/${sketchbook.slug}`} class="block group">
+                                <article class="relative isolate overflow-hidden rounded aspect-[2/1]">
+                                    <img src={sketchbook.cover} alt={sketchbook.coverAlt} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+
+                                    <div class="absolute bottom-0 flex min-w-full flex-col justify-end px-2 pb-1 pt-12 bg-gradient-to-t from-human-4 to-transparent">
+                                        {sketchbook.timeSpan && (
+                                            <p class="font-bellota text-xs leading-4 text-human-2">
+                                                {sketchbook.timeSpan}
+                                            </p>
+                                        )}
+
+                                        <h2 class="font-bebas text-lg leading-5 text-human-1">
+                                            {sketchbook.title}
+                                        </h2>
+                                    </div>
+                                </article>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
             </div>
             <Footer theme="home" />
         </section>
