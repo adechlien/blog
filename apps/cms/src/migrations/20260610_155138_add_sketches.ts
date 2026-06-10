@@ -22,18 +22,18 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.run(sql`CREATE TABLE IF NOT EXISTS \`sketches\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`title\` text NOT NULL,
-  	\`image\` text NOT NULL,
-  	\`alt\` text NOT NULL,
+  	\`cover_id\` integer,
   	\`featured\` integer DEFAULT false,
   	\`pub_date\` text NOT NULL,
   	\`status\` text DEFAULT 'draft' NOT NULL,
   	\`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
-  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL
+  	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+  	FOREIGN KEY (\`cover_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
   );
   `)
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`sketches_cover_idx\` ON \`sketches\` (\`cover_id\`);`)
   await db.run(sql`CREATE INDEX IF NOT EXISTS \`sketches_updated_at_idx\` ON \`sketches\` (\`updated_at\`);`)
   await db.run(sql`CREATE INDEX IF NOT EXISTS \`sketches_created_at_idx\` ON \`sketches\` (\`created_at\`);`)
-  await ignoreIfExists(db.run(sql`INSERT INTO \`sketches\` ("title", "image", "alt", "featured", "pub_date", "status") SELECT 'Raquetas', '/sketches/1.JPEG', 'Sketch de varias raquetas de tenis con un mensaje', true, '2026-06-10T00:00:00.000Z', 'published' WHERE NOT EXISTS (SELECT 1 FROM \`sketches\` WHERE \`title\` = 'Raquetas');`))
   await ignoreIfExists(db.run(sql`ALTER TABLE \`payload_locked_documents_rels\` ADD \`sketches_id\` integer REFERENCES sketches(id);`))
   await db.run(sql`CREATE INDEX IF NOT EXISTS \`payload_locked_documents_rels_sketches_id_idx\` ON \`payload_locked_documents_rels\` (\`sketches_id\`);`)
 }

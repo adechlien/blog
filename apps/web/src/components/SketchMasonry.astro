@@ -1,8 +1,10 @@
 ---
 interface Sketch {
   title: string;
-  image: string;
-  alt: string;
+  image: {
+    url: string;
+    alt: string;
+  };
   order: number;
 }
 
@@ -18,9 +20,9 @@ const { sketches } = Astro.props;
     {
       sketches.map((sketch) => (
         <article class="mb-5 break-inside-avoid">
-            <button type="button" class="group w-full text-left" data-sketch-open data-title={sketch.title} data-image={sketch.image} data-alt={sketch.alt ?? sketch.title} aria-label={`Abrir sketch ${sketch.title}`}>
+            <button type="button" class="group w-full text-left" data-sketch-open data-title={sketch.title} data-image={sketch.image.url} data-alt={sketch.image.alt ?? sketch.title} aria-label={`Abrir sketch ${sketch.title}`}>
             <div class="overflow-hidden rounded-lg">
-                <img src={sketch.image} alt={sketch.alt ?? sketch.title} loading="lazy" class="h-auto w-full object-cover"/>
+                <img src={sketch.image.url} alt={sketch.image.alt ?? sketch.title} loading="lazy" class="h-auto w-full object-cover"/>
             </div>
 
             <div class="mt-3">

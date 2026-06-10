@@ -29,7 +29,7 @@ if (!sketchbook) {
   return new Response("Not found", { status: 404 });
 }
 
-const heroBg = sketchbook.cover || "/banner.svg";
+const heroBg = sketchbook.cover?.url || "/banner.svg";
 const baseBg = "#024350";
 ---
 

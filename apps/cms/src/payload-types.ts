@@ -366,11 +366,7 @@ export interface Sketch {
    * Ruta publica del sketchbook. Ejemplo: mars
    */
   slug: string;
-  /**
-   * Path publico o URL. Ejemplo: /sketches/1.JPEG
-   */
-  cover: string;
-  coverAlt: string;
+  cover: number | Media;
   /**
    * Ejemplo: Diciembre de 2024 - Febrero de 2025
    */
@@ -382,11 +378,7 @@ export interface Sketch {
   pubDate: string;
   sketches: {
     title: string;
-    /**
-     * Path publico o URL. Ejemplo: /sketches/1.JPEG
-     */
-    image: string;
-    alt?: string | null;
+    image: number | Media;
     order: number;
     id?: string | null;
   }[];
@@ -652,7 +644,6 @@ export interface SketchesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   cover?: T;
-  coverAlt?: T;
   timeSpan?: T;
   featured?: T;
   pubDate?: T;
@@ -661,7 +652,6 @@ export interface SketchesSelect<T extends boolean = true> {
     | {
         title?: T;
         image?: T;
-        alt?: T;
         order?: T;
         id?: T;
       };

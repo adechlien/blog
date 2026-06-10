@@ -291,8 +291,12 @@ export function normalizePayloadSketch(sketch: any) {
     id: sketch.id,
     title: sketch.title,
     slug: sketch.slug,
-    cover: sketch.cover,
-    coverAlt: sketch.coverAlt,
+    cover: {
+      url: getMediaUrl(sketch.cover),
+      alt: sketch.cover?.alt ?? sketch.title,
+      width: sketch.cover?.width,
+      height: sketch.cover?.height,
+    },
     timeSpan: sketch.timeSpan,
     featured: sketch.featured,
     pubDate: sketch.pubDate,
@@ -301,8 +305,12 @@ export function normalizePayloadSketch(sketch: any) {
       .map((item: any) => ({
         id: item.id,
         title: item.title,
-        image: item.image,
-        alt: item.alt ?? item.title,
+        image: {
+          url: getMediaUrl(item.image),
+          alt: item.image?.alt ?? item.title,
+          width: item.image?.width,
+          height: item.image?.height,
+        },
         order: item.order ?? 0,
       }))
       .sort((a: any, b: any) => a.order - b.order),
@@ -315,13 +323,12 @@ export async function getPayloadSketches(options: PayloadSketchOptions = {}) {
 
   url.searchParams.set("where[status][equals]", status);
   url.searchParams.set('sort', '-pubDate');
-  url.searchParams.set('depth', '0');
+  url.searchParams.set('depth', '2');
   url.searchParams.set('limit', String(limit));
   setSelectParams(url, [
     "title",
     "slug",
     "cover",
-    "coverAlt",
     "timeSpan",
     "featured",
     "pubDate",

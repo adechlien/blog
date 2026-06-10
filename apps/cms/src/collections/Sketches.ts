@@ -49,18 +49,10 @@ export const Sketches: CollectionConfig = {
     },
     {
       name: 'cover',
-      type: 'text',
+      type: 'upload',
+      relationTo: 'media',
       required: true,
       label: 'Cover',
-      admin: {
-        description: 'Path publico o URL. Ejemplo: /sketches/1.JPEG',
-      },
-    },
-    {
-      name: 'coverAlt',
-      type: 'text',
-      required: true,
-      label: 'Alt del cover',
     },
     {
       name: 'timeSpan',
@@ -104,17 +96,10 @@ export const Sketches: CollectionConfig = {
         },
         {
           name: 'image',
-          type: 'text',
+          type: 'upload',
+          relationTo: 'media',
           required: true,
           label: 'Imagen',
-          admin: {
-            description: 'Path publico o URL. Ejemplo: /sketches/1.JPEG',
-          },
-        },
-        {
-          name: 'alt',
-          type: 'text',
-          label: 'Alt',
         },
         {
           name: 'order',

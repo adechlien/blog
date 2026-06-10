@@ -26,7 +26,7 @@ const featuredSketchbooks = sketches
             <a href={`/${sketchbook.slug}`} class="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label={`Ver sketchbook ${sketchbook.title}`}>
               <article class="relative isolate overflow-hidden rounded aspect-[2/1]">
                 <div class="relative aspect-[2/1] overflow-hidden rounded">
-                  <img src={sketchbook.cover} alt={sketchbook.coverAlt} class="absolute inset-0 h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" loading="lazy" />
+                  <img src={sketchbook.cover?.url} alt={sketchbook.cover?.alt ?? sketchbook.title} class="absolute inset-0 h-full w-full object-cover transition-transform duration-200 group-hover:scale-105" loading="lazy" />
                 </div>
 
                 <h3 class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent font-bebas text-lg leading-5 text-human-1">
