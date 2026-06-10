@@ -1,9 +1,9 @@
 ---
 interface Sketch {
   title: string;
-  pubDate: string;
   image: string;
   alt: string;
+  order: number;
 }
 
 interface Props {
@@ -11,13 +11,6 @@ interface Props {
 }
 
 const { sketches } = Astro.props;
-
-function formatSketchDate(pubDate: string) {
-  return new Intl.DateTimeFormat("es-CO", {
-    year: "numeric",
-    month: "long",
-  }).format(new Date(pubDate));
-}
 ---
 
 <section class="w-full">
@@ -25,7 +18,7 @@ function formatSketchDate(pubDate: string) {
     {
       sketches.map((sketch) => (
         <article class="mb-5 break-inside-avoid">
-            <button type="button" class="group w-full text-left" data-sketch-open data-title={sketch.title} data-date={formatSketchDate(sketch.pubDate)} data-image={sketch.image} data-alt={sketch.alt ?? sketch.title} aria-label={`Abrir sketch ${sketch.title}`}>
+            <button type="button" class="group w-full text-left" data-sketch-open data-title={sketch.title} data-image={sketch.image} data-alt={sketch.alt ?? sketch.title} aria-label={`Abrir sketch ${sketch.title}`}>
             <div class="overflow-hidden rounded-lg">
                 <img src={sketch.image} alt={sketch.alt ?? sketch.title} loading="lazy" class="h-auto w-full object-cover"/>
             </div>
@@ -34,10 +27,6 @@ function formatSketchDate(pubDate: string) {
               <h3 class="font-bebas text-xl leading-tight text-human-1">
                 {sketch.title}
               </h3>
-
-              <p class="text-sm text-human-2/70">
-                {formatSketchDate(sketch.pubDate)}
-              </p>
             </div>
           </button>
         </article>
@@ -54,8 +43,6 @@ function formatSketchDate(pubDate: string) {
       <div class="flex flex-col p-5 sm:p-6">
         <div class="flex items-start justify-between gap-4">
           <div>
-              <p id="sketch-modal-date" class="text-sm text-human-2/70">
-              </p>
             <h2 id="sketch-modal-title" class="mt-2 font-serif text-2xl leading-tight text-human-1"></h2>
           </div>
 
@@ -74,7 +61,6 @@ function formatSketchDate(pubDate: string) {
   const modal = document.querySelector("#sketch-modal");
   const modalImage = document.querySelector("#sketch-modal-image");
   const modalTitle = document.querySelector("#sketch-modal-title");
-  const modalDate = document.querySelector("#sketch-modal-date");
   const closeButton = document.querySelector("#sketch-modal-close");
   const openButtons = document.querySelectorAll("[data-sketch-open]");
 
@@ -92,7 +78,6 @@ function formatSketchDate(pubDate: string) {
       if (!isDialog) return;
 
       const title = button.getAttribute("data-title") ?? "";
-      const date = button.getAttribute("data-date") ?? "";
       const image = button.getAttribute("data-image") ?? "";
       const alt = button.getAttribute("data-alt") ?? title;
 
@@ -102,7 +87,6 @@ function formatSketchDate(pubDate: string) {
       }
 
       if (modalTitle) modalTitle.textContent = title;
-      if (modalDate) modalDate.textContent = date;
 
       modal.showModal();
       document.body.style.overflow = "hidden";

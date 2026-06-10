@@ -290,11 +290,21 @@ export function normalizePayloadSketch(sketch: any) {
   return {
     id: sketch.id,
     title: sketch.title,
-    image: sketch.image,
-    alt: sketch.alt,
+    slug: sketch.slug,
+    cover: sketch.cover,
+    coverAlt: sketch.coverAlt,
     featured: sketch.featured,
     pubDate: sketch.pubDate,
     status: sketch.status,
+    sketches: (sketch.sketches ?? [])
+      .map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        image: item.image,
+        alt: item.alt ?? item.title,
+        order: item.order ?? 0,
+      }))
+      .sort((a: any, b: any) => a.order - b.order),
   };
 }
 
@@ -308,16 +318,24 @@ export async function getPayloadSketches(options: PayloadSketchOptions = {}) {
   url.searchParams.set('limit', String(limit));
   setSelectParams(url, [
     "title",
-    "image",
-    "alt",
+    "slug",
+    "cover",
+    "coverAlt",
     "featured",
     "pubDate",
     "status",
+    "sketches",
   ]);
 
   const response = await fetch(url.toString());
 
   if (response.status === 404) {
+    return {
+      docs: [],
+    };
+  }
+
+  if (response.status === 500) {
     return {
       docs: [],
     };
@@ -333,6 +351,34 @@ export async function getPayloadSketches(options: PayloadSketchOptions = {}) {
     ...data,
     docs: data.docs.map(normalizePayloadSketch),
   };
+}
+
+export async function getPayloadSketchbookBySlug(slug: string) {
+  const url = new URL('/api/sketches', PAYLOAD_URL);
+
+  url.searchParams.set('where[slug][equals]', slug);
+  url.searchParams.set('where[status][equals]', 'published');
+  url.searchParams.set('depth', '2');
+  url.searchParams.set('limit', '1');
+
+  const response = await fetch(url.toString());
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (response.status === 500) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(`Error fetching sketchbook from Payload: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const sketchbook = data.docs?.[0];
+
+  return sketchbook ? normalizePayloadSketch(sketchbook) : null;
 }
 
 export async function getPayloadDraftTexts() {

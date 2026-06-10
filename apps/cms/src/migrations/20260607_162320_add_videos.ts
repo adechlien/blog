@@ -1,7 +1,31 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-sqlite'
 
+async function ignoreIfExists(runQuery: () => Promise<unknown>) {
+  try {
+    await runQuery()
+  } catch (error: any) {
+    const details = [
+      String(error?.message ?? ''),
+      String(error?.cause?.message ?? ''),
+      String(error?.stack ?? ''),
+      String(error ?? ''),
+    ]
+      .join('\n')
+      .toLowerCase()
+
+    if (
+      details.includes('already exists') ||
+      details.includes('duplicate column name')
+    ) {
+      return
+    }
+
+    throw error
+  }
+}
+
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
-  await db.run(sql`CREATE TABLE \`videos\` (
+  await db.run(sql`CREATE TABLE IF NOT EXISTS \`videos\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`title\` text NOT NULL,
   	\`youtube_url\` text NOT NULL,
@@ -15,11 +39,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	FOREIGN KEY (\`thumbnail_id\`) REFERENCES \`media\`(\`id\`) ON UPDATE no action ON DELETE set null
   );
   `)
-  await db.run(sql`CREATE INDEX \`videos_thumbnail_idx\` ON \`videos\` (\`thumbnail_id\`);`)
-  await db.run(sql`CREATE INDEX \`videos_updated_at_idx\` ON \`videos\` (\`updated_at\`);`)
-  await db.run(sql`CREATE INDEX \`videos_created_at_idx\` ON \`videos\` (\`created_at\`);`)
-  await db.run(sql`ALTER TABLE \`payload_locked_documents_rels\` ADD \`videos_id\` integer REFERENCES videos(id);`)
-  await db.run(sql`CREATE INDEX \`payload_locked_documents_rels_videos_id_idx\` ON \`payload_locked_documents_rels\` (\`videos_id\`);`)
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`videos_thumbnail_idx\` ON \`videos\` (\`thumbnail_id\`);`)
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`videos_updated_at_idx\` ON \`videos\` (\`updated_at\`);`)
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`videos_created_at_idx\` ON \`videos\` (\`created_at\`);`)
+  await ignoreIfExists(() => db.run(sql`ALTER TABLE \`payload_locked_documents_rels\` ADD \`videos_id\` integer REFERENCES videos(id);`))
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`payload_locked_documents_rels_videos_id_idx\` ON \`payload_locked_documents_rels\` (\`videos_id\`);`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {

@@ -38,19 +38,29 @@ export const Sketches: CollectionConfig = {
       label: 'Titulo',
     },
     {
-      name: 'image',
+      name: 'slug',
       type: 'text',
       required: true,
-      label: 'Imagen',
+      unique: true,
+      label: 'Slug',
+      admin: {
+        description: 'Ruta publica del sketchbook. Ejemplo: mars',
+      },
+    },
+    {
+      name: 'cover',
+      type: 'text',
+      required: true,
+      label: 'Cover',
       admin: {
         description: 'Path publico o URL. Ejemplo: /sketches/1.JPEG',
       },
     },
     {
-      name: 'alt',
+      name: 'coverAlt',
       type: 'text',
       required: true,
-      label: 'Alt',
+      label: 'Alt del cover',
     },
     {
       name: 'featured',
@@ -65,8 +75,47 @@ export const Sketches: CollectionConfig = {
       label: 'Fecha de publicacion',
       defaultValue: () => new Date().toISOString(),
       admin: {
-        description: 'Se usa para ordenar los sketches.',
+        description: 'Se usa para ordenar los sketchbooks.',
       },
+    },
+    {
+      name: 'sketches',
+      type: 'array',
+      required: true,
+      label: 'Sketches',
+      labels: {
+        singular: 'Sketch',
+        plural: 'Sketches',
+      },
+      fields: [
+        {
+          name: 'title',
+          type: 'text',
+          required: true,
+          label: 'Titulo',
+        },
+        {
+          name: 'image',
+          type: 'text',
+          required: true,
+          label: 'Imagen',
+          admin: {
+            description: 'Path publico o URL. Ejemplo: /sketches/1.JPEG',
+          },
+        },
+        {
+          name: 'alt',
+          type: 'text',
+          label: 'Alt',
+        },
+        {
+          name: 'order',
+          type: 'number',
+          required: true,
+          label: 'Orden',
+          defaultValue: 0,
+        },
+      ],
     },
     {
       name: 'status',

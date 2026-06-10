@@ -1,7 +1,25 @@
 import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-sqlite'
 
+async function ignoreIfExists(query: Promise<unknown>) {
+  try {
+    await query
+  } catch (error: any) {
+    const message = String(error?.message ?? error)
+
+    if (
+      message.includes('already exists') ||
+      message.includes('duplicate column name') ||
+      message.includes('no such column')
+    ) {
+      return
+    }
+
+    throw error
+  }
+}
+
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
-  await db.run(sql`CREATE TABLE \`sketches\` (
+  await db.run(sql`CREATE TABLE IF NOT EXISTS \`sketches\` (
   	\`id\` integer PRIMARY KEY NOT NULL,
   	\`title\` text NOT NULL,
   	\`image\` text NOT NULL,
@@ -13,11 +31,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	\`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL
   );
   `)
-  await db.run(sql`CREATE INDEX \`sketches_updated_at_idx\` ON \`sketches\` (\`updated_at\`);`)
-  await db.run(sql`CREATE INDEX \`sketches_created_at_idx\` ON \`sketches\` (\`created_at\`);`)
-  await db.run(sql`INSERT INTO \`sketches\` ("title", "image", "alt", "featured", "pub_date", "status") VALUES ('Raquetas', '/sketches/1.JPEG', 'Sketch de varias raquetas de tenis con un mensaje', true, '2026-06-10T00:00:00.000Z', 'published');`)
-  await db.run(sql`ALTER TABLE \`payload_locked_documents_rels\` ADD \`sketches_id\` integer REFERENCES sketches(id);`)
-  await db.run(sql`CREATE INDEX \`payload_locked_documents_rels_sketches_id_idx\` ON \`payload_locked_documents_rels\` (\`sketches_id\`);`)
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`sketches_updated_at_idx\` ON \`sketches\` (\`updated_at\`);`)
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`sketches_created_at_idx\` ON \`sketches\` (\`created_at\`);`)
+  await ignoreIfExists(db.run(sql`INSERT INTO \`sketches\` ("title", "image", "alt", "featured", "pub_date", "status") SELECT 'Raquetas', '/sketches/1.JPEG', 'Sketch de varias raquetas de tenis con un mensaje', true, '2026-06-10T00:00:00.000Z', 'published' WHERE NOT EXISTS (SELECT 1 FROM \`sketches\` WHERE \`title\` = 'Raquetas');`))
+  await ignoreIfExists(db.run(sql`ALTER TABLE \`payload_locked_documents_rels\` ADD \`sketches_id\` integer REFERENCES sketches(id);`))
+  await db.run(sql`CREATE INDEX IF NOT EXISTS \`payload_locked_documents_rels_sketches_id_idx\` ON \`payload_locked_documents_rels\` (\`sketches_id\`);`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {

@@ -363,15 +363,29 @@ export interface Sketch {
   id: number;
   title: string;
   /**
+   * Ruta publica del sketchbook. Ejemplo: mars
+   */
+  slug: string;
+  /**
    * Path publico o URL. Ejemplo: /sketches/1.JPEG
    */
-  image: string;
-  alt: string;
+  cover: string;
+  coverAlt: string;
   featured?: boolean | null;
   /**
-   * Se usa para ordenar los sketches.
+   * Se usa para ordenar los sketchbooks.
    */
   pubDate: string;
+  sketches: {
+    title: string;
+    /**
+     * Path publico o URL. Ejemplo: /sketches/1.JPEG
+     */
+    image: string;
+    alt?: string | null;
+    order: number;
+    id?: string | null;
+  }[];
   status: 'draft' | 'published' | 'archived';
   updatedAt: string;
   createdAt: string;
@@ -632,10 +646,20 @@ export interface VideosSelect<T extends boolean = true> {
  */
 export interface SketchesSelect<T extends boolean = true> {
   title?: T;
-  image?: T;
-  alt?: T;
+  slug?: T;
+  cover?: T;
+  coverAlt?: T;
   featured?: T;
   pubDate?: T;
+  sketches?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        alt?: T;
+        order?: T;
+        id?: T;
+      };
   status?: T;
   updatedAt?: T;
   createdAt?: T;

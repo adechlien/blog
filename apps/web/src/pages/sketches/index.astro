@@ -6,7 +6,7 @@ import Footer from "../../components/Footer.astro";
 import { getPayloadSketches } from "../../lib/payload";
 
 const sketchesData = await getPayloadSketches();
-const sketches = sketchesData.docs ?? [];
+const sketchbooks = sketchesData.docs ?? [];
 
 const heroBg = "/banner.svg";
 const baseBg = "#024350";
@@ -26,7 +26,14 @@ const baseBg = "#024350";
                 <h1 class="text-4xl font-bebas">Lienzos Atrevidos</h1>
                 <p class="text-3xl font-tangerine opacity-80">"."</p>
             </header>
-            <SketchMasonry sketches={sketches} />
+            <div class="flex flex-col gap-16">
+                {sketchbooks.map((sketchbook: any) => (
+                    <section class="flex flex-col gap-5">
+                        <h2 class="font-bebas text-3xl text-human-1">{sketchbook.title}</h2>
+                        <SketchMasonry sketches={sketchbook.sketches ?? []} />
+                    </section>
+                ))}
+            </div>
             <Footer theme="home" />
         </section>
     </main>
