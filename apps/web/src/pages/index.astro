@@ -48,8 +48,10 @@ const sketches = sketchesData.docs ?? [];
                     <History posts={posts} />
                 </div>
                 <Soon posts={soonPosts} />
-                <Figures figures={figures} />
-                <Sketches sketches={sketches} />
+                <div class="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-8 h-full">
+                    <Figures figures={figures} />
+                    <Sketches sketches={sketches} />
+                </div>
                 <Videos videos={videos} />
                 <Albums />
             </div>

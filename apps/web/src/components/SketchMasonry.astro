@@ -19,105 +19,109 @@ const { sketches } = Astro.props;
   <div class="columns-1 gap-5 sm:columns-2 lg:columns-3">
     {
       sketches.map((sketch) => (
-        <article class="mb-5 break-inside-avoid">
+        <article class="relative isolate break-inside-avoid">
             <button type="button" class="group w-full text-left" data-sketch-open data-title={sketch.title} data-image={sketch.image.url} data-alt={sketch.image.alt ?? sketch.title} aria-label={`Abrir sketch ${sketch.title}`}>
             <div class="overflow-hidden rounded-lg">
                 <img src={sketch.image.url} alt={sketch.image.alt ?? sketch.title} loading="lazy" class="h-auto w-full object-cover"/>
             </div>
 
-            <div class="mt-3">
-              <h3 class="font-bebas text-xl leading-tight text-human-1">
+            <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-4 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
+              <h3 class="text-human-1 font-bebas text-start text-xl leading-5">
                 {sketch.title}
               </h3>
             </div>
           </button>
         </article>
+
+
       ))
     }
   </div>
 
-  <dialog id="sketch-modal" class="w-[min(92vw,900px)] border border-human-3/40 bg-human-4 p-0 text-human-1 backdrop:bg-human-1/60">
-    <div class="grid max-h-[90vh] overflow-y-auto md:grid-cols-[1.2fr_0.8fr]">
-      <div class="bg-human-1/5">
-          <img id="sketch-modal-image" src="" alt="" class="h-auto max-h-[85vh] w-full object-contain"/>
-      </div>
+  <div id="sketch-modal" class="fixed inset-0 z-[100] hidden min-h-[100dvh] items-center justify-center bg-human-5/75 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-6" aria-hidden="true">
+    <div class="relative flex max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-1.5rem)] items-center justify-center text-human-2 sm:max-w-[calc(100vw-2rem)]" role="dialog" aria-modal="true">
+      <button type="button" id="sketch-modal-close" class="absolute right-3 top-3 z-[60] inline-flex text-2xl leading-none text-human-2 transition hover:text-human-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label="Cerrar modal">
+        <i class="ti ti-x"></i>
+      </button>
 
-      <div class="flex flex-col p-5 sm:p-6">
-        <div class="flex items-start justify-between gap-4">
-          <div>
-            <h2 id="sketch-modal-title" class="mt-2 font-serif text-2xl leading-tight text-human-1"></h2>
-          </div>
-
-          <button type="button" id="sketch-modal-close" class="border border-human-3/40 px-3 py-1 text-sm text-human-2 transition-colors hover:bg-human-3/10" aria-label="Cerrar modal">
-            Cerrar
-          </button>
-        </div>
-
-      </div>
+      <img id="sketch-modal-image" src="" alt="" class="max-h-[calc(100dvh-2rem)] w-auto max-w-[calc(100vw-1.5rem)] object-contain sm:max-w-[calc(100vw-2rem)] rounded-lg"/>
     </div>
-  </dialog>
+  </div>
 </section>
 
 
-<script>
+<script is:inline data-astro-rerun>
+(() => {
+  window.__leggiamoSketchModalController?.abort();
+
+  const controller = new AbortController();
+  window.__leggiamoSketchModalController = controller;
+
   const modal = document.querySelector("#sketch-modal");
   const modalImage = document.querySelector("#sketch-modal-image");
-  const modalTitle = document.querySelector("#sketch-modal-title");
   const closeButton = document.querySelector("#sketch-modal-close");
-  const openButtons = document.querySelectorAll("[data-sketch-open]");
 
-  const isDialog = modal instanceof HTMLDialogElement;
+  const openClass = "flex";
+  const closedClass = "hidden";
 
-  const closeModal = () => {
-    if (!isDialog) return;
-
-    modal.close();
-    document.body.style.overflow = "";
+  const lockPageScroll = () => {
+    document.documentElement.classList.add("overflow-hidden");
+    document.body.classList.add("overflow-hidden");
   };
 
-  openButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      if (!isDialog) return;
+  const unlockPageScroll = () => {
+    document.documentElement.classList.remove("overflow-hidden");
+    document.body.classList.remove("overflow-hidden");
+  };
 
-      const title = button.getAttribute("data-title") ?? "";
-      const image = button.getAttribute("data-image") ?? "";
-      const alt = button.getAttribute("data-alt") ?? title;
+  const closeModal = () => {
+    if (!modal) return;
 
-      if (modalImage instanceof HTMLImageElement) {
-        modalImage.src = image;
-        modalImage.alt = alt;
-      }
+    modal.classList.add(closedClass);
+    modal.classList.remove(openClass);
+    modal.setAttribute("aria-hidden", "true");
+    unlockPageScroll();
+  };
 
-      if (modalTitle) modalTitle.textContent = title;
+  const openModal = (image, alt) => {
+    if (!modal) return;
 
-      modal.showModal();
-      document.body.style.overflow = "hidden";
-    });
-  });
+    if (modalImage instanceof HTMLImageElement) {
+      modalImage.src = image;
+      modalImage.alt = alt;
+    }
 
-  closeButton?.addEventListener("click", closeModal);
+    modal.classList.remove(closedClass);
+    modal.classList.add(openClass);
+    modal.setAttribute("aria-hidden", "false");
+    lockPageScroll();
+  };
+
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const trigger = target.closest("[data-sketch-open]");
+    if (!trigger) return;
+
+    event.preventDefault();
+
+    const image = trigger.getAttribute("data-image") ?? "";
+    const alt = trigger.getAttribute("data-alt") ?? "";
+
+    if (trigger instanceof HTMLElement) trigger.blur();
+
+    openModal(image, alt);
+  }, { signal: controller.signal });
+
+  closeButton?.addEventListener("click", closeModal, { signal: controller.signal });
 
   modal?.addEventListener("click", (event) => {
-    if (!isDialog) return;
-
-    if (!(event instanceof MouseEvent)) return;
-
-    const rect = modal.getBoundingClientRect();
-
-    const clickedOutside =
-      event.clientX < rect.left ||
-      event.clientX > rect.right ||
-      event.clientY < rect.top ||
-      event.clientY > rect.bottom;
-
-    if (clickedOutside) {
-      closeModal();
-    }
-  });
+    if (event.target === modal) closeModal();
+  }, { signal: controller.signal });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      document.body.style.overflow = "";
-    }
-  });
+    if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) closeModal();
+  }, { signal: controller.signal });
+})();
 </script>
