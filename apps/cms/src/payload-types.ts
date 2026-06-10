@@ -73,6 +73,7 @@ export interface Config {
     texts: Text;
     figures: Figure;
     videos: Video;
+    sketches: Sketch;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     texts: TextsSelect<false> | TextsSelect<true>;
     figures: FiguresSelect<false> | FiguresSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
+    sketches: SketchesSelect<false> | SketchesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -355,6 +357,27 @@ export interface Video {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sketches".
+ */
+export interface Sketch {
+  id: number;
+  title: string;
+  /**
+   * Path publico o URL. Ejemplo: /sketches/1.JPEG
+   */
+  image: string;
+  alt: string;
+  featured?: boolean | null;
+  /**
+   * Se usa para ordenar los sketches.
+   */
+  pubDate: string;
+  status: 'draft' | 'published' | 'archived';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -400,6 +423,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'videos';
         value: number | Video;
+      } | null)
+    | ({
+        relationTo: 'sketches';
+        value: number | Sketch;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -595,6 +622,20 @@ export interface VideosSelect<T extends boolean = true> {
   description?: T;
   order?: T;
   featured?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sketches_select".
+ */
+export interface SketchesSelect<T extends boolean = true> {
+  title?: T;
+  image?: T;
+  alt?: T;
+  featured?: T;
+  pubDate?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;

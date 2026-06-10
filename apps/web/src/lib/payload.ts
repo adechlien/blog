@@ -16,6 +16,11 @@ type PayloadVideoOptions = {
   limit?: number;
 };
 
+type PayloadSketchOptions = {
+  status?: "published" | "draft";
+  limit?: number;
+};
+
 function setSelectParams(url: URL, fields: string[]) {
   fields.forEach((field) => {
     url.searchParams.set(`select[${field}]`, "true");
@@ -278,6 +283,55 @@ export async function getPayloadVideos(options: PayloadVideoOptions = {}) {
   return {
     ...data,
     docs: data.docs.map(normalizePayloadVideo),
+  };
+}
+
+export function normalizePayloadSketch(sketch: any) {
+  return {
+    id: sketch.id,
+    title: sketch.title,
+    image: sketch.image,
+    alt: sketch.alt,
+    featured: sketch.featured,
+    pubDate: sketch.pubDate,
+    status: sketch.status,
+  };
+}
+
+export async function getPayloadSketches(options: PayloadSketchOptions = {}) {
+  const { status = "published", limit = 100 } = options;
+  const url = new URL('/api/sketches', PAYLOAD_URL);
+
+  url.searchParams.set("where[status][equals]", status);
+  url.searchParams.set('sort', '-pubDate');
+  url.searchParams.set('depth', '0');
+  url.searchParams.set('limit', String(limit));
+  setSelectParams(url, [
+    "title",
+    "image",
+    "alt",
+    "featured",
+    "pubDate",
+    "status",
+  ]);
+
+  const response = await fetch(url.toString());
+
+  if (response.status === 404) {
+    return {
+      docs: [],
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(`Error fetching sketches from Payload: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return {
+    ...data,
+    docs: data.docs.map(normalizePayloadSketch),
   };
 }
 

@@ -7,29 +7,33 @@ import Collections from "../components/Collections.astro";
 import History from "../components/History.astro";
 import Destacados from "../components/Destacados.astro";
 import Figures from "../components/Figures.astro";
+import Sketches from "../components/Sketches.astro";
 import Videos from "../components/Videos.astro";
 import Albums from "../components/Albums.astro";
 import Footer from "../components/Footer.astro";
 import {
   getPayloadDraftTexts,
   getPayloadFigures,
+  getPayloadSketches,
   getPayloadTexts,
   getPayloadVideos,
 } from "../lib/payload";
 
 export const prerender = true;
 
-const [textsData, draftTextsData, figuresData, videosData] = await Promise.all([
+const [textsData, draftTextsData, figuresData, videosData, sketchesData] = await Promise.all([
   getPayloadTexts({ includeContent: false }),
   getPayloadDraftTexts(),
   getPayloadFigures({ includeDetails: false }),
   getPayloadVideos(),
+  getPayloadSketches(),
 ]);
 
 const posts = textsData.docs ?? [];
 const soonPosts = draftTextsData.docs ?? [];
 const figures = figuresData.docs ?? [];
 const videos = videosData.docs ?? [];
+const sketches = sketchesData.docs ?? [];
 ---
 
 <Layout title="Inicio" description="Blog de textos literarios, prosa y reflexiones personales.">
@@ -45,6 +49,7 @@ const videos = videosData.docs ?? [];
                 </div>
                 <Soon posts={soonPosts} />
                 <Figures figures={figures} />
+                <Sketches sketches={sketches} />
                 <Videos videos={videos} />
                 <Albums />
             </div>
