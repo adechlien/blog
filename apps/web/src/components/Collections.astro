@@ -1,30 +1,29 @@
 ---
+type PayloadCollection = {
+  id: string | number;
+  name: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  order?: number;
+};
+
 type PayloadText = {
   id: string;
   title: string;
   pubDate?: string;
-  collection?: {
-    slug?: string;
-    name?: string;
-    color?: string;
-  };
+  collection?: PayloadCollection;
   cover?: {
     url?: string;
     alt?: string;
   };
 };
 
-type Category = {
-  name: string;
-  slug: string;
-};
-
 type ModalPost = {
   id: string;
   title: string;
   type: string;
-  typeTitle: string;
-  typeDescription: string;
   href: string;
   coverUrl: string;
   coverAlt: string;
@@ -33,51 +32,25 @@ type ModalPost = {
   formattedDate: string;
 };
 
-const newEra: Category[] = [
-  { name: "Consciencia Colménica", slug: "consciencia" },
-  { name: "If this world were mine", slug: "world" },
-  { name: "Pintas Heredadas", slug: "pintas" },
-];
-
-const oldEra: Category[] = [
-  { name: "Lágrimas de Siddartha", slug: "lagrimas" },
-  { name: "Still Prefer Sentir", slug: "still" },
-  { name: "Placebo Onírico", slug: "placebo" },
-  { name: "En las luces de colores", slug: "colores" },
-];
-
-const typeTitles: Record<string, string> = {
-  consciencia: "Consciencia colménica",
-  lagrimas: "Lágrimas de Siddartha",
-  colores: "En las luces de colores",
-  still: "Still Prefer Sentir",
-  placebo: "Placebo Onírico",
-  pintas: "Pintas Heredadas",
-  world: "If this world were mine",
+const { posts = [], collections = [] } = Astro.props as {
+  posts?: PayloadText[];
+  collections?: PayloadCollection[];
 };
 
-const typeDescriptions: Record<string, string> = {
-  consciencia: '"Se necesita una razón para odiar a alguien, y querer odiarle es una razón válida."',
-  lagrimas: '"Cuando miro a las nubes, no hay nadie más. Soy solo yo."',
-  colores: '"A través de mis sueños y añoranzas empezó la búsqueda del sentido."',
-  still: '"El calor de tu piel me dio razones para despertar."',
-  placebo: '"Escribir con un vacío en el pecho. Hallar en la insignificancia un camino hacia la libertad."',
-  pintas: '"Va de hallar dentro lo que siempre se ha buscado fuera."',
-  world: '"As an intent to achieve new ways of feeling, I started feeling."',
-};
+const sortedCollections = [...collections].sort((a, b) => {
+  const orderA = a.order ?? 0;
+  const orderB = b.order ?? 0;
 
-const mapIcon = (slug = "") => {
-  if (slug === "consciencia") return "/icons/bee.svg";
-  if (slug === "world") return "/icons/world.svg";
-  if (slug === "pintas") return "/icons/cupcake.svg";
-  if (slug === "lagrimas") return "/icons/cloud.svg";
-  if (slug === "still") return "/icons/heart.svg";
-  if (slug === "placebo") return "/icons/moon.svg";
+  if (orderA !== orderB) return orderA - orderB;
 
-  return "/icons/flower.svg";
-};
+  return a.name.localeCompare(b.name, "es");
+});
 
-const { posts = [] } = Astro.props as { posts?: PayloadText[] };
+const collectionsBySlug = sortedCollections.reduce<Record<string, PayloadCollection>>((acc, collection) => {
+  if (collection.slug) acc[collection.slug] = collection;
+
+  return acc;
+}, {});
 
 const countsByType = posts.reduce<Record<string, number>>((acc, post) => {
   const slug = post.collection?.slug;
@@ -99,8 +72,6 @@ const modalPosts: ModalPost[] = posts
       id: post.id,
       title: post.title,
       type,
-      typeTitle: typeTitles[type] ?? type,
-      typeDescription: typeDescriptions[type] ?? "",
       href: `/${type}/${post.id}`,
       coverUrl: post.cover?.url ?? "",
       coverAlt: post.cover?.alt ?? post.title,
@@ -109,6 +80,11 @@ const modalPosts: ModalPost[] = posts
       formattedDate: pubDate && !Number.isNaN(pubDate.getTime()) ? pubDate.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" }) : "",
     };
   });
+
+const modalData = {
+  posts: modalPosts,
+  collections: collectionsBySlug,
+};
 ---
 
 <div class="flex flex-col">
@@ -117,57 +93,35 @@ const modalPosts: ModalPost[] = posts
   </h2>
 
   <div class="flex flex-col w-full justify-around gap-4 md:gap-1 border-2 rounded border-human-3 p-4 sm:p-2">
-    <div class="flex flex-col md:grid md:grid-cols-3 justify-around w-full gap-2">
-      {newEra.map((category) => {
-        const count = countsByType[category.slug] ?? 0;
-        const icon = mapIcon(category.slug);
+    {sortedCollections.length > 0 ? (
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-around w-full gap-2">
+        {sortedCollections.map((collection) => {
+          const count = countsByType[collection.slug] ?? 0;
 
-        return (
-          <button type="button" data-collection-modal-trigger data-collection-slug={category.slug} aria-label={`Abrir colección ${category.name}`} class="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3">
-            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm">
-              <div class="flex items-center gap-2">
-                <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy" />
+          return (
+            <button type="button" data-collection-modal-trigger data-collection-slug={collection.slug} aria-label={`Abrir coleccion ${collection.name}`} class="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3">
+              <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm">
+                <div class="flex items-center gap-2 min-w-0">
+                  {collection.icon && (
+                    <img src={collection.icon} alt="" aria-hidden="true" class="size-4 shrink-0 object-contain" loading="lazy" />
+                  )}
 
-                <span class="font-bebas font-normal text-lg text-center text-human-2 leading-relaxed">
-                  {category.name}
+                  <span class="font-bebas font-normal text-lg text-center text-human-2 leading-relaxed truncate">
+                    {collection.name}
+                  </span>
+                </div>
+
+                <span class="inline-flex items-center justify-center text-base font-black text-human-3">
+                  {count}
                 </span>
-              </div>
-
-              <span class="inline-flex items-center justify-center text-base font-black text-human-3">
-                {count}
-              </span>
-            </article>
-          </button>
-        );
-      })}
-    </div>
-
-    <div class="border-b-2 border-human-3 md:border-0"></div>
-
-    <div class="flex flex-col md:grid sm:grid-cols-3 lg:grid-cols-4 justify-around w-full gap-2">
-      {oldEra.map((category) => {
-        const count = countsByType[category.slug] ?? 0;
-        const icon = mapIcon(category.slug);
-
-        return (
-          <button type="button" data-collection-modal-trigger data-collection-slug={category.slug} aria-label={`Abrir colección ${category.name}`} class="w-full text-left">
-            <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm">
-              <div class="flex items-center gap-2">
-                <img src={icon} alt="" aria-hidden="true" class="size-4 object-contain" loading="lazy" />
-
-                <span class="font-bebas font-normal text-lg text-center text-human-2">
-                  {category.name}
-                </span>
-              </div>
-
-              <span class="inline-flex items-center justify-center text-base font-black text-human-3">
-                {count}
-              </span>
-            </article>
-          </button>
-        );
-      })}
-    </div>
+              </article>
+            </button>
+          );
+        })}
+      </div>
+    ) : (
+      <p class="text-sm text-human-2">No hay colecciones todavia.</p>
+    )}
   </div>
 </div>
 
@@ -189,14 +143,19 @@ const modalPosts: ModalPost[] = posts
   </div>
 </div>
 
-<script is:inline data-astro-rerun define:vars={{ modalPosts, modalTypeTitles: typeTitles, modalTypeDescriptions: typeDescriptions }}>
+<script is:inline id="collection-modal-data" type="application/json" set:html={JSON.stringify(modalData)}></script>
+
+<script is:inline data-astro-rerun>
 (() => {
   window.__leggiamoCollectionModalController?.abort();
 
   var controller = new AbortController();
   window.__leggiamoCollectionModalController = controller;
 
-  var posts = modalPosts;
+  var dataElement = document.getElementById("collection-modal-data");
+  var modalData = dataElement?.textContent ? JSON.parse(dataElement.textContent) : {};
+  var posts = modalData.posts ?? [];
+  var collections = modalData.collections ?? {};
 
   var modal = document.getElementById("collection-modal");
   var closeButton = document.getElementById("collection-modal-close");
@@ -270,19 +229,17 @@ const modalPosts: ModalPost[] = posts
     if (!modal || !titleElement || !descriptionElement || !listElement) return;
 
     const filteredPosts = posts.filter((post) => post.type === slug).sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
+    const collection = collections[slug] ?? {};
 
-    const title = modalTypeTitles[slug] ?? slug;
-    const description = modalTypeDescriptions[slug] ?? "";
-
-    titleElement.textContent = title;
-    descriptionElement.textContent = description;
+    titleElement.textContent = collection.name ?? slug;
+    descriptionElement.textContent = collection.description ?? "";
 
     clearList();
 
     if (filteredPosts.length === 0) {
       const emptyMessage = document.createElement("p");
       emptyMessage.className = "text-human-2/70";
-      emptyMessage.textContent = "No hay textos en esta colección todavía.";
+      emptyMessage.textContent = "No hay textos en esta coleccion todavia.";
       listElement.appendChild(emptyMessage);
     } else {
       filteredPosts.forEach((post) => {

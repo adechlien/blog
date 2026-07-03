@@ -59,9 +59,11 @@ const collections = collectionsData.docs ?? [];
                     <Figures figures={figures} />
                     <Sketches sketches={sketches} />
                 </div>
-                <Videos videos={videos} />
-                <Albums />
-                <Movies movies={movies} />
+                    <Videos videos={videos} />
+                <div class="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-8 h-full">
+                    <Movies movies={movies} />
+                    <Albums />
+                </div>
             </div>
         </section>
     </main>
