@@ -74,6 +74,7 @@ export interface Config {
     figures: Figure;
     videos: Video;
     sketches: Sketch;
+    movies: Movie;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     figures: FiguresSelect<false> | FiguresSelect<true>;
     videos: VideosSelect<false> | VideosSelect<true>;
     sketches: SketchesSelect<false> | SketchesSelect<true>;
+    movies: MoviesSelect<false> | MoviesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -181,12 +183,11 @@ export interface Collection {
   slug: string;
   description?: string | null;
   /**
-   * Color hexadecimal asociado a la colección. Ejemplo: #8B5CF6
+   * Color hexadecimal asociado a la coleccion. Ejemplo: #8B5CF6
    */
   color: string;
   icon?: (number | null) | Media;
   order?: number | null;
-  kind: 'writer' | 'philosopher' | 'developer' | 'artist' | 'fictional' | 'other';
   updatedAt: string;
   createdAt: string;
 }
@@ -388,6 +389,28 @@ export interface Sketch {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "movies".
+ */
+export interface Movie {
+  id: number;
+  title: string;
+  /**
+   * Texto corto para mostrar sobre el poster. Ejemplo: I, II, 01.
+   */
+  label: string;
+  /**
+   * URL completa de la pelicula en Letterboxd.
+   */
+  letterboxdUrl: string;
+  poster: number | Media;
+  order?: number | null;
+  featured?: boolean | null;
+  status: 'draft' | 'published' | 'archived';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -437,6 +460,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'sketches';
         value: number | Sketch;
+      } | null)
+    | ({
+        relationTo: 'movies';
+        value: number | Movie;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -531,7 +558,6 @@ export interface CollectionsSelect<T extends boolean = true> {
   color?: T;
   icon?: T;
   order?: T;
-  kind?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -655,6 +681,21 @@ export interface SketchesSelect<T extends boolean = true> {
         order?: T;
         id?: T;
       };
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "movies_select".
+ */
+export interface MoviesSelect<T extends boolean = true> {
+  title?: T;
+  label?: T;
+  letterboxdUrl?: T;
+  poster?: T;
+  order?: T;
+  featured?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;

@@ -12,7 +12,15 @@ type PayloadFigureOptions = {
   includeDetails?: boolean;
 };
 
+type PayloadCollectionOptions = {
+  limit?: number;
+};
+
 type PayloadVideoOptions = {
+  limit?: number;
+};
+
+type PayloadMovieOptions = {
   limit?: number;
 };
 
@@ -73,6 +81,7 @@ export function normalizePayloadText(text: any) {
       color: text.collection?.color,
       description: text.collection?.description,
       icon: getMediaUrl(text.collection?.icon),
+      order: text.collection?.order,
     },
 
     cover: {
@@ -81,6 +90,48 @@ export function normalizePayloadText(text: any) {
       width: text.cover?.width,
       height: text.cover?.height,
     },
+  };
+}
+
+export function normalizePayloadCollection(collection: any) {
+  return {
+    id: collection.id,
+    name: collection.name,
+    slug: collection.slug,
+    description: collection.description,
+    color: collection.color,
+    order: collection.order,
+    icon: getMediaUrl(collection.icon),
+  };
+}
+
+export async function getPayloadCollections(options: PayloadCollectionOptions = {}) {
+  const { limit = 100 } = options;
+  const url = new URL("/api/collections", PAYLOAD_URL);
+
+  url.searchParams.set("sort", "order");
+  url.searchParams.set("depth", "2");
+  url.searchParams.set("limit", String(limit));
+  setSelectParams(url, [
+    "name",
+    "slug",
+    "description",
+    "color",
+    "icon",
+    "order",
+  ]);
+
+  const response = await fetch(url.toString());
+
+  if (!response.ok) {
+    throw new Error(`Error fetching collections from Payload: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return {
+    ...data,
+    docs: data.docs.map(normalizePayloadCollection),
   };
 }
 
@@ -283,6 +334,64 @@ export async function getPayloadVideos(options: PayloadVideoOptions = {}) {
   return {
     ...data,
     docs: data.docs.map(normalizePayloadVideo),
+  };
+}
+
+export function normalizePayloadMovie(movie: any) {
+  return {
+    id: movie.id,
+    title: movie.title,
+    label: movie.label,
+    letterboxdUrl: movie.letterboxdUrl,
+    order: movie.order,
+    featured: movie.featured,
+    status: movie.status,
+
+    poster: {
+      url: getMediaUrl(movie.poster),
+      alt: movie.poster?.alt ?? movie.title,
+      width: movie.poster?.width,
+      height: movie.poster?.height,
+    },
+  };
+}
+
+export async function getPayloadMovies(options: PayloadMovieOptions = {}) {
+  const { limit = 4 } = options;
+  const url = new URL('/api/movies', PAYLOAD_URL);
+
+  url.searchParams.set("where[status][equals]", "published");
+  url.searchParams.set("where[featured][equals]", "true");
+  url.searchParams.set('sort', 'order');
+  url.searchParams.set('depth', '2');
+  url.searchParams.set('limit', String(limit));
+  setSelectParams(url, [
+    "title",
+    "label",
+    "letterboxdUrl",
+    "poster",
+    "order",
+    "featured",
+    "status",
+  ]);
+
+  const response = await fetch(url.toString());
+
+  if (response.status === 404) {
+    return {
+      docs: [],
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(`Error fetching movies from Payload: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  return {
+    ...data,
+    docs: data.docs.map(normalizePayloadMovie),
   };
 }
 

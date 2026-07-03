@@ -1,0 +1,67 @@
+---
+const letterboxdProfileUrl = "https://boxd.it/8fVlX";
+const letterboxdListUrl = "https://letterboxd.com/adechlien/list/magnificinema/";
+
+type PayloadMovie = {
+  id: string | number;
+  title: string;
+  label: string;
+  letterboxdUrl: string;
+  poster?: {
+    url?: string;
+    alt?: string;
+  };
+};
+
+const { movies = [] } = Astro.props as { movies?: PayloadMovie[] };
+---
+
+<section class="w-full">
+  <div class="flex flex-col gap-4 sm:mx-auto">
+    <div class="flex items-center justify-between gap-4 text-human-2 border-b-human-3 border-b-2">
+      <h2 class="text-4xl font-medium text-left font-bebas leading-none">
+        Claqueta del so&ntilde;ador
+      </h2>
+
+      <a href={letterboxdProfileUrl} target="_blank" rel="noopener noreferrer" class="shrink-0 underline">
+        Letterboxd
+      </a>
+    </div>
+
+    {movies.length > 0 ? (
+      <ul class="grid grid-cols-2 sm:grid-cols-4 gap-3 px-3">
+        {movies.map((movie) => (
+          <li>
+            <a href={movie.letterboxdUrl} target="_blank" rel="noopener noreferrer" class="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label={`Ver ${movie.title} en Letterboxd`}>
+              <article class="flex flex-col gap-1 overflow-hidden">
+                <div class="relative aspect-[2/3] overflow-hidden rounded bg-human-5">
+                  {movie.poster?.url && (
+                    <img src={movie.poster.url} alt={movie.poster.alt ?? `Poster de ${movie.title}`} class="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async" />
+                  )}
+                  <div class="absolute left-0 top-0 z-10 rounded-br-md bg-human-4 px-2 py-0 font-bebas text-human-1">
+                    {movie.label}
+                  </div>
+                </div>
+
+                <span class="font-bebas text-xl leading-none text-human-2 truncate">
+                  {movie.title}
+                </span>
+              </article>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="px-3 text-sm text-human-2">
+        No hay peliculas destacadas todavia.
+      </p>
+    )}
+
+    <div class="px-3">
+      <a href={letterboxdListUrl} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-bebas text-xl text-human-2 underline underline-offset-4">
+          Magnificinema
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>

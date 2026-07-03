@@ -14,7 +14,7 @@ const recentPosts = posts.slice(0, 3);
       {recentPosts.map((post: any) => {
         const collection = post.collection;
         const typeLabel = collection?.name ?? "";
-        const icon = collection?.icon || "/icons/flower.svg";
+        const icon = collection?.icon ?? "";
         const href = `/${collection?.slug}/${post.id}`;
         const coverUrl = post.cover?.url ?? "";
         const coverAlt = post.cover?.alt ?? post.title;
@@ -27,7 +27,7 @@ const recentPosts = posts.slice(0, 3);
 
                 <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent" style={`--collection-color: ${collection?.color ?? "#000000"}`}>
                   <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                    <img src={icon} alt="" class="size-4" />
+                    {icon && <img src={icon} alt="" class="size-4" />}
                     {typeLabel}
                   </p>
 

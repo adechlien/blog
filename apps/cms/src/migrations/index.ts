@@ -4,6 +4,8 @@ import * as migration_20260610_155138_add_sketches from './20260610_155138_add_s
 import * as migration_20260610_161600_sketchbooks_model from './20260610_161600_sketchbooks_model';
 import * as migration_20260610_174500_repair_sketchbook_uploads from './20260610_174500_repair_sketchbook_uploads';
 import * as migration_20260610_181500_rebuild_sketches_schema from './20260610_181500_rebuild_sketches_schema';
+import * as migration_20260703_131500_add_movies from './20260703_131500_add_movies';
+import * as migration_20260703_133000_remove_collection_kind from './20260703_133000_remove_collection_kind';
 
 export const migrations = [
   {
@@ -35,5 +37,15 @@ export const migrations = [
     up: migration_20260610_181500_rebuild_sketches_schema.up,
     down: migration_20260610_181500_rebuild_sketches_schema.down,
     name: '20260610_181500_rebuild_sketches_schema'
+  },
+  {
+    up: migration_20260703_131500_add_movies.up,
+    down: migration_20260703_131500_add_movies.down,
+    name: '20260703_131500_add_movies',
+  },
+  {
+    up: migration_20260703_133000_remove_collection_kind.up,
+    down: migration_20260703_133000_remove_collection_kind.down,
+    name: '20260703_133000_remove_collection_kind',
   },
 ];

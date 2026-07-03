@@ -26,29 +26,6 @@ export async function getStaticPaths() {
   }));
 }
 
-const typeTitles: Record<string, string> = {
-  consciencia: "Consciencia colménica",
-  lagrimas: "Lágrimas de Siddartha",
-  colores: "En las luces de colores",
-  still: "Still Prefer Sentir",
-  placebo: "Placebo Onírico",
-  pintas: "Pintas Heredadas",
-  world: "If this world were mine",
-};
-
-const typeDescriptions: Record<string, string> = {
-  consciencia: '"Se necesita una razón para odiar a alguien, y querer odiarle es una razón válida."',
-  lagrimas: '"Cuando miro a las nubes, no hay nadie más. Soy solo yo."',
-  colores: '"A través de mis sueños y añoranzas empezó la búsqueda del sentido."',
-  still: '"El calor de tu piel me dio razones para despertar."',
-  placebo: '"Escribir con un vacío en el pecho. Hallar en la insignificancia un camino hacia la libertad."',
-  pintas: '"Va de hallar dentro lo que siempre se ha buscado fuera."',
-  world: '"As an intent to achieve new ways of feeling, I started feeling."',
-};
-
-const typeTitle = typeTitles[type] ?? type;
-const typeDescription = typeDescriptions[type] ?? "";
-
 const data = await getPayloadTexts({ includeContent: false });
 const allPosts = data.docs ?? [];
 
@@ -58,6 +35,10 @@ const posts = allPosts
     (a: any, b: any) =>
       new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
   );
+
+const collection = posts[0]?.collection;
+const typeTitle = collection?.name ?? type;
+const typeDescription = collection?.description ?? "";
 
 const heroBg = "/banner.svg";
 const baseBg = "#024350";
@@ -86,7 +67,7 @@ const baseBg = "#024350";
 
     <section class="flex flex-col gap-6 px-6 w-full max-w-6xl mx-auto">
       <header class="mb-10 text-human-2">
-          <h1 class="text-4xl font-bebas">
+        <h1 class="text-4xl font-bebas">
           {typeTitle}
         </h1>
 
@@ -133,7 +114,7 @@ const baseBg = "#024350";
           })}
         </ul>
       ) : (
-        <p class="text-human-2">No hay textos en esta colección todavía.</p>
+        <p class="text-human-2">No hay textos en esta coleccion todavia.</p>
       )}
 
       <Footer theme="home" />

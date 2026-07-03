@@ -29,17 +29,6 @@ export async function getStaticPaths() {
 const { year } = Astro.params;
 const yearNum = Number(year);
 
-const mapIcon = (type = "") => {
-  if (type === "consciencia") return "/icons/bee.svg";
-  if (type === "world") return "/icons/world.svg";
-  if (type === "pintas") return "/icons/cupcake.svg";
-  if (type === "lagrimas") return "/icons/cloud.svg";
-  if (type === "still") return "/icons/heart.svg";
-  if (type === "placebo") return "/icons/moon.svg";
-
-  return "/icons/flower.svg";
-};
-
 const data = await getPayloadTexts({ includeContent: false });
 const allPosts = data.docs ?? [];
 
@@ -89,7 +78,7 @@ const baseBg = "#024350";
           posts.map((post: any) => {
             const collection = post.collection;
             const postTypeTitle = collection?.name ?? "";
-            const icon = mapIcon(collection?.slug);
+            const icon = collection?.icon ?? "";
             const href = `/${collection?.slug}/${post.id}`;
             const coverUrl = post.cover?.url ?? "";
             const coverAlt = post.cover?.alt ?? post.title;
@@ -109,7 +98,7 @@ const baseBg = "#024350";
 
                     <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
                       <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                        <img src={icon} alt="" class="size-4" />
+                        {icon && <img src={icon} alt="" class="size-4" />}
                         {postTypeTitle}
                       </p>
 
