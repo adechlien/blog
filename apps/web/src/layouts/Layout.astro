@@ -17,7 +17,7 @@ const {
   type = "website",
 } = Astro.props;
 
-const siteName = "Leggiamo";
+const siteName = "Blog";
 const displayTitle = title && title !== "Inicio" ? `${title} | ${siteName}` : `${siteName} | Alejandro J. Hernandez P.`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL(image, Astro.site);

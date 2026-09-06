@@ -18,6 +18,10 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.*
+!.env.example
+
+# local database and media backups
+/backups/
 
 # macOS-specific files
 .DS_Store

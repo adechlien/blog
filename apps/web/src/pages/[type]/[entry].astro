@@ -3,13 +3,13 @@ import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
-import { getPayloadTexts, getPayloadTextByNumericId } from "../../lib/payload";
+import { getDirectusTexts, getDirectusTextByNumericId } from "../../lib/directus";
 import { richTextToHtml } from "../../lib/richTextToHtml";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const data = await getPayloadTexts();
+  const data = await getDirectusTexts();
   const posts = data.docs ?? [];
 
   const paths = [];
@@ -58,7 +58,7 @@ if (redirectTo) {
 
 const { entry } = Astro.params;
 
-const post = staticPost ?? (entry ? await getPayloadTextByNumericId(entry) : null);
+const post = staticPost ?? (entry ? await getDirectusTextByNumericId(entry) : null);
 
 if (!post) {
   return new Response("Not found", { status: 404 });

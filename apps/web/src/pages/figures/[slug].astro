@@ -2,13 +2,13 @@
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
-import { getPayloadFigures } from "../../lib/payload";
+import { getDirectusFigures } from "../../lib/directus";
 import { richTextToHtml } from "../../lib/richTextToHtml";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const data = await getPayloadFigures();
+  const data = await getDirectusFigures();
   const figures = data.docs ?? [];
 
   return figures
@@ -35,9 +35,7 @@ const formatLifeSpan = (figure: any) => {
 
 const getContributionImageUrl = (image: any) => {
   if (!image?.url) return "";
-  if (image.url.startsWith("http")) return image.url;
-
-  return `${import.meta.env.PAYLOAD_URL ?? "http://localhost:3000"}${image.url}`;
+  return image.url.startsWith("http") ? image.url : "";
 };
 
 const bg = figure.backgroundColor ?? "#080809";

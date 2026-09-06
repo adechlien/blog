@@ -1,4 +1,6 @@
 ---
+import { getCollectionIcon, isMainCollection } from "../lib/collection-ui";
+
 type PayloadCollection = {
   id: string | number;
   name: string;
@@ -37,7 +39,7 @@ const { posts = [], collections = [] } = Astro.props as {
   collections?: PayloadCollection[];
 };
 
-const sortedCollections = [...collections].sort((a, b) => {
+const sortedCollections = [...collections].filter((collection) => isMainCollection(collection.slug)).sort((a, b) => {
   const orderA = a.order ?? 0;
   const orderB = b.order ?? 0;
 
@@ -63,7 +65,7 @@ const countsByType = posts.reduce<Record<string, number>>((acc, post) => {
 }, {});
 
 const modalPosts: ModalPost[] = posts
-  .filter((post) => Boolean(post.collection?.slug))
+  .filter((post) => isMainCollection(post.collection?.slug))
   .map((post) => {
     const type = String(post.collection?.slug ?? "");
     const pubDate = post.pubDate ? new Date(post.pubDate) : null;
@@ -88,23 +90,22 @@ const modalData = {
 ---
 
 <div class="flex flex-col">
-  <h2 class="text-4xl font-medium text-left font-bebas text-human-2">
-    Colecciones
+  <h2 class="text-4xl font-medium text-left font-bebas text-human-2 border-b-human-3 border-b-2">
+      Desde mi lado de la acera
   </h2>
 
-  <div class="flex flex-col w-full justify-around gap-4 md:gap-1 border-2 rounded border-human-3 p-4 sm:p-2">
+  <div class="flex flex-col w-full justify-around gap-4 md:gap-1 pt-3">
     {sortedCollections.length > 0 ? (
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-around w-full gap-2">
         {sortedCollections.map((collection) => {
           const count = countsByType[collection.slug] ?? 0;
+          const iconClass = getCollectionIcon(collection.slug);
 
           return (
             <button type="button" data-collection-modal-trigger data-collection-slug={collection.slug} aria-label={`Abrir coleccion ${collection.name}`} class="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3">
               <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm">
                 <div class="flex items-center gap-2 min-w-0">
-                  {collection.icon && (
-                    <img src={collection.icon} alt="" aria-hidden="true" class="size-4 shrink-0 object-contain" loading="lazy" />
-                  )}
+                  <i class={`ti ${iconClass} shrink-0 text-lg text-human-3`} aria-hidden="true"></i>
 
                   <span class="font-bebas font-normal text-lg text-center text-human-2 leading-relaxed truncate">
                     {collection.name}
@@ -199,7 +200,7 @@ const modalData = {
       image.src = post.coverUrl;
       image.alt = post.coverAlt || post.title;
       image.loading = "lazy";
-      image.className = "absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105";
+      image.className = "absolute inset-0 h-full w-full object-cover pointer-events-none select-none";
 
       imageWrapper.appendChild(image);
     }

@@ -1,0 +1,2641 @@
+version: 1
+directus: 12.3.1
+vendor: postgres
+collections:
+  - collection: albums
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: albums
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: albums
+  - collection: collections
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: collections
+      color: null
+      display_template: '{{name}}'
+      group: null
+      hidden: false
+      icon: library_books
+      item_duplication_fields: null
+      note: Colecciones literarias del blog
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: order
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: collections
+  - collection: figure_quotes
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: figure_quotes
+      color: null
+      display_template: '{{source}}'
+      group: figures
+      hidden: false
+      icon: format_quote
+      item_duplication_fields: null
+      note: Citas asociadas a los ilustres
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: sort
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: figure_quotes
+  - collection: figures
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: figures
+      color: null
+      display_template: '{{name}}'
+      group: null
+      hidden: false
+      icon: person
+      item_duplication_fields: null
+      note: Ilustres del camino
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: figures
+  - collection: movies
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: movies
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: movies
+  - collection: runs
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: runs
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: runs
+  - collection: sketchbooks
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: sketchbooks
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: sketchbooks
+  - collection: texts
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: texts
+      color: null
+      display_template: '{{title}}'
+      group: null
+      hidden: false
+      icon: article
+      item_duplication_fields: null
+      note: Textos del blog
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: texts
+  - collection: videos
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      autosave_revision_interval: null
+      collapse: open
+      collection: videos
+      color: null
+      display_template: null
+      group: null
+      hidden: false
+      icon: null
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      status: active
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: videos
+fields:
+  - collection: albums
+    field: id
+    type: integer
+    meta:
+      collection: albums
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: albums
+      data_type: integer
+      default_value: nextval('albums_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: albums
+    field: date_created
+    type: timestamp
+    meta:
+      collection: albums
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 2
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: albums
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: albums
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: albums
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: albums
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: albums
+    field: apple_music_url
+    type: string
+    meta:
+      collection: albums
+      conditions: null
+      display: null
+      display_options: null
+      field: apple_music_url
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: apple
+      readonly: false
+      required: true
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: apple_music_url
+      table: albums
+      data_type: character varying
+      default_value: https://music.apple.com/profile/adechline
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: albums
+    field: cover_url
+    type: string
+    meta:
+      collection: albums
+      conditions: null
+      display: null
+      display_options: null
+      field: cover_url
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: image
+      readonly: true
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: cover_url
+      table: albums
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: collections
+    field: id
+    type: integer
+    meta:
+      collection: collections
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: collections
+      data_type: integer
+      default_value: nextval('collections_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: collections
+    field: name
+    type: string
+    meta:
+      collection: collections
+      conditions: null
+      display: null
+      display_options: null
+      field: name
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: name
+      table: collections
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: collections
+    field: slug
+    type: string
+    meta:
+      collection: collections
+      conditions: null
+      display: null
+      display_options: null
+      field: slug
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: slug
+      table: collections
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: collections
+    field: description
+    type: text
+    meta:
+      collection: collections
+      conditions: null
+      display: null
+      display_options: null
+      field: description
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: description
+      table: collections
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: collections
+    field: color
+    type: string
+    meta:
+      collection: collections
+      conditions: null
+      display: null
+      display_options: null
+      field: color
+      group: null
+      hidden: false
+      interface: select-color
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: color
+      table: collections
+      data_type: character varying
+      default_value: null
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: collections
+    field: icon
+    type: string
+    meta:
+      collection: collections
+      conditions: null
+      display: null
+      display_options: null
+      field: icon
+      group: null
+      hidden: false
+      interface: input
+      note: Nombre del icono de Tabler sin el prefijo ti-
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: icon
+      table: collections
+      data_type: character varying
+      default_value: null
+      max_length: 100
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: collections
+    field: order
+    type: integer
+    meta:
+      collection: collections
+      conditions: null
+      display: null
+      display_options: null
+      field: order
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: order
+      table: collections
+      data_type: integer
+      default_value: 0
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figure_quotes
+    field: id
+    type: integer
+    meta:
+      collection: figure_quotes
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: figure_quotes
+      data_type: integer
+      default_value: nextval('figure_quotes_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figure_quotes
+    field: figure
+    type: integer
+    meta:
+      collection: figure_quotes
+      conditions: null
+      display: null
+      display_options: null
+      field: figure
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: figure
+      table: figure_quotes
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: figures
+      foreign_key_column: id
+  - collection: figure_quotes
+    field: text
+    type: text
+    meta:
+      collection: figure_quotes
+      conditions: null
+      display: null
+      display_options: null
+      field: text
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: text
+      table: figure_quotes
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figure_quotes
+    field: source
+    type: string
+    meta:
+      collection: figure_quotes
+      conditions: null
+      display: null
+      display_options: null
+      field: source
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: source
+      table: figure_quotes
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figure_quotes
+    field: sort
+    type: integer
+    meta:
+      collection: figure_quotes
+      conditions: null
+      display: null
+      display_options: null
+      field: sort
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: sort
+      table: figure_quotes
+      data_type: integer
+      default_value: 0
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: id
+    type: integer
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: figures
+      data_type: integer
+      default_value: nextval('figures_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: name
+    type: string
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: name
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: name
+      table: figures
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: slug
+    type: string
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: slug
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: slug
+      table: figures
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: kind
+    type: string
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: kind
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: kind
+      table: figures
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: life_span
+    type: string
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: life_span
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: life_span
+      table: figures
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: biography
+    type: text
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: biography
+      group: null
+      hidden: false
+      interface: input-rich-text-html
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: biography
+      table: figures
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: background_color
+    type: string
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: background_color
+      group: null
+      hidden: false
+      interface: select-color
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 7
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: background_color
+      table: figures
+      data_type: character varying
+      default_value: '#080809'
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: figures
+    field: cover
+    type: uuid
+    meta:
+      collection: figures
+      conditions: null
+      display: null
+      display_options: null
+      field: cover
+      group: null
+      hidden: false
+      interface: file
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 8
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: cover
+      table: figures
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: figures
+    field: status
+    type: string
+    meta:
+      collection: figures
+      conditions: null
+      display: labels
+      display_options:
+        choices:
+          - text: Borrador
+            value: draft
+          - text: Publicado
+            value: published
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Borrador
+            value: draft
+          - text: Publicado
+            value: published
+      readonly: false
+      required: true
+      searchable: true
+      sort: 9
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: figures
+      data_type: character varying
+      default_value: draft
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: movies
+    field: id
+    type: integer
+    meta:
+      collection: movies
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: movies
+      data_type: integer
+      default_value: nextval('movies_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: movies
+    field: date_created
+    type: timestamp
+    meta:
+      collection: movies
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 2
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: movies
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: movies
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: movies
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: movies
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: movies
+    field: letterboxd_url
+    type: string
+    meta:
+      collection: movies
+      conditions: null
+      display: null
+      display_options: null
+      field: letterboxd_url
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: movie
+      readonly: false
+      required: true
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: letterboxd_url
+      table: movies
+      data_type: character varying
+      default_value: https://letterboxd.com/Adechlien/
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: movies
+    field: cover_url
+    type: string
+    meta:
+      collection: movies
+      conditions: null
+      display: null
+      display_options: null
+      field: cover_url
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: image
+      readonly: true
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: cover_url
+      table: movies
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: runs
+    field: id
+    type: integer
+    meta:
+      collection: runs
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: runs
+      data_type: integer
+      default_value: nextval('runs_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: runs
+    field: date_created
+    type: timestamp
+    meta:
+      collection: runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 2
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: runs
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: runs
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: runs
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: runs
+    field: strava_url
+    type: string
+    meta:
+      collection: runs
+      conditions: null
+      display: null
+      display_options: null
+      field: strava_url
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: link
+      readonly: false
+      required: false
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: strava_url
+      table: runs
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: runs
+    field: cover
+    type: uuid
+    meta:
+      collection: runs
+      conditions: null
+      display: null
+      display_options: null
+      field: cover
+      group: null
+      hidden: false
+      interface: file
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 5
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: cover
+      table: runs
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: sketchbooks
+    field: id
+    type: integer
+    meta:
+      collection: sketchbooks
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: sketchbooks
+      data_type: integer
+      default_value: nextval('sketchbooks_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: sketchbooks
+    field: date_created
+    type: timestamp
+    meta:
+      collection: sketchbooks
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 2
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: sketchbooks
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: sketchbooks
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: sketchbooks
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: sketchbooks
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: id
+    type: integer
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: texts
+      data_type: integer
+      default_value: nextval('texts_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: title
+    type: string
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: texts
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: numeric_id
+    type: string
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: numeric_id
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: numeric_id
+      table: texts
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: legacy_slug
+    type: string
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: legacy_slug
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: legacy_slug
+      table: texts
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: excerpt
+    type: text
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: excerpt
+      group: null
+      hidden: false
+      interface: input-multiline
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: excerpt
+      table: texts
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: content
+    type: text
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: content
+      group: null
+      hidden: false
+      interface: input-rich-text-html
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 6
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: content
+      table: texts
+      data_type: text
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: collection
+    type: integer
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: collection
+      group: null
+      hidden: false
+      interface: select-dropdown-m2o
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 7
+      special:
+        - m2o
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: collection
+      table: texts
+      data_type: integer
+      default_value: null
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: collections
+      foreign_key_column: id
+  - collection: texts
+    field: cover
+    type: uuid
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: cover
+      group: null
+      hidden: false
+      interface: file
+      note: null
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 8
+      special:
+        - file
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: cover
+      table: texts
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
+      foreign_key_column: id
+  - collection: texts
+    field: pub_date
+    type: timestamp
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: pub_date
+      group: null
+      hidden: false
+      interface: datetime
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 9
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: pub_date
+      table: texts
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: featured
+    type: boolean
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: featured
+      group: null
+      hidden: false
+      interface: boolean
+      note: null
+      options: null
+      readonly: false
+      required: true
+      searchable: true
+      sort: 10
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: featured
+      table: texts
+      data_type: boolean
+      default_value: false
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: texts
+    field: status
+    type: string
+    meta:
+      collection: texts
+      conditions: null
+      display: null
+      display_options: null
+      field: status
+      group: null
+      hidden: false
+      interface: select-dropdown
+      note: null
+      options:
+        choices:
+          - text: Borrador
+            value: draft
+          - text: Publicado
+            value: published
+      readonly: false
+      required: true
+      searchable: true
+      sort: 11
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: status
+      table: texts
+      data_type: character varying
+      default_value: draft
+      max_length: 32
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: false
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: videos
+    field: id
+    type: integer
+    meta:
+      collection: videos
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: input
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: videos
+      data_type: integer
+      default_value: nextval('videos_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: videos
+    field: date_created
+    type: timestamp
+    meta:
+      collection: videos
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_created
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 2
+      special:
+        - date-created
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_created
+      table: videos
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: videos
+    field: date_updated
+    type: timestamp
+    meta:
+      collection: videos
+      conditions: null
+      display: datetime
+      display_options:
+        relative: true
+      field: date_updated
+      group: null
+      hidden: true
+      interface: datetime
+      note: null
+      options: null
+      readonly: true
+      required: false
+      searchable: true
+      sort: 3
+      special:
+        - date-updated
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+    schema:
+      name: date_updated
+      table: videos
+      data_type: timestamp with time zone
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: videos
+    field: youtube_url
+    type: string
+    meta:
+      collection: videos
+      conditions: null
+      display: null
+      display_options: null
+      field: youtube_url
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: link
+      readonly: false
+      required: true
+      searchable: true
+      sort: 4
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: youtube_url
+      table: videos
+      data_type: character varying
+      default_value: https://www.youtube.com/@yourfriendlyadc
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: videos
+    field: title
+    type: string
+    meta:
+      collection: videos
+      conditions: null
+      display: null
+      display_options: null
+      field: title
+      group: null
+      hidden: false
+      interface: input
+      note: null
+      options:
+        iconLeft: title
+      readonly: true
+      required: false
+      searchable: true
+      sort: 5
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: title
+      table: videos
+      data_type: character varying
+      default_value: null
+      max_length: 255
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: null
+      foreign_key_column: null
+systemFields:
+  - collection: directus_activity
+    field: timestamp
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_clients
+    field: date_created
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_codes
+    field: expires_at
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_codes
+    field: used_at
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_consents
+    field: client
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: code_hash
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: expires_at
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: previous_session
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: session
+    schema:
+      is_indexed: true
+  - collection: directus_revisions
+    field: activity
+    schema:
+      is_indexed: true
+  - collection: directus_revisions
+    field: parent
+    schema:
+      is_indexed: true
+  - collection: directus_sessions
+    field: oauth_client
+    schema:
+      is_indexed: true
+relations:
+  - collection: figure_quotes
+    field: figure
+    related_collection: figures
+    meta:
+      junction_field: null
+      many_collection: figure_quotes
+      many_field: figure
+      one_allowed_collections: null
+      one_collection: figures
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: figure_quotes
+      column: figure
+      foreign_key_table: figures
+      foreign_key_column: id
+      constraint_name: figure_quotes_figure_foreign
+      on_update: NO ACTION
+      on_delete: CASCADE
+  - collection: figures
+    field: cover
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: figures
+      many_field: cover
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: figures
+      column: cover
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: figures_cover_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: runs
+    field: cover
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: runs
+      many_field: cover
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: runs
+      column: cover
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: runs_cover_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: texts
+    field: collection
+    related_collection: collections
+    meta:
+      junction_field: null
+      many_collection: texts
+      many_field: collection
+      one_allowed_collections: null
+      one_collection: collections
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: texts
+      column: collection
+      foreign_key_table: collections
+      foreign_key_column: id
+      constraint_name: texts_collection_foreign
+      on_update: NO ACTION
+      on_delete: RESTRICT
+  - collection: texts
+    field: cover
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: texts
+      many_field: cover
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: texts
+      column: cover
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: texts_cover_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL

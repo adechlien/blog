@@ -4,8 +4,8 @@ import { getCollection } from 'astro:content';
 export async function GET(context) {
   const posts = await getCollection('texts');
   return rss({
-    title: "Leggiamo",
-    description: "Bienvenido a Leggiamo",
+    title: "Blog",
+    description: "Bienvenido a mi blog",
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title, // Título del texto

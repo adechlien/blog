@@ -151,7 +151,11 @@ function renderNode(node: LexicalNode): string {
   }
 }
 
-export function richTextToHtml(richText: LexicalRichText | null | undefined): string {
+export function richTextToHtml(richText: LexicalRichText | string | null | undefined): string {
+  if (typeof richText === "string") {
+    return richText;
+  }
+
   if (!richText?.root) {
     return "";
   }

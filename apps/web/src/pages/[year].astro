@@ -2,12 +2,13 @@
 import Layout from "../layouts/Layout.astro";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { getPayloadTexts } from "../lib/payload";
+import { getDirectusTexts } from "../lib/directus";
+import { getCollectionIcon } from "../lib/collection-ui";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const data = await getPayloadTexts({ includeContent: false });
+  const data = await getDirectusTexts({ includeContent: false });
   const posts = data.docs ?? [];
 
   const years = Array.from(
@@ -29,7 +30,7 @@ export async function getStaticPaths() {
 const { year } = Astro.params;
 const yearNum = Number(year);
 
-const data = await getPayloadTexts({ includeContent: false });
+const data = await getDirectusTexts({ includeContent: false });
 const allPosts = data.docs ?? [];
 
 const posts = allPosts
@@ -78,7 +79,7 @@ const baseBg = "#024350";
           posts.map((post: any) => {
             const collection = post.collection;
             const postTypeTitle = collection?.name ?? "";
-            const icon = collection?.icon ?? "";
+            const iconClass = getCollectionIcon(collection?.slug);
             const href = `/${collection?.slug}/${post.id}`;
             const coverUrl = post.cover?.url ?? "";
             const coverAlt = post.cover?.alt ?? post.title;
@@ -91,14 +92,14 @@ const baseBg = "#024350";
                       <img
                         src={coverUrl}
                         alt={coverAlt}
-                        class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105"
+                        class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
                         loading="lazy"
                       />
                     )}
 
                     <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
                       <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                        {icon && <img src={icon} alt="" class="size-4" />}
+                        <i class={`ti ${iconClass} text-base text-human-3`} aria-hidden="true"></i>
                         {postTypeTitle}
                       </p>
 

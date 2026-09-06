@@ -1,7 +1,11 @@
 ---
+import { getCollectionIcon, isMainCollection } from "../lib/collection-ui";
+
 const { posts = [] } = Astro.props;
 
-const recentPosts = posts.slice(0, 3);
+const recentPosts = posts
+  .filter((post: any) => isMainCollection(post.collection?.slug))
+  .slice(0, 3);
 ---
 
 <section class="w-full min-w-0 flex flex-col gap-3">
@@ -14,7 +18,7 @@ const recentPosts = posts.slice(0, 3);
       {recentPosts.map((post: any) => {
         const collection = post.collection;
         const typeLabel = collection?.name ?? "";
-        const icon = collection?.icon ?? "";
+        const iconClass = getCollectionIcon(collection?.slug);
         const href = `/${collection?.slug}/${post.id}`;
         const coverUrl = post.cover?.url ?? "";
         const coverAlt = post.cover?.alt ?? post.title;
@@ -27,7 +31,7 @@ const recentPosts = posts.slice(0, 3);
 
                 <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent" style={`--collection-color: ${collection?.color ?? "#000000"}`}>
                   <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                    {icon && <img src={icon} alt="" class="size-4" />}
+                    <i class={`ti ${iconClass} text-base text-human-3`} aria-hidden="true"></i>
                     {typeLabel}
                   </p>
 

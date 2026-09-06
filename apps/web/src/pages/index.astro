@@ -2,44 +2,35 @@
 import Layout from "../layouts/Layout.astro";
 import About from "../components/About.astro";
 import Recent from "../components/Recent.astro";
-import Soon from "../components/Soon.astro";
 import Collections from "../components/Collections.astro";
 import History from "../components/History.astro";
 import Destacados from "../components/Destacados.astro";
 import Figures from "../components/Figures.astro";
-import Sketches from "../components/Sketches.astro";
 import Videos from "../components/Videos.astro";
+import Runs from "../components/Runs.astro";
 import Albums from "../components/Albums.astro";
 import Movies from "../components/Movies.astro";
 import Footer from "../components/Footer.astro";
-import {
-  getPayloadCollections,
-  getPayloadDraftTexts,
-  getPayloadFigures,
-  getPayloadMovies,
-  getPayloadSketches,
-  getPayloadTexts,
-  getPayloadVideos,
-} from "../lib/payload";
+import { getDirectusAlbums, getDirectusCollections, getDirectusFigures, getDirectusMovies, getDirectusRuns, getDirectusTexts, getDirectusVideos } from "../lib/directus";
 
 export const prerender = true;
 
-const [textsData, draftTextsData, figuresData, videosData, sketchesData, moviesData, collectionsData] = await Promise.all([
-  getPayloadTexts({ includeContent: false }),
-  getPayloadDraftTexts(),
-  getPayloadFigures({ includeDetails: false }),
-  getPayloadVideos(),
-  getPayloadSketches(),
-  getPayloadMovies(),
-  getPayloadCollections(),
+const [textsData, figuresData, videosData, moviesData, albumsData, runsData, collectionsData] = await Promise.all([
+  getDirectusTexts({ includeContent: false }),
+  getDirectusFigures(),
+  getDirectusVideos(),
+  getDirectusMovies(),
+  getDirectusAlbums(),
+  getDirectusRuns(),
+  getDirectusCollections(),
 ]);
 
 const posts = textsData.docs ?? [];
-const soonPosts = draftTextsData.docs ?? [];
 const figures = figuresData.docs ?? [];
 const videos = videosData.docs ?? [];
-const sketches = sketchesData.docs ?? [];
 const movies = moviesData.docs ?? [];
+const albums = albumsData.docs ?? [];
+const runs = runsData.docs ?? [];
 const collections = collectionsData.docs ?? [];
 ---
 
@@ -54,15 +45,12 @@ const collections = collectionsData.docs ?? [];
                     <Destacados posts={posts} />
                     <History posts={posts} />
                 </div>
-                <Soon posts={soonPosts} />
-                <div class="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-8 h-full">
                     <Figures figures={figures} />
-                    <Sketches sketches={sketches} />
-                </div>
+                    <Runs runs={runs} />
                     <Videos videos={videos} />
                 <div class="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-8 h-full">
                     <Movies movies={movies} />
-                    <Albums />
+                    <Albums albums={albums} />
                 </div>
             </div>
         </section>

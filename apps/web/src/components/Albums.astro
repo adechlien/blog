@@ -1,42 +1,11 @@
 ---
-const albums = [
-  {
-    title: "Quizá no es para tanto",
-    artist: "Jaze",
-    cover: "qnept.webp",
-    link: "https://www.youtube.com/watch?v=ZblFXnv8eAA&list=PLSC2ZIlwOzm54UAfQk9XgSxxEaYHRS_vw",
-  },
-  {
-    title: "Blanco",
-    artist: "Ricardo Arjona",
-    cover: "blanco.webp",
-    link: "https://www.youtube.com/watch?v=cap5V6kNEb4&list=OLAK5uy_nbEDEld90A1tsMhPTtsw0rWC9mAM0srwc&index=2",
-  },
-  {
-    title: "We are not your kind",
-    artist: "Slipknot",
-    cover: "wearenotyourkind.webp",
-    link: "https://www.youtube.com/watch?v=neliFsn2g-I&list=PLvXUqfNLb-tnlP1TgObahebiRcIcVyc2J",
-  },
-  {
-    title: "Data",
-    artist: "Tainy",
-    cover: "data.webp",
-    link: "https://www.youtube.com/watch?v=Ak3ROTSVRGs&list=OLAK5uy_lhb0K46x2XM9WYEASWk0AB7NTukr2qCHI&index=2",
-  },
-  {
-    title: "Estopa",
-    artist: "Estopa",
-    cover: "estopa.webp",
-    link: "https://www.youtube.com/watch?v=T8gzgj6W7UA&list=PL6mpyAioMZGi2mO7gKHnNzRrHYv8rst0T",
-  },
-  {
-    title: "La novena Batalla",
-    artist: "Silvestre Dangond",
-    cover: "novena.webp",
-    link: "https://www.youtube.com/watch?v=mK8PNF55I50&list=OLAK5uy_mbUDY72WytUuvas0cCh92gRbINbv4lwLg",
-  },
-];
+type Album = {
+  id: number;
+  apple_music_url: string;
+  cover_url: string;
+};
+
+const { albums = [] } = Astro.props as { albums?: Album[] };
 ---
 
 <section class="w-full">
@@ -48,23 +17,26 @@ const albums = [
       </a>
     </div>
 
-    <ul class="grid grid-cols-2 sm:grid-cols-3 gap-3 px-3">
-      {albums.map((album, index) => (
-        <li>
-          <a href={album.link} target="_blank" rel="noopener noreferrer" class="group block">
-            <article class="flex flex-col justify-center gap-0 overflow-hidden">
-              <div class="overflow-hidden mb-1 relative">
-                <img src={`/albums/${album.cover}`} alt={album.title} class="w-full h-full object-cover" loading="lazy" decoding="async" />
-                <div class="absolute top-0 left-0 text-human-1 bg-human-4 px-2 py-0 font-bebas z-10 rounded-br-md">
-                  {index + 1}
-                </div>
+    {albums.length > 0 ? (
+      <ul class="grid grid-cols-3 gap-3 px-3">
+        {albums.map((album) => (
+          <li>
+            <a
+              href={album.apple_music_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block overflow-hidden rounded-sm bg-human-5 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3"
+              aria-label="Abrir álbum en Apple Music"
+            >
+              <div class="aspect-square overflow-hidden">
+                <img src={album.cover_url} alt="Portada de álbum" class="h-full w-full object-cover" loading="lazy" decoding="async" />
               </div>
-              <span class="font-bebas text-xl text-human-2 leading-none truncate">{album.title}</span>
-              <span class="font-bellota text-xs text-human-2">{album.artist}</span>
-            </article>
-          </a>
-        </li>
-      ))}
-    </ul>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="px-3 text-sm text-human-2">No hay álbumes seleccionados todavía.</p>
+    )}
   </div>
 </section>

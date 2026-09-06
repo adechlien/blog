@@ -3,14 +3,14 @@ import Layout from "../../layouts/Layout.astro";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
-import { getPayloadTexts } from "../../lib/payload";
+import { getDirectusTexts } from "../../lib/directus";
 
 const type = String(Astro.params.type ?? "");
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const data = await getPayloadTexts({ includeContent: false });
+  const data = await getDirectusTexts({ includeContent: false });
   const posts = data.docs ?? [];
 
   const types = [
@@ -26,7 +26,7 @@ export async function getStaticPaths() {
   }));
 }
 
-const data = await getPayloadTexts({ includeContent: false });
+const data = await getDirectusTexts({ includeContent: false });
 const allPosts = data.docs ?? [];
 
 const posts = allPosts
@@ -93,7 +93,7 @@ const baseBg = "#024350";
                       <img
                         src={coverUrl}
                         alt={coverAlt}
-                        class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none transition-transform duration-500 group-hover:scale-105"
+                        class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
                         loading="lazy"
                       />
                     )}
