@@ -16,9 +16,9 @@ const { runs = [] } = Astro.props as { runs?: Run[] };
         <h2 class="text-left font-bebas text-4xl font-medium">Rastros del Mendigo</h2>
       </div>
 
-      <ul class="grid grid-cols-2 gap-3 px-3 sm:grid-cols-5">
+      <ul class="grid grid-cols-2 gap-3 px-3 sm:grid-cols-3 lg:grid-cols-5">
         {runs.map((run) => (
-          <li>
+          <li class="min-w-0">
             <a href={run.stravaUrl} target="_blank" rel="noopener noreferrer" class="block overflow-hidden rounded bg-human-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label="Abrir actividad en Strava">
               <div class="aspect-[3/4] overflow-hidden">
                 {run.coverUrl && (

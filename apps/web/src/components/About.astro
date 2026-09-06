@@ -1,9 +1,4 @@
 ---
-const socialLinks = [
-  { href: "https://www.serializd.com/user/YourFriendlyADC/profile", text: "Serializd" },
-  { href: "https://www.instagram.com/adcpolo?igsh=OHF5c3A3azFrbGN1&utm_source=qr", text: "Instagram" },
-];
-
 const heroBg = "/banner.svg";
 const heroMobileBg = "/banner-mobile.svg";
 const avatar = "/avatar.webp";
@@ -29,25 +24,6 @@ const avatar = "/avatar.webp";
     <h1 class="font-bebas text-3xl tracking-wide text-human-2 sm:text-5xl">
       Alejandro J. Hernández P.
     </h1>
-
-    <nav
-      aria-label="Redes sociales"
-      class="flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-base text-human-2 sm:gap-x-4 sm:text-lg"
-    >
-      {socialLinks.map((link) => (
-        <>
-            <a href={link.href} target="_blank" rel="noopener noreferrer" class="px-1 underline-offset-4 hover:underline">
-              {link.text}
-            </a>
-
-          <span class="text-human-3" aria-hidden="true">|</span>
-        </>
-      ))}
-
-      <a href="https://pin.it/37CeFyEJI" target="_blank" rel="noopener noreferrer" class="px-2 underline-offset-4 hover:underline">
-        Pinterest
-      </a>
-    </nav>
 
     <p class="font-tangerine text-xl leading-tight text-human-2 sm:text-2xl mt-8 md:mt-0">
       Donde reside todo lo que siento y no sé cómo decir.

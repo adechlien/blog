@@ -1,29 +1,24 @@
 ---
+import TextCard from "../../components/TextCard.astro";
 import Layout from "../../layouts/Layout.astro";
-import FormattedDate from "../../components/FormattedDate.astro";
 import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
-import { getDirectusTexts } from "../../lib/directus";
+import { getDirectusTexts, getDirectusCollections } from "../../lib/directus";
 
 const type = String(Astro.params.type ?? "");
 
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const data = await getDirectusTexts({ includeContent: false });
-  const posts = data.docs ?? [];
-
-  const types = [
-    ...new Set(
-      posts
-        .map((post: any) => post.collection?.slug)
-        .filter(Boolean)
-    ),
-  ];
-
-  return types.map((type) => ({
-    params: { type },
-  }));
+  const [data, collectionsData] = await Promise.all([
+    getDirectusTexts({ includeContent: false }),
+    getDirectusCollections(),
+  ]);
+  const types = [...new Set([
+    ...(collectionsData.docs ?? []).map((collection: any) => collection.slug),
+    ...(data.docs ?? []).map((post: any) => post.collection?.slug),
+  ].filter(Boolean))];
+  return types.map((type) => ({ params: { type } }));
 }
 
 const data = await getDirectusTexts({ includeContent: false });
@@ -36,7 +31,8 @@ const posts = allPosts
       new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
   );
 
-const collection = posts[0]?.collection;
+const collectionsData = await getDirectusCollections();
+const collection = (collectionsData.docs ?? []).find((collection: any) => collection.slug === type) ?? posts[0]?.collection;
 const typeTitle = collection?.name ?? type;
 const typeDescription = collection?.description ?? "";
 
@@ -49,19 +45,9 @@ const baseBg = "#024350";
 
   <main class="w-full max-w-[1100px] sm:max-w-none flex flex-col gap-16">
     <section class="relative overflow-hidden">
-      <div
-        class="relative w-full min-h-[70vh] bg-cover bg-bottom"
-        style={`background-image: url(${heroBg});`}
-      >
-        <div
-          class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8"
-          style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`}
-        />
-
-        <div
-          class="pointer-events-none absolute inset-x-0 bottom-0 h-4"
-          style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`}
-        />
+      <div class="relative w-full min-h-[70vh] bg-cover bg-bottom" style={`background-image: url(${heroBg});`}>
+        <div class="sm:hidden pointer-events-none absolute inset-x-0 top-0 h-8" style={`background: linear-gradient(to top, rgba(0,0,0,0), ${baseBg});`} />
+        <div class="pointer-events-none absolute inset-x-0 bottom-0 h-4" style={`background: linear-gradient(to bottom, rgba(0,0,0,0), ${baseBg});`} />
       </div>
     </section>
 
@@ -79,36 +65,11 @@ const baseBg = "#024350";
       </header>
 
       {posts.length > 0 ? (
-        <ul class="grid gap-4 grid-cols-1 md:grid-cols-4">
+        <ul class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {posts.map((post: any) => {
-            const href = `/${post.collection?.slug}/${post.id}`;
-            const coverUrl = post.cover?.url ?? "";
-            const coverAlt = post.cover?.alt ?? post.title;
-
-            return (
+        return (
               <li>
-                <a href={href} class="block group">
-                  <div class="relative isolate overflow-hidden rounded-lg aspect-[2/1]">
-                    {coverUrl && (
-                      <img
-                        src={coverUrl}
-                        alt={coverAlt}
-                        class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none"
-                        loading="lazy"
-                      />
-                    )}
-
-                    <div class="absolute bottom-0 flex flex-col justify-end px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent">
-                      <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                        <FormattedDate date={post.pubDate} format="long" />
-                      </p>
-
-                      <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
-                        {post.title}
-                      </h3>
-                    </div>
-                  </div>
-                </a>
+<TextCard post={post} />
               </li>
             );
           })}

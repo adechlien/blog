@@ -1,5 +1,5 @@
 ---
-type PayloadText = {
+type DirectusText = {
   id: string;
   title: string;
   pubDate?: string;
@@ -14,19 +14,7 @@ type PayloadText = {
   };
 };
 
-type ModalPost = {
-  id: string;
-  title: string;
-  type: string;
-  href: string;
-  coverUrl: string;
-  coverAlt: string;
-  pubDate: string;
-  year: string;
-  formattedDate: string;
-};
-
-const { posts = [] } = Astro.props as { posts?: PayloadText[] };
+const { posts = [] } = Astro.props as { posts?: DirectusText[] };
 
 const yearCount: Record<number, number> = {};
 
@@ -42,25 +30,6 @@ posts.forEach((post) => {
 
 const years = Object.keys(yearCount).map(Number).sort((a, b) => b - a);
 
-const modalPosts: ModalPost[] = posts
-  .filter((post) => post.pubDate)
-  .map((post) => {
-    const pubDate = new Date(post.pubDate ?? "");
-    const type = post.collection?.slug ?? "";
-
-    return {
-      id: post.id,
-      title: post.title,
-      type,
-      href: `/${type}/${post.id}`,
-      coverUrl: post.cover?.url ?? "",
-      coverAlt: post.cover?.alt ?? post.title,
-      pubDate: post.pubDate ?? "",
-      year: Number.isNaN(pubDate.getTime()) ? "" : String(pubDate.getFullYear()),
-      formattedDate: Number.isNaN(pubDate.getTime()) ? "" : pubDate.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" }),
-    };
-  })
-  .filter((post) => post.year && post.type);
 ---
 
 <aside class="w-full flex flex-col">
@@ -71,171 +40,15 @@ const modalPosts: ModalPost[] = posts
   <ul class="grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-col gap-2 pt-3">
     {years.map((year) => (
       <li>
-        <button type="button" data-history-modal-trigger data-history-year={year} class="flex justify-between items-center text-human-2 text-2xl font-bebas tracking-wide transition hover:text-human-1 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3 border-2 border-human-3 px-2 py-1 rounded" aria-label={`Abrir textos del año ${year}`}>
+        <a href={`/${year}`} class="flex justify-between items-center text-human-2 text-2xl font-bebas tracking-wide transition hover:text-human-1 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3 border-2 border-human-3 px-2 py-1 rounded" aria-label={`Abrir textos del año ${year}`}>
           <span>{year}</span>
 
           <span class="text-sm font-black text-human-3 font-bellota">
             {yearCount[year]}
           </span>
-        </button>
+        </a>
       </li>
     ))}
     <div class="hidden border-human-3 md:border-t-2"></div>
   </ul>
 </aside>
-
-<div id="history-modal" class="fixed inset-0 z-[100] hidden min-h-[100dvh] items-center justify-center bg-human-5/75 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-6" aria-hidden="true">
-  <div class="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-human-4 text-human-2 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="history-modal-title">
-    <button id="history-modal-close" type="button" class="absolute right-4 top-4 z-[60] inline-flex size-9 items-center justify-center rounded-full bg-human-4/80 text-2xl text-human-2 backdrop-blur transition hover:bg-human-5/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label="Cerrar modal">
-      <i class="ti ti-x"></i>
-    </button>
-
-    <header class="relative p-4 pt-8 sm:px-8 sm:pt-8">
-      <div class="absolute -bottom-12 left-0 z-50 flex min-w-full flex-col justify-end bg-gradient-to-b from-human-4 to-transparent px-2 pt-12"></div>
-
-      <h2 id="history-modal-title" class="font-bebas text-4xl font-medium leading-none text-human-2 sm:text-6xl"></h2>
-    </header>
-
-    <div id="history-modal-list" class="grid max-h-[calc(100dvh-12rem)] grid-cols-1 gap-4 overflow-y-auto overscroll-contain p-4 pb-[env(safe-area-inset-bottom)] sm:grid-cols-2 sm:p-8 lg:grid-cols-3"></div>
-  </div>
-</div>
-
-<script is:inline data-astro-rerun define:vars={{ modalPosts }}>
-(() => {
-  window.__leggiamoHistoryModalController?.abort();
-
-  var controller = new AbortController();
-  window.__leggiamoHistoryModalController = controller;
-
-  var posts = modalPosts;
-
-  var modal = document.getElementById("history-modal");
-  var closeButton = document.getElementById("history-modal-close");
-  var titleElement = document.getElementById("history-modal-title");
-  var listElement = document.getElementById("history-modal-list");
-
-  var openClass = "flex";
-  var closedClass = "hidden";
-
-  function lockPageScroll() {
-    document.documentElement.classList.add("overflow-hidden");
-    document.body.classList.add("overflow-hidden");
-  }
-
-  function unlockPageScroll() {
-    document.documentElement.classList.remove("overflow-hidden");
-    document.body.classList.remove("overflow-hidden");
-  }
-
-  function clearList() {
-    if (!listElement) return;
-
-    while (listElement.firstChild) {
-      listElement.removeChild(listElement.firstChild);
-    }
-  }
-
-  function createPostCard(post) {
-    const item = document.createElement("article");
-
-    const link = document.createElement("a");
-    link.href = post.href;
-    link.className = "group block";
-
-    const imageWrapper = document.createElement("div");
-    imageWrapper.className = "relative isolate overflow-hidden rounded-lg aspect-[2/1]";
-
-    if (post.coverUrl) {
-      const image = document.createElement("img");
-      image.src = post.coverUrl;
-      image.alt = post.coverAlt || post.title;
-      image.loading = "lazy";
-      image.className = "absolute inset-0 h-full w-full object-cover pointer-events-none select-none";
-
-      imageWrapper.appendChild(image);
-    }
-
-    const overlay = document.createElement("div");
-    overlay.className = "absolute bottom-0 flex min-w-full flex-col justify-end bg-gradient-to-t from-human-4 to-transparent px-2 pb-1 pt-12";
-
-    const date = document.createElement("p");
-    date.className = "mt-auto flex items-center gap-1 truncate text-xs font-black text-human-2";
-    date.textContent = post.formattedDate;
-
-    const heading = document.createElement("h3");
-    heading.className = "text-start font-bebas text-lg leading-6 text-human-1";
-    heading.textContent = post.title;
-
-    overlay.appendChild(date);
-    overlay.appendChild(heading);
-    imageWrapper.appendChild(overlay);
-
-    link.appendChild(imageWrapper);
-    item.appendChild(link);
-
-    return item;
-  }
-
-  function openModal(year) {
-    if (!modal || !titleElement || !listElement) return;
-
-    const filteredPosts = posts.filter((post) => post.year === String(year)).sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
-
-    titleElement.textContent = year;
-
-    clearList();
-
-    if (filteredPosts.length === 0) {
-      const emptyMessage = document.createElement("p");
-      emptyMessage.className = "text-human-2/70";
-      emptyMessage.textContent = "No hay textos registrados en este año.";
-      listElement.appendChild(emptyMessage);
-    } else {
-      filteredPosts.forEach((post) => {
-        listElement.appendChild(createPostCard(post));
-      });
-    }
-
-    modal.classList.remove(closedClass);
-    modal.classList.add(openClass);
-    modal.setAttribute("aria-hidden", "false");
-    lockPageScroll();
-  }
-
-  function closeModal() {
-    if (!modal) return;
-
-    modal.classList.add(closedClass);
-    modal.classList.remove(openClass);
-    modal.setAttribute("aria-hidden", "true");
-    unlockPageScroll();
-  }
-
-  document.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-
-    const trigger = target.closest("[data-history-modal-trigger]");
-    if (!trigger) return;
-
-    event.preventDefault();
-
-    const year = trigger.getAttribute("data-history-year");
-    if (!year) return;
-
-    if (trigger instanceof HTMLElement) trigger.blur();
-
-    openModal(year);
-  }, { signal: controller.signal });
-
-  closeButton?.addEventListener("click", closeModal, { signal: controller.signal });
-
-  modal?.addEventListener("click", (event) => {
-    if (event.target === modal) closeModal();
-  }, { signal: controller.signal });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) closeModal();
-  }, { signal: controller.signal });
-})();
-</script>

@@ -6,12 +6,9 @@
   ],
   "scripts": {
     "dev:web": "npm run dev -w web",
-    "dev:cms": "npm run dev -w cms",
     "build:web": "npm run build -w web",
-    "build:cms": "npm run build -w cms",
     "preview:web": "npm run preview -w web",
-    "dev": "npm run dev:cms",
-    "dev:all": "node tools/dev-all.mjs",
+    "dev": "npm run dev:web",
     "build": "npm run build:web"
   },
   "dependencies": {

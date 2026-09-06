@@ -1,0 +1,46 @@
+---
+import { getCollectionIcon } from "../lib/collection-ui";
+
+const { post } = Astro.props;
+const href = `/${post.collection?.slug}/${post.id}`;
+const date = new Date(post.pubDate);
+const formattedDate = Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" });
+---
+
+<article class="text-card" data-text-card data-text-id={String(post.id)}>
+  <a class="text-card-cover" href={href}>
+    {post.cover?.url && <img src={post.cover.url} alt={post.cover.alt || post.title} loading="lazy" />}
+    {formattedDate && <time class="text-card-date" datetime={post.pubDate}>{formattedDate}</time>}
+  </a>
+  <div class="text-card-body">
+    <a class="text-card-heading" href={href}>
+      <p class="text-card-collection"><i class={`ti ${getCollectionIcon(post.collection?.slug)}`} aria-hidden="true"></i>{post.collection?.name}</p>
+      <h3>{post.title}</h3>
+    </a>
+    <div class="text-card-actions">
+      <button type="button" data-card-like aria-pressed="false" aria-label={`Me gusta: ${post.title}`}><span data-card-count>—</span><i class="ti ti-thumb-up" aria-hidden="true"></i></button>
+      <button type="button" data-card-share data-url={href} data-title={post.title} aria-label={`Compartir ${post.title}`}><i class="ti ti-share-2" aria-hidden="true"></i></button>
+    </div>
+    <span class="text-card-status" role="status"></span>
+  </div>
+</article>
+
+<style is:global>
+  .text-card { --card-dark: #022A31; --card-light: #D8F8FF; position: relative; width: 100%; color: #fff; border-radius: 10px; box-shadow: 0 5px 16px rgb(0 15 20 / 25%); }
+  .text-card-cover { position: relative; display: block; aspect-ratio: 2 / 1; overflow: hidden; border-radius: 10px; background: var(--card-dark); text-decoration: none; }
+  .text-card-cover::after { content: ""; position: absolute; inset: 0; background: rgb(0 0 0 / 60%); pointer-events: none; }
+  .text-card-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .text-card-date { position: absolute; z-index: 1; top: 10px; right: 12px; max-width: calc(100% - 16px); padding: 0; font-size: 12px; font-weight: 700; line-height: 1.2; color: #fff; }
+  .text-card-body { position: absolute; bottom: 10px; left: 12px; right: 8px; display: flex; align-items: flex-end; gap: 8px; padding: 0; }
+  .text-card-heading { flex: 1; min-width: 0; color: #fff; text-decoration: none; }
+  .text-card-collection { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; font-size: 12px; font-weight: 700; line-height: 1.2; color: var(--card-light); }
+  .text-card-heading h3 { font-family: "Bebas Neue", sans-serif; font-size: 18px; font-weight: 400; line-height: 1.1; color: #fff; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .text-card-actions { display: flex; align-items: center; flex-shrink: 0; }
+  .text-card-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; min-width: 32px; min-height: 36px; padding: 4px; color: #fff; cursor: pointer; font-size: 11px; }
+  .text-card-actions i { font-size: 18px; color: var(--card-light); }
+  .text-card-actions [data-card-like][aria-pressed="true"] i { color: #fff; }
+  .text-card :focus-visible { outline: 2px solid var(--card-light); outline-offset: 2px; }
+  .text-card-actions button:disabled { opacity: .5; cursor: wait; }
+  .text-card-status { position: absolute; z-index: 3; bottom: calc(100% + 5px); left: 8px; right: 8px; padding: 5px 8px; border-radius: 6px; background: var(--card-dark); font-size: 11px; color: #fff; pointer-events: none; }
+  .text-card-status:empty { display: none; }
+</style>

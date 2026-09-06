@@ -1,5 +1,6 @@
 ---
-import { getCollectionIcon, isMainCollection } from "../lib/collection-ui";
+import TextCard from "./TextCard.astro";
+import { isMainCollection } from "../lib/collection-ui";
 
 const { posts = [] } = Astro.props;
 
@@ -16,31 +17,9 @@ const recentPosts = posts
   {recentPosts.length > 0 ? (
     <ul class="grid grid-cols-1 md:grid-cols-3 gap-3 px-3">
       {recentPosts.map((post: any) => {
-        const collection = post.collection;
-        const typeLabel = collection?.name ?? "";
-        const iconClass = getCollectionIcon(collection?.slug);
-        const href = `/${collection?.slug}/${post.id}`;
-        const coverUrl = post.cover?.url ?? "";
-        const coverAlt = post.cover?.alt ?? post.title;
-
         return (
           <li class="snap-start flex-none">
-            <a href={href} class="block group">
-              <div class="relative isolate overflow-hidden rounded aspect-[2/1] w-full">
-                {coverUrl && (<img src={coverUrl} alt={coverAlt} class="absolute inset-0 h-full w-full object-cover pointer-events-none select-none" loading="lazy"/>)}
-
-                <div class="absolute bottom-0 flex flex-col justify-end gap-1 px-2 pb-1 pt-12 min-w-full bg-gradient-to-t from-human-4 to-transparent" style={`--collection-color: ${collection?.color ?? "#000000"}`}>
-                  <p class="flex items-center gap-1 mt-auto text-xs text-human-2 font-black truncate">
-                    <i class={`ti ${iconClass} text-base text-human-3`} aria-hidden="true"></i>
-                    {typeLabel}
-                  </p>
-
-                  <h3 class="text-human-1 font-bebas text-start text-lg leading-6">
-                    {post.title}
-                  </h3>
-                </div>
-              </div>
-            </a>
+<TextCard post={post} />
           </li>
         );
       })}

@@ -27,5 +27,7 @@ pnpm-debug.log*
 .DS_Store
 
 scripts/
+!apps/web/src/scripts/
+!apps/web/src/scripts/text-cards.ts
 .vscode
 .vercel/output

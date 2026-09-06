@@ -1,7 +1,7 @@
 ---
 import { getCollectionIcon, isMainCollection } from "../lib/collection-ui";
 
-type PayloadCollection = {
+type DirectusCollection = {
   id: string | number;
   name: string;
   slug: string;
@@ -11,32 +11,20 @@ type PayloadCollection = {
   order?: number;
 };
 
-type PayloadText = {
+type DirectusText = {
   id: string;
   title: string;
   pubDate?: string;
-  collection?: PayloadCollection;
+  collection?: DirectusCollection;
   cover?: {
     url?: string;
     alt?: string;
   };
 };
 
-type ModalPost = {
-  id: string;
-  title: string;
-  type: string;
-  href: string;
-  coverUrl: string;
-  coverAlt: string;
-  pubDate: string;
-  year: string;
-  formattedDate: string;
-};
-
 const { posts = [], collections = [] } = Astro.props as {
-  posts?: PayloadText[];
-  collections?: PayloadCollection[];
+  posts?: DirectusText[];
+  collections?: DirectusCollection[];
 };
 
 const sortedCollections = [...collections].filter((collection) => isMainCollection(collection.slug)).sort((a, b) => {
@@ -48,12 +36,6 @@ const sortedCollections = [...collections].filter((collection) => isMainCollecti
   return a.name.localeCompare(b.name, "es");
 });
 
-const collectionsBySlug = sortedCollections.reduce<Record<string, PayloadCollection>>((acc, collection) => {
-  if (collection.slug) acc[collection.slug] = collection;
-
-  return acc;
-}, {});
-
 const countsByType = posts.reduce<Record<string, number>>((acc, post) => {
   const slug = post.collection?.slug;
 
@@ -64,29 +46,6 @@ const countsByType = posts.reduce<Record<string, number>>((acc, post) => {
   return acc;
 }, {});
 
-const modalPosts: ModalPost[] = posts
-  .filter((post) => isMainCollection(post.collection?.slug))
-  .map((post) => {
-    const type = String(post.collection?.slug ?? "");
-    const pubDate = post.pubDate ? new Date(post.pubDate) : null;
-
-    return {
-      id: post.id,
-      title: post.title,
-      type,
-      href: `/${type}/${post.id}`,
-      coverUrl: post.cover?.url ?? "",
-      coverAlt: post.cover?.alt ?? post.title,
-      pubDate: post.pubDate ?? "",
-      year: pubDate && !Number.isNaN(pubDate.getTime()) ? String(pubDate.getFullYear()) : "",
-      formattedDate: pubDate && !Number.isNaN(pubDate.getTime()) ? pubDate.toLocaleDateString("es-CO", { day: "numeric", month: "long", year: "numeric" }) : "",
-    };
-  });
-
-const modalData = {
-  posts: modalPosts,
-  collections: collectionsBySlug,
-};
 ---
 
 <div class="flex flex-col">
@@ -102,7 +61,7 @@ const modalData = {
           const iconClass = getCollectionIcon(collection.slug);
 
           return (
-            <button type="button" data-collection-modal-trigger data-collection-slug={collection.slug} aria-label={`Abrir coleccion ${collection.name}`} class="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3">
+            <a href={`/${collection.slug}`} aria-label={`Abrir coleccion ${collection.name}`} class="w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3">
               <article class="overflow-hidden flex flex-row items-center justify-between gap-2 w-full md:border-2 md:border-human-3 md:p-2 rounded-sm">
                 <div class="flex items-center gap-2 min-w-0">
                   <i class={`ti ${iconClass} shrink-0 text-lg text-human-3`} aria-hidden="true"></i>
@@ -116,7 +75,7 @@ const modalData = {
                   {count}
                 </span>
               </article>
-            </button>
+            </a>
           );
         })}
       </div>
@@ -125,169 +84,3 @@ const modalData = {
     )}
   </div>
 </div>
-
-<div id="collection-modal" class="fixed inset-0 z-[100] hidden min-h-[100dvh] items-center justify-center bg-human-5/75 px-3 py-4 backdrop-blur-sm sm:px-4 sm:py-6" aria-hidden="true">
-  <div class="relative flex max-h-[calc(100dvh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-lg bg-human-4 text-human-2 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="collection-modal-title">
-    <button id="collection-modal-close" type="button" class="absolute right-4 top-4 z-[60] inline-flex size-8 items-center justify-center rounded-full bg-human-4/80 text-2xl text-human-2 backdrop-blur transition hover:bg-human-5/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-human-3" aria-label="Cerrar modal">
-      <i class="ti ti-x"></i>
-    </button>
-
-    <header class="relative p-4 pt-8 sm:px-8 sm:pt-8">
-      <div class="absolute -bottom-12 left-0 z-50 flex min-w-full flex-col justify-end bg-gradient-to-b from-human-4 to-transparent px-2 pt-12"></div>
-
-      <h2 id="collection-modal-title" class="font-bebas text-4xl font-medium leading-none text-human-2 sm:text-4xl"></h2>
-
-      <p id="collection-modal-description" class="max-w-3xl font-tangerine text-2xl leading-none text-human-2 sm:text-4xl"></p>
-    </header>
-
-    <div id="collection-modal-list" class="grid max-h-[calc(100dvh-12rem)] grid-cols-1 gap-4 overflow-y-auto overscroll-contain p-4 pb-[env(safe-area-inset-bottom)] sm:grid-cols-2 sm:p-8 lg:grid-cols-3"></div>
-  </div>
-</div>
-
-<script is:inline id="collection-modal-data" type="application/json" set:html={JSON.stringify(modalData)}></script>
-
-<script is:inline data-astro-rerun>
-(() => {
-  window.__leggiamoCollectionModalController?.abort();
-
-  var controller = new AbortController();
-  window.__leggiamoCollectionModalController = controller;
-
-  var dataElement = document.getElementById("collection-modal-data");
-  var modalData = dataElement?.textContent ? JSON.parse(dataElement.textContent) : {};
-  var posts = modalData.posts ?? [];
-  var collections = modalData.collections ?? {};
-
-  var modal = document.getElementById("collection-modal");
-  var closeButton = document.getElementById("collection-modal-close");
-  var titleElement = document.getElementById("collection-modal-title");
-  var descriptionElement = document.getElementById("collection-modal-description");
-  var listElement = document.getElementById("collection-modal-list");
-
-  var openClass = "flex";
-  var closedClass = "hidden";
-
-  function lockPageScroll() {
-    document.documentElement.classList.add("overflow-hidden");
-    document.body.classList.add("overflow-hidden");
-  }
-
-  function unlockPageScroll() {
-    document.documentElement.classList.remove("overflow-hidden");
-    document.body.classList.remove("overflow-hidden");
-  }
-
-  function clearList() {
-    if (!listElement) return;
-
-    while (listElement.firstChild) {
-      listElement.removeChild(listElement.firstChild);
-    }
-  }
-
-  function createPostCard(post) {
-    const item = document.createElement("article");
-
-    const link = document.createElement("a");
-    link.href = post.href;
-    link.className = "group block";
-
-    const imageWrapper = document.createElement("div");
-    imageWrapper.className = "relative isolate overflow-hidden rounded-lg aspect-[2/1]";
-
-    if (post.coverUrl) {
-      const image = document.createElement("img");
-      image.src = post.coverUrl;
-      image.alt = post.coverAlt || post.title;
-      image.loading = "lazy";
-      image.className = "absolute inset-0 h-full w-full object-cover pointer-events-none select-none";
-
-      imageWrapper.appendChild(image);
-    }
-
-    const overlay = document.createElement("div");
-    overlay.className = "absolute bottom-0 flex min-w-full flex-col justify-end bg-gradient-to-t from-human-4 to-transparent px-2 pb-1 pt-12";
-
-    const date = document.createElement("p");
-    date.className = "mt-auto flex items-center gap-1 truncate text-xs font-black text-human-2";
-    date.textContent = post.formattedDate;
-
-    const heading = document.createElement("h3");
-    heading.className = "text-start font-bebas text-lg leading-6 text-human-1";
-    heading.textContent = post.title;
-
-    overlay.appendChild(date);
-    overlay.appendChild(heading);
-    imageWrapper.appendChild(overlay);
-
-    link.appendChild(imageWrapper);
-    item.appendChild(link);
-
-    return item;
-  }
-
-  function openModal(slug) {
-    if (!modal || !titleElement || !descriptionElement || !listElement) return;
-
-    const filteredPosts = posts.filter((post) => post.type === slug).sort((a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime());
-    const collection = collections[slug] ?? {};
-
-    titleElement.textContent = collection.name ?? slug;
-    descriptionElement.textContent = collection.description ?? "";
-
-    clearList();
-
-    if (filteredPosts.length === 0) {
-      const emptyMessage = document.createElement("p");
-      emptyMessage.className = "text-human-2/70";
-      emptyMessage.textContent = "No hay textos en esta coleccion todavia.";
-      listElement.appendChild(emptyMessage);
-    } else {
-      filteredPosts.forEach((post) => {
-        listElement.appendChild(createPostCard(post));
-      });
-    }
-
-    modal.classList.remove(closedClass);
-    modal.classList.add(openClass);
-    modal.setAttribute("aria-hidden", "false");
-    lockPageScroll();
-  }
-
-  function closeModal() {
-    if (!modal) return;
-
-    modal.classList.add(closedClass);
-    modal.classList.remove(openClass);
-    modal.setAttribute("aria-hidden", "true");
-    unlockPageScroll();
-  }
-
-  document.addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-
-    const trigger = target.closest("[data-collection-modal-trigger]");
-    if (!trigger) return;
-
-    event.preventDefault();
-
-    const slug = trigger.getAttribute("data-collection-slug");
-    if (!slug) return;
-
-    if (trigger instanceof HTMLElement) trigger.blur();
-
-    openModal(slug);
-  }, { signal: controller.signal });
-
-  closeButton?.addEventListener("click", closeModal, { signal: controller.signal });
-
-  modal?.addEventListener("click", (event) => {
-    if (event.target === modal) closeModal();
-  }, { signal: controller.signal });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && modal && !modal.classList.contains(closedClass)) closeModal();
-  }, { signal: controller.signal });
-})();
-</script>

@@ -1,6 +1,6 @@
 # Directus local
 
-Prueba aislada de Directus Core con PostgreSQL. No reemplaza Payload ni cambia el frontend Astro.
+Directus Core con PostgreSQL para administrar el contenido del blog Astro.
 
 ## Uso
 
@@ -15,4 +15,3 @@ Los datos persisten en `data/database` y `data/uploads`; ambos están excluidos 
 `docker compose down` detiene los contenedores sin eliminar los datos persistidos.
 
 No ejecutar `docker compose down --volumes` ni borrar `data/` si se quiere conservar la instancia.
-
