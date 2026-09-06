@@ -1,0 +1,11 @@
+{
+  "name": "directus-extension-likes",
+  "version": "1.0.0",
+  "type": "module",
+  "directus:extension": {
+    "type": "endpoint",
+    "path": "dist/index.js",
+    "source": "",
+    "host": "^12.0.0"
+  }
+}

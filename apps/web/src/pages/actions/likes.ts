@@ -1,7 +1,34 @@
 import type { APIRoute } from "astro";
-import { db, TextLike, eq, sql } from "astro:db";
 
 export const prerender = false;
+
+const DIRECTUS_URL = import.meta.env.DIRECTUS_URL;
+const DIRECTUS_TOKEN = import.meta.env.DIRECTUS_TOKEN;
+
+function directusLikesUrl(textId: string) {
+  return new URL(`/likes/${encodeURIComponent(textId)}`, DIRECTUS_URL);
+}
+
+async function requestLikes(textId: string, init?: RequestInit) {
+  if (!DIRECTUS_URL || !DIRECTUS_TOKEN) {
+    throw new Error("Missing Directus likes configuration");
+  }
+
+  const response = await fetch(directusLikesUrl(textId), {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${DIRECTUS_TOKEN}`,
+      "Content-Type": "application/json",
+      ...init?.headers,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Directus likes request failed with ${response.status}`);
+  }
+
+  return response.json();
+}
 
 export const GET: APIRoute = async ({ url }) => {
   const textId = url.searchParams.get("textId");
@@ -13,15 +40,11 @@ export const GET: APIRoute = async ({ url }) => {
     );
   }
 
-  const rows = await db
-    .select()
-    .from(TextLike)
-    .where(eq(TextLike.textId, textId));
-
-  return Response.json({
-    textId,
-    likes: rows[0]?.likes ?? 0,
-  });
+  try {
+    return Response.json(await requestLikes(textId));
+  } catch {
+    return Response.json({ error: "Likes service unavailable" }, { status: 503 });
+  }
 };
 
 export const POST: APIRoute = async ({ request }) => {
@@ -38,61 +61,16 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const rows = await db
-      .select()
-      .from(TextLike)
-      .where(eq(TextLike.textId, textId));
-
-    const current = rows[0];
-
-    if (action === "unlike") {
-      if (!current) {
-        return Response.json({
-          textId,
-          likes: 0,
-        });
-      }
-
-      const nextLikes = Math.max(0, current.likes - 1);
-
-      await db
-        .update(TextLike)
-        .set({ likes: nextLikes })
-        .where(eq(TextLike.textId, textId));
-
-      return Response.json({
-        textId,
-        likes: nextLikes,
-      });
-    }
-
-    if (!current) {
-      await db.insert(TextLike).values({
-        textId,
-        likes: 1,
-      });
-
-      return Response.json({
-        textId,
-        likes: 1,
-      });
-    }
-
-    await db
-      .update(TextLike)
-      .set({
-        likes: sql`${TextLike.likes} + 1`,
-      })
-      .where(eq(TextLike.textId, textId));
-
-    return Response.json({
-      textId,
-      likes: current.likes + 1,
-    });
+    return Response.json(
+      await requestLikes(textId, {
+        method: "POST",
+        body: JSON.stringify({ action }),
+      }),
+    );
   } catch {
     return Response.json(
-      { error: "Invalid request" },
-      { status: 400 }
+      { error: "Likes service unavailable" },
+      { status: 503 }
     );
   }
 };
